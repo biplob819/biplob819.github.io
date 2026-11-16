@@ -1,7 +1,7 @@
 // Everything about the person lives here; projects live in src/content/projects.
 // Lines marked CONFIRM need Biplob's sign-off before the site goes public.
 
-export const CV_DOC_ID = '1V6tCHFobjcv-I7X0Erp6cCz3Co2VWco0MQKucX1e5jM';
+export const CV_DOC_ID = '1i7LYGpB_8UCOrdSHJMWcfm_YO8hm5RlPnD0lUqvrHPs'; // the live master CV: edits here show up in the site's download
 
 export const site = {
   name: 'Biplob Chakraborty',
