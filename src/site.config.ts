@@ -10,7 +10,7 @@ export const site = {
   // One sentence of identity, one of proof. Numbers come from the CV.
   lede: 'Product manager who ships. Pentathlete for India.',
   proof: [
-    'Lead PM for data, analytics and AI/ML at Mindbody, where I shipped its first agentic product and ML products I led contributed to $103M+ in incremental ARR.',
+    'Lead Product Manager, Data (Agentic Analytics and ML) at Mindbody, where I shipped its first agentic product and ML products I led contributed to $103M+ in incremental ARR.',
     'Building Kova (kovahr.com) and Insightsflow (insightsflow.live) end to end. PhD scholar in AI at IIT Kharagpur.',
     'I represent India in modern pentathlon.',
   ],
@@ -34,7 +34,7 @@ export const site = {
 // Products shipped inside a day job: no public repo, so they live here, tagged BUILT like the CV.
 export const atWork = {
   company: 'Mindbody',
-  title: 'Lead Product Manager, Data, Analytics and AI/ML',
+  title: 'Lead Product Manager, Data (Agentic Analytics and ML)',
   period: '2023 to now',
   // Source: LinkedIn profile export, 16 Nov 2026 (private/linkedin-profile.md).
   items: [
