@@ -17,7 +17,7 @@ metrics:
     label: HR modules, from hiring to payroll
   - value: "352"
     label: merged pull requests
-  - value: "39"
+  - value: "33"
     label: pre-push gates every change must pass
   - value: 1,450+
     label: product and engineering decisions logged

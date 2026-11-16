@@ -8,14 +8,18 @@ const platforms = await projects('product');
 const oss = await projects('open-source');
 const builds = await projects('case-study');
 const published = builds.filter((p) => p.data.headline).length;
-const INSTALL: Record<string, string> = { evalkit: "pip install 'evalkit-harness[anthropic,openai]'" };
+const INSTALL: Record<string, string> = {
+  evalkit: "pip install 'evalkit-harness[anthropic,openai]'",
+  'build-harness': '/plugin marketplace add biplob819/build-harness',
+};
 ---
 <Base image="/images/kova.jpg">
   <section class="hero wrap">
     <div class="chips">
       {site.roles.map((r, i) => <span class:list={['chip', { strong: i === site.roles.length - 1 }]}>{r}</span>)}
     </div>
-    <h1 class="cond">{site.lede}</h1>
+    <p class="status-line"><span class="dot" aria-hidden="true"></span>Shipping Kova · building Insightsflow · training for the 2027 Asian Championships</p>
+    <h1 class="cond">Product manager who ships. <span class="muted-h">Pentathlete for India.</span></h1>
     <p class="lead">
       Lead PM for data, analytics and AI/ML at <strong>Mindbody</strong>, where I shipped its first agentic product and ML products I led contributed to <strong>$103M+ in incremental ARR</strong>.
       I'm building <a class="tlink" href="https://kovahr.com/" rel="noopener">Kova</a> and <a class="tlink" href="https://insightsflow.live/" rel="noopener">Insightsflow</a> end to end, and I'm a PhD scholar in AI at IIT Kharagpur.
@@ -120,7 +124,10 @@ const INSTALL: Record<string, string> = { evalkit: "pip install 'evalkit-harness
 <style>
   .hero { padding-block: clamp(40px, 7vw, 88px) 0; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  h1 { font-size: clamp(48px, 9.4vw, 120px); margin: 22px 0 0; max-width: 13ch; }
+  .status-line { display: flex; align-items: center; gap: 10px; margin: 18px 0 0; font: 400 13px/1.4 var(--f-mono); color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); box-shadow: 0 0 0 4px color-mix(in srgb, var(--good) 22%, transparent); flex: none; }
+  .muted-h { color: var(--muted); }
+  h1 { font-size: clamp(42px, 6.6vw, 92px); margin: 16px 0 0; max-width: 22ch; }
   .lead { font-size: clamp(16.5px, 1.6vw, 19px); color: var(--muted); max-width: 62ch; margin: 24px 0 0; }
   .lead strong { color: var(--ink); font-weight: 600; }
   .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }

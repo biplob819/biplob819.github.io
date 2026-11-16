@@ -8,7 +8,7 @@ export const site = {
   url: 'https://biplob819.github.io',
   roles: ['Product Manager', 'Builder', 'India International, Modern Pentathlon'],
   // One sentence of identity, one of proof. Numbers come from the CV.
-  lede: 'I build AI products and score them like a race.',
+  lede: 'Product manager who ships. Pentathlete for India.',
   proof: [
     'Lead PM for data, analytics and AI/ML at Mindbody, where I shipped its first agentic product and ML products I led contributed to $103M+ in incremental ARR.',
     'Building Kova (kovahr.com) and Insightsflow (insightsflow.live) end to end. PhD scholar in AI at IIT Kharagpur.',
@@ -98,6 +98,6 @@ export const now = [
   'Shipping Kova, an AI-native HR platform for US small businesses.',
   'Getting Insightsflow, embedded analytics for SaaS teams, ready to launch.',
   'Finishing eight public AI builds, each scored with EvalKit.',
-  'Open-sourcing the Build Harness behind Kova, Insightsflow and every project here.',
+  'Released the Build Harness as open source: the Claude Code harness behind Kova, Insightsflow and every project here.',
   'PhD research at IIT Kharagpur, and training.',
 ];

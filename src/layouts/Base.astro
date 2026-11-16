@@ -87,7 +87,7 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
   .brand .cond { font-size: 19px; line-height: 1; }
   .bib { font: 500 10.5px/1 var(--f-mono); background: var(--lime); color: var(--on-lime); padding: 4px 6px; border-radius: 4px; letter-spacing: .04em; }
   nav { display: flex; align-items: center; gap: 20px; font-size: 14px; }
-  nav a { text-decoration: none; }
+  nav a { text-decoration: none; white-space: nowrap; }
   .nl { color: var(--muted); }
   .nl:hover, .nl[aria-current='page'] { color: var(--ink); }
   .nx { font-weight: 500; }

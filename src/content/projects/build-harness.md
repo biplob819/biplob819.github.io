@@ -1,22 +1,42 @@
 ---
 title: Build Harness
-tagline: The Claude Code harness I build everything with, from Kova and Insightsflow to every project here. Guides steer the agent before it acts; gates and a skeptical verifier check it after.
+tagline: Gates, roles and memory for building real products with Claude Code. Guides steer the agent before it acts; gates and a skeptical verifier check it after.
 kind: open-source
-status: building
+status: shipped
 role: Creator
 year: "2026"
 featured: true
 order: 10
 tags: [harness engineering, Claude Code, agents, quality gates]
+headline:
+  value: 6,548
+  label: commits across the 10 repos it built, Kova and Insightsflow included
+  note: Measured with the repo's own scripts/evidence.py on 16 Nov 2026. Insightsflow is built with a teammate, so its commits are the team's.
 metrics:
-  - value: "39"
-    label: pre-push gates in production use
-  - value: "3"
-    label: "agent roles: builder, adversarial QA, engineering manager"
-  - value: "10"
-    label: repos built with it, Kova and Insightsflow included
-stack: [Claude Code plugins, hooks, subagents, skills, git hooks]
+  - value: "1,755"
+    label: capability rows tracked, 748 green with proofs
+  - value: "1,751"
+    label: decisions recorded
+  - value: "286"
+    label: lessons, each with a control
+  - value: "33"
+    label: pre-push gates on Kova
+links:
+  repo: https://github.com/biplob819/build-harness
+stack: [Claude Code plugin, hooks, subagents, skills, Python 3.11+, git hooks]
+methodology:
+  - Guides and sensors, computational and inferential (Böckeler, harness engineering)
+  - Dependency-gated build graph; a node starts only when its dependencies are green
+  - Every gate ships with a self-test that proves it can fail
+  - Adversarial verifier refutes by default, from a fresh start
+  - Mistakes become lessons; lessons that can be checked become gates
+proof:
+  - { label: "Repository and README", url: "https://github.com/biplob819/build-harness" }
+  - { label: "Release 0.1.0", url: "https://github.com/biplob819/build-harness/releases/tag/v0.1.0" }
+  - { label: "Field evidence script", url: "https://github.com/biplob819/build-harness/blob/main/scripts/evidence.py" }
+  - { label: "CI: tests on Python 3.11 to 3.13", url: "https://github.com/biplob819/build-harness/actions" }
 ---
+
 
 ## The problem
 
@@ -34,8 +54,14 @@ The harness behind Kova's 5,600+ commits, Insightsflow, and every AI build on th
 
 ## How it ships
 
-As a Claude Code plugin with an `init` step that writes the per-repo pieces (constitution, gates, decision log, build graph) into any project. No product code from Kova or Insightsflow comes with it; the release is rebuilt in a fresh repository and secret-scanned before it goes public.
+A Claude Code plugin: three agents (builder, verifier, engineering manager), six skills, and hooks that re-inject the standing principles every turn and block `--no-verify`, force-pushes and any push that fails a gate. An `init` step writes the per-repo pieces (constitution, gates, decision log, build graph) into any project. No product code from Kova or Insightsflow is in it: the release was rebuilt in a fresh repository and secret-scanned before it went public, under Apache-2.0.
 
-## Status
+## Install
 
-Being extracted now. Every project on this site was built with it: node by node, behind converge gates and a skeptical verifier.
+```text
+/plugin marketplace add biplob819/build-harness
+/plugin install build-harness@build-harness
+/build-harness:init
+```
+
+Or without the plugin: clone the repo and run `python3 scripts/init.py /path/to/repo`.
