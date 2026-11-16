@@ -11,12 +11,30 @@ export async function getStaticPaths() {
 const { project } = Astro.props as { project: Project };
 const d = project.data;
 const { Content, headings } = await render(project);
-const toc = headings.filter((h) => h.depth === 2);
-const LINK_LABEL: Record<string, string> = { site: 'Website', demo: 'Live demo', repo: 'Code', report: 'Results report', package: 'Package', video: '90-second video', prd: 'PRD' };
-const links = Object.entries(d.links).filter(([, v]) => v) as [string, string][];
 const results = d.images.filter((im) => im.kind === 'result');
 const diagrams = d.images.filter((im) => im.kind === 'architecture' || im.kind === 'dataflow');
 const shots = d.images.filter((im) => im.kind === 'screenshot');
+const LINK_LABEL: Record<string, string> = { site: 'Website', demo: 'Live demo', repo: 'Code', report: 'Results report', package: 'Package', video: '90-second video', prd: 'PRD', architecture: 'Architecture', dataflow: 'Data flow', methodology: 'Methodology' };
+const LINK_ORDER = ['demo', 'site', 'repo', 'video', 'prd', 'architecture', 'dataflow', 'methodology', 'report', 'package'];
+const links = LINK_ORDER.filter((k) => (d.links as Record<string, string | undefined>)[k]).map((k) => [k, (d.links as Record<string, string>)[k]]) as [string, string][];
+const st = d.story ?? {};
+const CALL_LABEL = { built: 'Built', cut: 'Cut', later: 'Later' } as const;
+const KIND_TAG = { 'north-star': 'North star', adoption: 'Adoption', quality: 'Quality', guardrail: 'Guardrail', cost: 'Cost' } as const;
+const designLinks = (['architecture', 'dataflow'] as const).filter((k) => d.links[k]);
+// Story sections come first on the page, then the hand-written deep dive.
+const storyToc = [
+  st.pain && { slug: 'pain', text: 'The pain' },
+  (st.bet || st.priorities?.length) && { slug: 'priorities', text: 'The bet and the cuts' },
+  (diagrams.length || designLinks.length) && { slug: 'how-it-works', text: 'How it works' },
+].filter(Boolean) as { slug: string; text: string }[];
+const tailToc = [
+  st.monitoring?.length && { slug: 'monitoring', text: 'Metrics and monitoring' },
+  st.next?.length && { slug: 'next', text: "What's next" },
+  { slug: 'feedback', text: 'Feedback' },
+].filter(Boolean) as { slug: string; text: string }[];
+const bodyToc = headings.filter((h) => h.depth === 2 && h.slug !== 'how-it-works').map((h) => ({ slug: h.slug, text: h.text }));
+const toc = [...storyToc, ...bodyToc, ...tailToc];
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const all = await projects();
 const i = all.findIndex((p) => p.id === project.id);
 const prev = all[(i - 1 + all.length) % all.length];
@@ -72,14 +90,84 @@ const facts = [
 
     <div class="body">
       <div class="prose">
-        {diagrams.map((im) => (
-          <figure class="panel"><img src={im.src} alt={im.alt} loading="lazy" /><figcaption class="label">{im.kind === 'dataflow' ? 'Data flow' : 'Architecture'}{im.caption && ` · ${im.caption}`}</figcaption></figure>
-        ))}
+        {st.pain && (
+          <section class="story" aria-labelledby="pain">
+            <h2 id="pain">The pain</h2>
+            <p class="who"><span class="label">Who hurts</span>{st.pain.who}</p>
+            <p>{st.pain.problem}</p>
+            {st.pain.evidence?.map((e) => (
+              <blockquote>
+                <p>{e.text}</p>
+                {(e.source || e.url) && <cite class="label">{e.url ? <a href={e.url} rel="noopener">{e.source ?? 'Source'} ↗</a> : e.source}</cite>}
+              </blockquote>
+            ))}
+          </section>
+        )}
+
+        {(st.bet || st.priorities?.length) && (
+          <section class="story" aria-labelledby="priorities">
+            <h2 id="priorities">The bet and the cuts</h2>
+            {st.bet && <p class="bet"><span class="label">The bet</span>{st.bet}</p>}
+            {st.priorities?.length && (
+              <table class="calls">
+                <thead><tr><th>Call</th><th>What</th><th>Why</th></tr></thead>
+                <tbody>{st.priorities.map((pr) => <tr><td><span class:list={['call', pr.call]}>{CALL_LABEL[pr.call]}</span></td><td>{pr.item}</td><td>{pr.why}</td></tr>)}</tbody>
+              </table>
+            )}
+          </section>
+        )}
+
+        {(diagrams.length > 0 || designLinks.length > 0) && (
+          <section class="story" aria-labelledby="how-it-works">
+            <h2 id="how-it-works">How it works</h2>
+            {diagrams.map((im) => (
+              <figure class="panel"><img src={im.src} alt={im.alt} loading="lazy" /><figcaption class="label">{im.kind === 'dataflow' ? 'Data flow' : 'Architecture'}{im.caption && ` · ${im.caption}`}</figcaption></figure>
+            ))}
+            {designLinks.length > 0 && (
+              <p class="doc-links">{designLinks.map((k) => <a href={d.links[k]} rel="noopener">Full {LINK_LABEL[k].toLowerCase()} doc ↗</a>)}</p>
+            )}
+          </section>
+        )}
+
         <Content />
         {shots.map((im) => <figure class="panel"><img src={im.src} alt={im.alt} loading="lazy" />{im.caption && <figcaption class="label">{im.caption}</figcaption>}</figure>)}
+
+        {st.monitoring?.length && (
+          <section class="story" aria-labelledby="monitoring">
+            <h2 id="monitoring">Metrics and monitoring</h2>
+            <table class="monitor">
+              <thead><tr><th>Metric</th><th>Target</th><th>Now</th><th>How it is watched</th></tr></thead>
+              <tbody>{st.monitoring.map((m) => (
+                <tr>
+                  <td><span class:list={['kind', m.kind]}>{KIND_TAG[m.kind]}</span><strong>{m.metric}</strong></td>
+                  <td>{m.target ?? '—'}</td>
+                  <td class="num-cell">{m.current ?? '—'}</td>
+                  <td>{m.how}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </section>
+        )}
+
+        {st.next?.length && (
+          <section class="story" aria-labelledby="next">
+            <h2 id="next">What's next</h2>
+            <ol>{st.next.map((n) => <li>{n}</li>)}</ol>
+          </section>
+        )}
+
+        <section class="fb" id="feedback" aria-label="Feedback">
+          <p class="label">Feedback</p>
+          <p class="fb-h cond">Spot a gap? Tell me.</p>
+          <p>A shaky number, a better approach, or a bug in the demo. It goes straight to my inbox.</p>
+          <div class="fb-actions">
+            <a class="btn primary" href="#feedback" data-mail data-subject={`Feedback on ${d.title}`} data-body={`Page: ${pageUrl}\n\nWhat I noticed:\n`}>Send feedback ✉</a>
+            {d.links.repo && <a class="btn" href={`${d.links.repo}/issues/new`} rel="noopener">Open an issue ↗</a>}
+          </div>
+        </section>
       </div>
       <aside class="rail">
-        {toc.length > 2 && (
+        {toc.length > 3 && (
           <nav class="block" aria-label="On this page"><p class="label">On this page</p>{toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}</nav>
         )}
         {d.proof.length > 0 && (
@@ -155,6 +243,24 @@ const facts = [
   .prose :global(pre code) { background: none; padding: 0; }
   .prose :global(blockquote) { margin: 20px 0; padding: 4px 0 4px 18px; border-left: 4px solid var(--lime); }
   .prose :global(img) { border-radius: 10px; border: 1px solid var(--line); }
+  .who, .bet { display: flex; flex-direction: column; gap: 6px; font-size: 19px; color: var(--ink) !important; font-weight: 500; margin: 0 0 14px; }
+  .bet { border-left: 4px solid var(--lime); padding-left: 16px; }
+  .prose blockquote cite { display: block; margin-top: 6px; font-style: normal; text-transform: none; letter-spacing: 0; }
+  .prose blockquote p { margin: 0; color: var(--ink); }
+  .call, .kind { display: inline-block; font: 500 11px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 6px; border-radius: 4px; border: 1px solid var(--line); white-space: nowrap; }
+  .call.built { background: var(--lime); color: var(--on-lime); border-color: transparent; }
+  .call.cut { text-decoration: line-through; color: var(--muted); }
+  .kind { display: table; margin-bottom: 6px; color: var(--muted); }
+  .kind.north-star { background: var(--ink); color: var(--bg); border-color: transparent; }
+  .num-cell { font-family: var(--f-mono); white-space: nowrap; }
+  .doc-links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+  .fb { margin-top: 56px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 0 0 var(--r) var(--r); }
+  .fb .label { margin: 0; }
+  .fb-h { font-size: clamp(28px, 3.4vw, 38px); margin: 10px 0 8px; color: var(--ink) !important; }
+  .fb-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+  .fb .btn { text-decoration: none; color: var(--ink); }
+  .fb .btn.primary { color: var(--bg); }
+  .fb .btn.primary:hover { color: #fff; }
   .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: clamp(56px, 8vw, 96px); border-top: 3px solid var(--ink); padding-top: 18px; }
   .pager a { display: flex; flex-direction: column; gap: 6px; text-decoration: none; }
   .pager .nx { text-align: right; align-items: flex-end; }

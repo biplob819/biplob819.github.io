@@ -1,26 +1,15 @@
-## The problem
-
-Who has the pain, how often, and what it costs them today. One paragraph.
-
 ## What I built
 
-What a user sees and does. Link the demo.
-
-## How it works
-
-The architecture and data flow, with a diagram (`![Architecture](https://raw.githubusercontent.com/<you>/<repo>/main/docs/architecture.svg)`).
+What a user sees and does, step by step. Link the demo and show a screenshot.
 
 ## Decisions and trade-offs
 
 The two or three calls that mattered, each with the alternative I rejected and why.
+(The pain, the bet, priorities, monitoring and next steps go in portfolio.yml `story`, not here.)
 
-## Results
+## What failed
 
-The headline chart and what it means. Confidence intervals, not adjectives.
-
-## What failed and what is next
-
-What did not work, what I would do differently, and the next experiment.
+What did not work, what it taught me, and what I changed because of it.
 
 ## Cost and how to reproduce
 

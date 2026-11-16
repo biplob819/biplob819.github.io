@@ -7,6 +7,7 @@
 //   portfolio sync                       refresh every page that came from a repo
 //   portfolio list                       show every project and its status
 //   portfolio validate                   check every page against the schema
+//   portfolio story [slug]               show which parts of each page's story are still missing
 //   portfolio cv                         save the CV Google Doc as public/cv.pdf
 //   portfolio publish [-m "message"]     validate, build, commit and push the site
 //
@@ -25,10 +26,13 @@ const TEMPLATES = join(SITE, 'templates');
 
 const KINDS = ['product', 'open-source', 'case-study', 'prototype'];
 const STATUSES = ['live', 'launching', 'shipped', 'building', 'design'];
-const LINK_KEYS = ['repo', 'site', 'demo', 'report', 'package', 'video', 'prd'];
+const LINK_KEYS = ['repo', 'site', 'demo', 'report', 'package', 'video', 'prd', 'architecture', 'dataflow', 'methodology'];
+const CALLS = ['built', 'cut', 'later'];
+const MONITOR_KINDS = ['north-star', 'adoption', 'quality', 'guardrail', 'cost'];
 // Frontmatter fields copied from a manifest, in this order. Keep in step with src/content.config.ts.
-const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost'];
-const SECTIONS = ['The problem', 'What I built', 'How it works', 'Decisions and trade-offs', 'Results', 'What failed and what is next', 'Cost and how to reproduce'];
+const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost', 'story'];
+// Page body headings. The pain, priorities, monitoring and next steps live in `story`, so the body is the deep dive.
+const SECTIONS = ['What I built', 'Decisions and trade-offs', 'What failed', 'Cost and how to reproduce'];
 
 // ---------- small helpers ----------
 const args = process.argv.slice(2);
@@ -69,6 +73,11 @@ function validate(data, where) {
   }
   for (const im of data.images ?? []) if (!im.src || !im.alt) errs.push('every image needs src and alt text');
   for (const pr of data.proof ?? []) if (!/^https?:\/\//.test(pr.url ?? '')) errs.push(`proof "${pr.label}" needs a URL`);
+  const st = data.story ?? {};
+  if (st.pain && (!st.pain.who || !st.pain.problem)) errs.push('story.pain needs who and problem');
+  for (const e of st.pain?.evidence ?? []) if (!e.text || (e.url && !/^https?:\/\//.test(e.url))) errs.push('every story.pain.evidence item needs text, and url must be a URL');
+  for (const pr of st.priorities ?? []) if (!pr.item || !pr.why || !CALLS.includes(pr.call)) errs.push(`every story.priorities item needs item, why and call (${CALLS.join(', ')})`);
+  for (const m of st.monitoring ?? []) if (!m.metric || !m.how || (m.kind && !MONITOR_KINDS.includes(m.kind))) errs.push(`every story.monitoring item needs metric and how; kind is one of ${MONITOR_KINDS.join(', ')}`);
   if (data.tagline && data.tagline.length > 200) errs.push('tagline is over 200 characters; keep it to one line');
   return errs.map((e) => `${where}: ${e}`);
 }
@@ -246,6 +255,34 @@ function validateAll() {
   console.log(`ok: ${entries().length} projects`);
 }
 
+// What a finished project page needs, so a page tells the whole story. Run `portfolio story [slug]`.
+const STORY_PARTS = [
+  ['User pain', (d) => d.story?.pain],
+  ['Pain evidence (quote, ticket, data)', (d) => d.story?.pain?.evidence?.length],
+  ['The bet', (d) => d.story?.bet],
+  ['Priorities (built / cut / later)', (d) => d.story?.priorities?.length],
+  ['PRD link', (d) => d.links?.prd],
+  ['Architecture (doc or diagram)', (d) => d.links?.architecture || d.images?.some((i) => i.kind === 'architecture')],
+  ['Data flow (doc or diagram)', (d) => d.links?.dataflow || d.images?.some((i) => i.kind === 'dataflow')],
+  ['Demo or live site', (d) => d.links?.demo || d.links?.site || d.links?.video],
+  ['Repo (not needed for private platforms)', (d) => d.links?.repo || d.kind === 'product'],
+  ['Headline result', (d) => d.headline],
+  ['Result screenshots or charts', (d) => d.images?.some((i) => i.kind === 'result')],
+  ['Methodology', (d) => d.methodology?.length || d.links?.methodology],
+  ['Metrics and monitoring', (d) => d.story?.monitoring?.length],
+  ['Proof a stranger can open', (d) => d.proof?.length],
+  ["What's next", (d) => d.story?.next?.length],
+];
+function story(slug) {
+  const rows = entries().filter((e) => !slug || e.slug === slug).sort((a, b) => (a.data.order ?? 100) - (b.data.order ?? 100));
+  if (!rows.length) die(slug ? `no project ${slug}` : 'no projects');
+  for (const e of rows) {
+    const missing = STORY_PARTS.filter(([, ok]) => !ok(e.data)).map(([n]) => n);
+    const have = STORY_PARTS.length - missing.length;
+    console.log(`${e.slug.padEnd(24)} ${String(have).padStart(2)}/${STORY_PARTS.length}${missing.length ? `  missing: ${missing.join(', ')}` : '  complete'}`);
+  }
+}
+
 async function cv() {
   const cfg = readFileSync(join(SITE, 'src/site.config.ts'), 'utf8');
   const id = cfg.match(/CV_DOC_ID = '([^']+)'/)?.[1];
@@ -269,7 +306,7 @@ function publish() {
   console.log('pushed; GitHub Actions deploys the site in about a minute');
 }
 
-const usage = readFileSync(fileURLToPath(import.meta.url), 'utf8').split('\n').slice(1, 15).map((l) => l.replace(/^\/\/ ?/, '')).join('\n');
+const usage = readFileSync(fileURLToPath(import.meta.url), 'utf8').split("\n").slice(1, 16).map((l) => l.replace(/^\/\/ ?/, '')).join('\n');
 switch (cmd) {
   case 'init': init(args[0]); break;
   case 'add': await add(args[0]); break;
@@ -277,6 +314,7 @@ switch (cmd) {
   case 'sync': await sync(); break;
   case 'list': list(); break;
   case 'validate': validateAll(); break;
+  case 'story': story(args[0]); break;
   case 'cv': await cv(); break;
   case 'publish': publish(); break;
   default: console.log(usage); if (cmd && cmd !== 'help' && cmd !== '--help') process.exit(1);

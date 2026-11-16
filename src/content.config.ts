@@ -32,6 +32,10 @@ const projects = defineCollection({
         package: url.optional(),
         video: url.optional(),
         prd: url.optional(),
+        // Long-form design docs: system architecture, data flow, methodology write-up or notebook.
+        architecture: url.optional(),
+        dataflow: url.optional(),
+        methodology: url.optional(),
       })
       .default({}),
     // Product screenshot or hero image: a /images/... path in this site, or a URL.
@@ -52,6 +56,34 @@ const projects = defineCollection({
     // Evidence a stranger can open: results files, dashboards, run logs, write-ups.
     proof: z.array(z.object({ label: z.string(), url })).default([]),
     cost: z.string().optional(),
+    // The story the page tells, in order: whose pain, the bet, what was cut, how it is
+    // measured and watched, what comes next. Every part is optional; a part shows when filled.
+    story: z
+      .object({
+        pain: z
+          .object({
+            who: z.string(),
+            problem: z.string(),
+            // Quotes, support tickets, data points: anything that shows the pain is real.
+            evidence: z.array(z.object({ text: z.string(), source: z.string().optional(), url: url.optional() })).optional(),
+          })
+          .optional(),
+        bet: z.string().optional(),
+        priorities: z
+          .array(z.object({ item: z.string(), call: z.enum(['built', 'cut', 'later']), why: z.string() }))
+          .optional(),
+        monitoring: z
+          .array(z.object({
+            metric: z.string(),
+            kind: z.enum(['north-star', 'adoption', 'quality', 'guardrail', 'cost']).default('quality'),
+            target: z.string().optional(),
+            current: z.string().optional(),
+            how: z.string(),
+          }))
+          .optional(),
+        next: z.array(z.string()).optional(),
+      })
+      .optional(),
     source: z
       .object({
         repo: z.string().optional(),

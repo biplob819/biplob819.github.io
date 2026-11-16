@@ -26,10 +26,33 @@ links:
   # demo: https://...
   # report: https://...
   # video: https://...
-  # prd: https://...
+  # prd: https://...            # the PRD (Google Doc, Notion, or docs/prd.md on GitHub)
+  # architecture: https://...   # full architecture write-up
+  # dataflow: https://...       # full data-flow write-up
+  # methodology: https://...    # methodology visualisation, notebook or eval design doc
 
 stack: [Python, Claude API]
 # cost: "$4.60 per full run"
+
+# The story, in the order the page tells it. Every part shows on the page once filled.
+# Check what's missing with:  portfolio story <slug>
+story:
+  pain:
+    who: Who hurts, in one line (a role, not "users")
+    problem: What goes wrong today, how often, and what it costs them.
+    evidence:                     # quotes, tickets, data points; link them where you can
+      - { text: "A real quote or number.", source: "Interview, Nov 2026", url: https://... }
+  bet: "If we <do this>, <who> will <change behaviour>, which we'll see in <metric>."
+  priorities:                     # call: built | cut | later
+    - { item: The thing you built first, call: built, why: Why it came first }
+    - { item: Something you deliberately cut, call: cut, why: What you gave up and why it was right }
+    - { item: Something for later, call: later, why: What has to be true first }
+  monitoring:                     # kind: north-star | adoption | quality | guardrail | cost
+    - { metric: The one number that says it works, kind: north-star, target: "60%", current: "57.5%", how: Where it's measured and what alerts on it }
+    - { metric: Cost per run, kind: cost, target: "< $5", how: Token usage logged per call }
+    - { metric: What must not get worse, kind: guardrail, how: How it's checked }
+  next:
+    - The next experiment, and what result would change the plan
 
 case_study: docs/case-study.md   # page body; use the fixed headings in that file
 
