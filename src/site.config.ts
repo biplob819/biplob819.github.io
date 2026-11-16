@@ -10,7 +10,7 @@ export const site = {
   // One sentence of identity, one of proof. Numbers come from the CV.
   lede: 'Product manager who ships. Pentathlete for India.',
   proof: [
-    "I'm Lead Product Manager, Data (Agentic Analytics and ML) at Mindbody. I shipped its first agentic product, and ML products I led have contributed $103M+ in incremental ARR.",
+    "I'm Lead Product Manager, Data (Agentic Analytics and ML) at Mindbody. I shipped its first agentic product and led ML products that contributed to $103M+ in incremental ARR.",
     "I'm also building Kova (kovahr.com) and Insightsflow (insightsflow.live) end to end, and I'm a PhD scholar in AI at IIT Kharagpur.",
     'I represent India in modern pentathlon.',
   ],
