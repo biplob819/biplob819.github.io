@@ -1,0 +1,20 @@
+{
+  "name": "portfolio-site",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Biplob Chakraborty's portfolio: product, company, builds, open source and sport. Projects are added from the CLI.",
+  "bin": { "portfolio": "./bin/portfolio.mjs" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "node bin/portfolio.mjs validate && astro build",
+    "portfolio": "node bin/portfolio.mjs"
+  },
+  "engines": { "node": ">=22.12.0" },
+  "dependencies": {
+    "astro": "7.3.8",
+    "yaml": "2.9.1"
+  }
+}

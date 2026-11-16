@@ -1,0 +1,50 @@
+# portfolio.yml: this project's card and page on the portfolio site.
+# Publish with:  portfolio add .   (then `portfolio publish` in the site repo)
+# Keep the words honest: every number here must come from a published run in this repo.
+
+slug: {{slug}}
+title: {{title}}
+tagline: One line, who it is for and what it does.   # under 200 characters
+kind: case-study        # product | open-source | case-study | prototype
+status: building        # live | launching | shipped | building | design
+role: Product and build
+year: {{year}}
+featured: false
+order: 50               # lower shows first
+tags: [evals]
+
+# The one number a hiring manager should remember. Delete until you have a published run.
+# headline:
+#   value: "0 of 310"
+#   label: attack trials succeeded across Claude and GPT agents
+#   note: Run main-2026-11-16; 95% upper bound 2.0% per trial.
+# metrics:
+#   - { value: "$4.60", label: spend for the full run }
+
+links:
+  repo: {{repo}}
+  # demo: https://...
+  # report: https://...
+  # video: https://...
+  # prd: https://...
+
+stack: [Python, Claude API]
+# cost: "$4.60 per full run"
+
+case_study: docs/case-study.md   # page body; use the fixed headings in that file
+
+# How you did it, in short phrases. Shown beside the case study.
+methodology:
+  - Dual cross-family LLM judges, checked against hand labels
+  - Bootstrap 95% confidence intervals, Holm correction
+
+# Diagrams and result images; paths are relative to this repo.
+images:
+  - { src: docs/architecture.svg, alt: Architecture of the system, kind: architecture }
+  - { src: docs/dataflow.svg, alt: How data moves from source to answer, kind: dataflow }
+  - { src: docs/results/headline.svg, alt: Headline result chart, kind: result, caption: One sentence on what the chart shows. }
+
+# Evidence a stranger can open.
+proof:
+  - { label: Results summary (JSON), url: https://github.com/<you>/<repo>/blob/main/docs/results/summary.json }
+  - { label: Full results report, url: https://<you>.github.io/<repo>/ }

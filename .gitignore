@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+.DS_Store
+.env
+# private planning notes (budgets, interview timing); not for the public repo
+Portfolio Site.md
+.claude/
+private/

@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects, KIND_PLURAL } from '../../lib/projects';
+
+const all = await projects();
+const groups = (['product', 'open-source', 'case-study', 'prototype'] as const)
+  .map((kind) => ({ kind, items: all.filter((p) => p.data.kind === kind) }))
+  .filter((g) => g.items.length);
+---
+<Base title="Builds" description="Every platform, open-source tool and AI build, with its headline result and proof.">
+  <div class="wrap page">
+    <h1 class="cond">Everything I've built</h1>
+    <p class="intro">Platforms, open-source tools, scored AI builds and earlier prototypes. Every number links back to a published run.</p>
+    {groups.map((g) => (
+      <section>
+        <div class="sec-head"><h2 class="cond">{KIND_PLURAL[g.kind]}</h2><span class="label">{g.items.length}</span></div>
+        <div class="cards">{g.items.map((p) => <ProjectCard project={p} />)}</div>
+      </section>
+    ))}
+  </div>
+</Base>
+<style>
+  .page { padding-block: clamp(40px, 6vw, 72px) 0; }
+  h1 { font-size: clamp(52px, 9vw, 112px); margin: 0; }
+  .intro { color: var(--muted); max-width: 62ch; font-size: 17px; margin: 18px 0 0; }
+  section { margin-top: clamp(48px, 7vw, 80px); }
+  .sec-head h2 { font-size: clamp(30px, 4vw, 44px); }
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 960px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .cards { grid-template-columns: 1fr; } }
+</style>
