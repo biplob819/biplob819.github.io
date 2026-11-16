@@ -91,7 +91,7 @@ export const sport = {
 export const education = [
   { name: 'PhD Scholar, AI & Cognitive Neuroscience', place: 'IIT Kharagpur', period: '2024 to 2028' },
   { name: 'Professional Certificate, Project Management', place: 'IIM Rohtak', period: '2017 to 2018' },
-  { name: 'BE (Honours), Computer Science', place: 'Girijananda Chowdhury Institute (Gauhati University)', period: '2016' },
+  { name: 'BE (Honours)', place: 'Girijananda Chowdhury Institute (Gauhati University)', period: '2016' },
 ];
 
 export const now = [
