@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { site } from '../site.config';
+import Icon from '../components/Icon.astro';
 
 interface Props { title?: string; description?: string; image?: string; }
 const { title, description = `${site.name}: ${site.roles.join(', ')}. ${site.proof[0]}`, image } = Astro.props;
@@ -43,8 +44,9 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
         <a class="nl" href="/#platforms">Platforms</a>
         <a class="nl" href="/projects/" aria-current={path.startsWith('/projects') ? 'page' : undefined}>Builds</a>
         <a class="nl" href="/#sport">Sport</a>
-        <a class="nx" href={site.links.cv} rel="noopener">CV ↓</a>
-        <a class="nx" href={site.links.linkedin} rel="me noopener">LinkedIn ↗</a>
+        <a class="nx" href={site.links.cv} rel="noopener"><Icon name="download" /><span>CV</span></a>
+        <a class="nx" href={site.links.linkedin} rel="me noopener" aria-label="LinkedIn"><Icon name="linkedin" /><span class="nxt">LinkedIn</span></a>
+        <a class="nx" href={site.links.github} rel="me noopener" aria-label="GitHub"><Icon name="github" /><span class="nxt">GitHub</span></a>
         <button class="theme" type="button" aria-label="Switch light or dark">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
         </button>
@@ -57,9 +59,9 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
       <div class="foot-top">
         <p class="cond foot-name">{site.name}</p>
         <div class="foot-links">
-          <a href={site.links.cv} rel="noopener">Download CV</a>
-          <a href={site.links.linkedin} rel="me noopener">LinkedIn</a>
-          <a href={site.links.github} rel="me noopener">GitHub</a>
+          <a href={site.links.cv} rel="noopener"><Icon name="download" />Download CV</a>
+          <a href={site.links.linkedin} rel="me noopener"><Icon name="linkedin" />LinkedIn</a>
+          <a href={site.links.github} rel="me noopener"><Icon name="github" />GitHub</a>
           {site.links.email && <a href={`mailto:${site.links.email}`}>Email</a>}
           <a href="/llms.txt">llms.txt</a>
         </div>
@@ -90,16 +92,16 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
   nav a { text-decoration: none; white-space: nowrap; }
   .nl { color: var(--muted); }
   .nl:hover, .nl[aria-current='page'] { color: var(--ink); }
-  .nx { font-weight: 500; }
+  .nx { font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
   .nx:hover { color: var(--accent); }
   .theme { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
   .theme svg { width: 16px; height: 16px; }
-  @media (max-width: 720px) { .nl { display: none; } .brand .cond { font-size: 16px; } nav { gap: 14px; } }
+  @media (max-width: 720px) { .nl { display: none; } .nxt { display: none; } .nx { font-size: 18px; } .brand .cond { font-size: 16px; } nav { gap: 16px; } }
   .foot { margin-top: clamp(64px, 10vw, 120px); border-top: 3px solid var(--ink); padding-block: 28px 56px; }
   .foot-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
   .foot-name { font-size: clamp(36px, 6vw, 64px); margin: 0; }
   .foot-links { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 14.5px; font-weight: 500; }
-  .foot-links a { text-decoration: none; }
+  .foot-links a { text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
   .foot-links a:hover { color: var(--accent); }
   .foot-note { margin: 20px 0 0; }
 </style>

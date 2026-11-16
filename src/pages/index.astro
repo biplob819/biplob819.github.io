@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import Icon from '../components/Icon.astro';
 import { site, atWork, sport, education, now } from '../site.config';
 import { projects, STATUS_LABEL } from '../lib/projects';
 
@@ -21,13 +22,13 @@ const INSTALL: Record<string, string> = {
     <p class="status-line"><span class="dot" aria-hidden="true"></span>Shipping Kova · building Insightsflow · training for the 2027 Asian Championships</p>
     <h1 class="cond">Product manager who ships. <span class="muted-h">Pentathlete for India.</span></h1>
     <p class="lead">
-      Lead Product Manager, Data (Agentic Analytics and ML) at <strong>Mindbody</strong>, where I shipped its first agentic product and ML products I led contributed to <strong>$103M+ in incremental ARR</strong>.
-      I'm building <a class="tlink" href="https://kovahr.com/" rel="noopener">Kova</a> and <a class="tlink" href="https://insightsflow.live/" rel="noopener">Insightsflow</a> end to end, and I'm a PhD scholar in AI at IIT Kharagpur.
+      I'm Lead Product Manager, Data (Agentic Analytics and ML) at <strong>Mindbody</strong>. I shipped its first agentic product, and ML products I led have contributed <strong>$103M+ in incremental ARR</strong>.
+      I'm also building <a class="tlink" href="https://kovahr.com/" rel="noopener">Kova</a> and <a class="tlink" href="https://insightsflow.live/" rel="noopener">Insightsflow</a> end to end, and I'm a PhD scholar in AI at IIT Kharagpur.
     </p>
     <div class="cta">
-      <a class="btn primary" href={site.links.cv} rel="noopener">Download CV ↓</a>
-      <a class="btn" href={site.links.linkedin} rel="me noopener">LinkedIn ↗</a>
-      <a class="btn" href={site.links.github} rel="me noopener">GitHub ↗</a>
+      <a class="btn primary" href={site.links.cv} rel="noopener"><Icon name="download" />Download CV</a>
+      <a class="btn" href={site.links.linkedin} rel="me noopener"><Icon name="linkedin" />LinkedIn</a>
+      <a class="btn" href={site.links.github} rel="me noopener"><Icon name="github" />GitHub</a>
     </div>
     <dl class="board" aria-label="Results">
       {site.ledger.map((l) => (
