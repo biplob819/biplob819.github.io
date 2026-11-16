@@ -62,7 +62,7 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
           <a href={site.links.cv} rel="noopener"><Icon name="download" />Download CV</a>
           <a href={site.links.linkedin} rel="me noopener"><Icon name="linkedin" />LinkedIn</a>
           <a href={site.links.github} rel="me noopener"><Icon name="github" />GitHub</a>
-          <a href="#feedback" data-mail data-subject="Feedback on your portfolio">Send feedback</a>
+          <button type="button" class="linkish" data-feedback data-subject="Feedback on the portfolio">Send feedback</button>
           {site.links.email && <a href={`mailto:${site.links.email}`}>Email</a>}
           <a href="/llms.txt">llms.txt</a>
         </div>
@@ -70,12 +70,69 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
       <p class="label foot-note">{site.location} · Built with Astro · New builds are published from the command line</p>
     </div>
   </footer>
+  <dialog class="fbd" aria-labelledby="fbd-h">
+    <form class="fbd-form" novalidate>
+      <div class="fbd-top">
+        <p class="label" id="fbd-about"></p>
+        <button type="button" class="fbd-x" data-close aria-label="Close">×</button>
+      </div>
+      <h2 class="cond" id="fbd-h">Send feedback</h2>
+      <p class="fbd-sub">A shaky number, a better idea, a bug. It goes straight to my inbox.</p>
+      <label>What did you notice?<textarea name="message" rows="5" required maxlength="4000"></textarea></label>
+      <div class="fbd-row">
+        <label><span>Name <span class="opt">(optional)</span></span><input name="name" autocomplete="name" maxlength="120" /></label>
+        <label><span>Email for a reply <span class="opt">(optional)</span></span><input name="email" type="email" autocomplete="email" maxlength="200" /></label>
+      </div>
+      <input class="hp" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      <p class="fbd-msg" role="status" aria-live="polite"></p>
+      <div class="fbd-actions">
+        <button type="submit" class="btn primary">Send</button>
+        <button type="button" class="btn" data-close>Cancel</button>
+      </div>
+    </form>
+  </dialog>
   <script is:inline define:vars={{ fb: site.feedback }}>
-    // Feedback links: the address is joined here so it never appears in the HTML.
-    document.querySelectorAll('a[data-mail]').forEach((a) => {
-      const q = new URLSearchParams({ subject: a.dataset.subject || 'Portfolio feedback', body: a.dataset.body || `Page: ${location.href}\n\n` });
-      a.href = `mailto:${fb.user}@${fb.domain}?${q.toString().replace(/\+/g, '%20')}`;
-    });
+    (() => {
+      const dlg = document.querySelector('.fbd');
+      const form = dlg.querySelector('form');
+      const msg = dlg.querySelector('.fbd-msg');
+      const send = form.querySelector('[type=submit]');
+      let subject = 'Portfolio feedback';
+      const mailto = (s, body) => `mailto:${fb.user}@${fb.domain}?${new URLSearchParams({ subject: s, body }).toString().replace(/\+/g, '%20')}`;
+      document.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-feedback]');
+        if (!b) return;
+        subject = b.dataset.subject || 'Portfolio feedback';
+        if (!fb.formspree || typeof dlg.showModal !== 'function') { location.href = mailto(subject, `Page: ${location.href}\n\nWhat I noticed:\n`); return; }
+        dlg.querySelector('#fbd-about').textContent = subject.replace(/^Feedback on /, '');
+        msg.textContent = ''; msg.className = 'fbd-msg'; send.disabled = false;
+        dlg.showModal();
+        form.message.focus();
+      });
+      form.addEventListener('input', () => { if (msg.classList.contains('err')) { msg.textContent = ''; msg.className = 'fbd-msg'; } });
+      dlg.addEventListener('click', (e) => { if (e.target === dlg || e.target.closest('[data-close]')) dlg.close(); });
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!form.message.value.trim()) { msg.textContent = 'Write a line or two first.'; msg.className = 'fbd-msg err'; form.message.focus(); return; }
+        if (form.email.value && !form.email.checkValidity()) { msg.textContent = 'That email address looks off.'; msg.className = 'fbd-msg err'; form.email.focus(); return; }
+        send.disabled = true; msg.textContent = 'Sending…'; msg.className = 'fbd-msg';
+        const data = { _subject: subject, page: location.href, message: form.message.value.trim(), name: form.name.value.trim(), email: form.email.value.trim(), _gotcha: form._gotcha.value };
+        try {
+          const r = await fetch(`https://formspree.io/f/${fb.formspree}`, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) });
+          if (!r.ok) throw new Error(String(r.status));
+          form.reset(); msg.textContent = 'Sent. Thank you, I read every one.'; msg.className = 'fbd-msg ok';
+          setTimeout(() => dlg.open && dlg.close(), 2200);
+        } catch {
+          send.disabled = false;
+          msg.innerHTML = '';
+          msg.className = 'fbd-msg err';
+          const a = document.createElement('a');
+          a.href = mailto(subject, `${data.message}\n\nPage: ${data.page}`);
+          a.textContent = 'send it by email instead';
+          msg.append("Couldn't send just now. Try again, or ", a, '.');
+        }
+      });
+    })();
   </script>
   <script is:inline>
     document.querySelector('.theme')?.addEventListener('click', () => {
@@ -112,4 +169,31 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
   .foot-links a { text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
   .foot-links a:hover { color: var(--accent); }
   .foot-note { margin: 20px 0 0; }
+  .linkish { all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+  .linkish:hover { color: var(--accent); }
+  .linkish:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .fbd { width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 0; border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 0 0 var(--r) var(--r); background: var(--bg); color: var(--ink); }
+  .fbd::backdrop { background: rgb(13 17 23 / .55); backdrop-filter: blur(2px); }
+  .fbd-form { display: flex; flex-direction: column; gap: 14px; padding: clamp(18px, 4vw, 28px); }
+  .fbd-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .fbd-top .label { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .fbd-x { border: 0; background: none; color: var(--muted); font-size: 26px; line-height: 1; cursor: pointer; padding: 0 4px; }
+  .fbd-x:hover { color: var(--ink); }
+  .fbd h2 { font-size: clamp(30px, 5vw, 40px); margin: 0; }
+  .fbd-sub { margin: -4px 0 0; color: var(--muted); font-size: 15px; }
+  .fbd label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500; min-width: 0; }
+  .fbd .opt { color: var(--muted); font-weight: 400; }
+  .fbd input, .fbd textarea { font: 15px/1.45 var(--f-body); color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; width: 100%; box-sizing: border-box; }
+  .fbd textarea { resize: vertical; min-height: 110px; }
+  .fbd input:focus, .fbd textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  .fbd-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .fbd-row { grid-template-columns: 1fr; } }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .fbd-msg { margin: 0; min-height: 1.2em; font-size: 14px; color: var(--muted); }
+  .fbd-msg.ok { color: var(--good, #15803d); font-weight: 500; }
+  .fbd-msg.err { color: #c2410c; }
+  .fbd-msg a { color: var(--accent); }
+  .fbd-actions { display: flex; gap: 10px; }
+  .fbd-actions .btn { cursor: pointer; }
+  .fbd-actions .btn:disabled { opacity: .55; cursor: progress; }
 </style>

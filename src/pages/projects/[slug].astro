@@ -34,7 +34,6 @@ const tailToc = [
 ].filter(Boolean) as { slug: string; text: string }[];
 const bodyToc = headings.filter((h) => h.depth === 2 && h.slug !== 'how-it-works').map((h) => ({ slug: h.slug, text: h.text }));
 const toc = [...storyToc, ...bodyToc, ...tailToc];
-const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
 const all = await projects();
 const i = all.findIndex((p) => p.id === project.id);
 const prev = all[(i - 1 + all.length) % all.length];
@@ -161,7 +160,7 @@ const facts = [
           <p class="fb-h cond">Spot a gap? Tell me.</p>
           <p>A shaky number, a better approach, or a bug in the demo. It goes straight to my inbox.</p>
           <div class="fb-actions">
-            <a class="btn primary" href="#feedback" data-mail data-subject={`Feedback on ${d.title}`} data-body={`Page: ${pageUrl}\n\nWhat I noticed:\n`}>Send feedback ✉</a>
+            <button type="button" class="btn primary" data-feedback data-subject={`Feedback on ${d.title}`}>Send feedback ✉</button>
             {d.links.repo && <a class="btn" href={`${d.links.repo}/issues/new`} rel="noopener">Open an issue ↗</a>}
           </div>
         </section>
@@ -261,6 +260,7 @@ const facts = [
   .fb .btn { text-decoration: none; color: var(--ink); }
   .fb .btn.primary { color: var(--bg); }
   .fb .btn.primary:hover { color: #fff; }
+  .fb button.btn { cursor: pointer; }
   .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: clamp(56px, 8vw, 96px); border-top: 3px solid var(--ink); padding-top: 18px; }
   .pager a { display: flex; flex-direction: column; gap: 6px; text-decoration: none; }
   .pager .nx { text-align: right; align-items: flex-end; }

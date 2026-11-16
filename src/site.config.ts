@@ -23,9 +23,11 @@ export const site = {
     cv: `https://docs.google.com/document/d/${CV_DOC_ID}/export?format=pdf`,
     email: '', // CONFIRM: leave empty to hide, or set a public address
   },
-  // Where every "Send feedback" link goes. Kept in two parts and joined in the browser,
-  // so the address isn't sitting in the page HTML for scrapers.
-  feedback: { user: 'biplob.serene', domain: 'gmail.com' },
+  // Every "Send feedback" button opens a short form. With a Formspree form ID set, the form
+  // posts straight to his inbox (https://formspree.io → New form → copy the ID after /f/).
+  // With formspree empty, the button opens the visitor's email app instead. The address
+  // is kept in two parts and joined in the browser, so it isn't sitting in the HTML.
+  feedback: { user: 'biplob.serene', domain: 'gmail.com', formspree: '' },
   ledger: [
     { value: '11+', label: 'years in product' },
     { value: '$103M+', label: 'incremental ARR my ML products contributed to' },
