@@ -12,11 +12,16 @@ tags:
   - grounding
 links:
   repo: https://github.com/biplob819/gemma-grounded-health
+  prd: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20PRD.md
+  techspec: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20Tech%20Spec.md
 stack:
   - Gemma
   - Kaggle GPU
   - Hugging Face
   - EvalKit
+proof:
+  - label: Data card
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/DATA_CARD.md
 source:
   repo: biplob819/gemma-grounded-health
   synced: 2026-11-16

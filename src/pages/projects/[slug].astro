@@ -14,8 +14,8 @@ const { Content, headings } = await render(project);
 const results = d.images.filter((im) => im.kind === 'result');
 const diagrams = d.images.filter((im) => im.kind === 'architecture' || im.kind === 'dataflow');
 const shots = d.images.filter((im) => im.kind === 'screenshot');
-const LINK_LABEL: Record<string, string> = { site: 'Website', demo: 'Live demo', repo: 'Code', report: 'Results report', package: 'Package', video: '90-second video', prd: 'PRD', architecture: 'Architecture', dataflow: 'Data flow', methodology: 'Methodology' };
-const LINK_ORDER = ['demo', 'site', 'repo', 'video', 'prd', 'architecture', 'dataflow', 'methodology', 'report', 'package'];
+const LINK_LABEL: Record<string, string> = { site: 'Website', demo: 'Live demo', repo: 'Code', report: 'Results report', package: 'Package', video: '90-second video', prd: 'PRD', techspec: 'Tech spec', architecture: 'Architecture', dataflow: 'Data flow', methodology: 'Methodology' };
+const LINK_ORDER = ['demo', 'site', 'repo', 'video', 'report', 'prd', 'techspec', 'architecture', 'dataflow', 'methodology', 'package'];
 const links = LINK_ORDER.filter((k) => (d.links as Record<string, string | undefined>)[k]).map((k) => [k, (d.links as Record<string, string>)[k]]) as [string, string][];
 const st = d.story ?? {};
 const CALL_LABEL = { built: 'Built', cut: 'Cut', later: 'Later' } as const;
@@ -85,6 +85,13 @@ const facts = [
       <nav class="links" aria-label="Project links">
         {links.map(([k, v], n) => <a class:list={['btn', { primary: n === 0 }]} href={v} rel="noopener">{LINK_LABEL[k] ?? k} ↗</a>)}
       </nav>
+    )}
+
+    {(st.overview || st.impact?.length) && (
+      <section class="ovim" aria-label="Overview and impact">
+        {st.overview && <div><p class="label">Overview</p><p class="ov">{st.overview}</p></div>}
+        {st.impact?.length && <div><p class="label">Impact</p><ul class="im">{st.impact.map((x) => <li>{x}</li>)}</ul></div>}
+      </section>
     )}
 
     {d.cover && <figure class="cover"><img src={d.cover} alt={`${d.title} product screen`} width="1440" height="900" /></figure>}
@@ -188,9 +195,16 @@ const facts = [
         {st.learnings?.length && (
           <section class="story" aria-labelledby="learnings">
             <h2 id="learnings">What I learned</h2>
-            <ol class="learn">{st.learnings.map((l) => (
+            <ol class="learn">{st.learnings.slice(0, 3).map((l) => (
               <li><p class="ls">{l.lesson}</p><p class="now"><span class="label">What I do now</span>{l.now}{l.url && <> <a href={l.url} rel="noopener">Source ↗</a></>}</p></li>
             ))}</ol>
+            {st.learnings.length > 3 && (
+              <details class="more-l"><summary>{st.learnings.length - 3} more lesson{st.learnings.length - 3 > 1 ? 's' : ''}</summary>
+                <ol class="learn" start="4">{st.learnings.slice(3).map((l) => (
+                  <li><p class="ls">{l.lesson}</p><p class="now"><span class="label">What I do now</span>{l.now}{l.url && <> <a href={l.url} rel="noopener">Source ↗</a></>}</p></li>
+                ))}</ol>
+              </details>
+            )}
           </section>
         )}
 
@@ -299,6 +313,14 @@ const facts = [
   .kind.north-star { background: var(--ink); color: var(--bg); border-color: transparent; }
   .num-cell { font-family: var(--f-mono); white-space: nowrap; }
   .lead { margin-top: -4px; }
+  .ovim { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); margin-top: 28px; padding: clamp(18px, 3vw, 28px) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .ovim .label { margin: 0 0 8px; }
+  .ov { margin: 0; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.55; color: var(--ink); }
+  .im { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 15.5px; color: var(--ink-2); }
+  .im li::marker { color: var(--accent); }
+  @media (max-width: 760px) { .ovim { grid-template-columns: 1fr; } }
+  .more-l summary { cursor: pointer; font-weight: 500; color: var(--accent); margin: 4px 0 8px; }
+  .learn[start="4"] { counter-reset: l 3; }
   .evals td:first-child { min-width: 130px; }
   .evals td:last-child { min-width: 170px; color: var(--ink); }
   .est { display: table; margin-bottom: 6px; font: 500 11px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }

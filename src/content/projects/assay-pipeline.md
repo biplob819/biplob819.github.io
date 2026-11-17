@@ -26,6 +26,8 @@ metrics:
 links:
   repo: https://github.com/biplob819/assay-pipeline
   report: https://biplob819.github.io/assay-pipeline/
+  prd: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20PRD.md
+  techspec: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20Tech%20Spec.md
 stack:
   - Python
   - DuckDB
@@ -47,7 +49,22 @@ proof:
     url: https://biplob819.github.io/assay-pipeline/
   - label: Threat model
     url: https://github.com/biplob819/assay-pipeline/blob/main/docs/threat-model.md
+  - label: Data card
+    url: https://github.com/biplob819/assay-pipeline/blob/main/docs/data/2026-11-15.1/DATA_CARD.md
 cost: $4.60 for the full run
+images:
+  - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/screenshots/dashboard.png
+    alt: "Trusted Assay Pipeline CISO dashboard: attack outcomes, what stopped them, data quality and audit events"
+    kind: screenshot
+    caption: CISO dashboard
+  - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/screenshots/console-replay.png
+    alt: Agent console replaying a recorded attack through the SQL guard and the audit log
+    kind: screenshot
+    caption: Agent console, replay mode
+  - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/screenshots/explorer.png
+    alt: Compound explorer over the EGFR snapshot with provenance and quality flags
+    kind: screenshot
+    caption: Data explorer
 story:
   evals:
     - name: Attack suite

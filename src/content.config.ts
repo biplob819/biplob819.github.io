@@ -33,6 +33,7 @@ const projects = defineCollection({
         video: url.optional(),
         prd: url.optional(),
         // Long-form design docs: system architecture, data flow, methodology write-up or notebook.
+        techspec: url.optional(),
         architecture: url.optional(),
         dataflow: url.optional(),
         methodology: url.optional(),
@@ -60,6 +61,10 @@ const projects = defineCollection({
     // measured and watched, what comes next. Every part is optional; a part shows when filled.
     story: z
       .object({
+        // For the page's reader (hiring managers and recruiters): what it is, in plain words,
+        // and what it achieved. Both sit at the top of the page.
+        overview: z.string().optional(),
+        impact: z.array(z.string()).optional(),
         pain: z
           .object({
             who: z.string(),

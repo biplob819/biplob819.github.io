@@ -12,10 +12,15 @@ tags:
   - fintech
 links:
   repo: https://github.com/biplob819/fraud-review-bedrock
+  prd: https://github.com/biplob819/fraud-review-bedrock/blob/main/PRD.md
+  techspec: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
 stack:
   - Amazon Bedrock
   - Claude
   - Python
+proof:
+  - label: Data card
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16

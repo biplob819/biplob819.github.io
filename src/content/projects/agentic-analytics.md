@@ -12,12 +12,17 @@ tags:
   - benchmarks
 links:
   repo: https://github.com/biplob819/agentic-analytics
+  prd: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20PRD.md
+  techspec: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20Tech%20Spec.md
 stack:
   - ClickHouse MCP
   - Snowflake Cortex Analyst
   - Claude
   - GPT
   - Langfuse
+proof:
+  - label: Data card
+    url: https://github.com/biplob819/agentic-analytics/blob/main/DATA_CARD.md
 source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16

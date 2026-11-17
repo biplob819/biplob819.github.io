@@ -12,6 +12,8 @@ tags:
   - guardrails
 links:
   repo: https://github.com/biplob819/course-assistant
+  prd: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20PRD.md
+  techspec: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20Tech%20Spec.md
 source:
   repo: biplob819/course-assistant
   synced: 2026-11-16

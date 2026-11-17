@@ -26,7 +26,7 @@ const TEMPLATES = join(SITE, 'templates');
 
 const KINDS = ['product', 'open-source', 'case-study', 'prototype'];
 const STATUSES = ['live', 'launching', 'shipped', 'building', 'design'];
-const LINK_KEYS = ['repo', 'site', 'demo', 'report', 'package', 'video', 'prd', 'architecture', 'dataflow', 'methodology'];
+const LINK_KEYS = ['repo', 'site', 'demo', 'report', 'package', 'video', 'prd', 'techspec', 'architecture', 'dataflow', 'methodology'];
 const CALLS = ['built', 'cut', 'later'];
 const MONITOR_KINDS = ['north-star', 'adoption', 'quality', 'guardrail', 'cost'];
 const EVAL_STATUS = ['pass', 'final', 'provisional', 'fail', 'pending'];
@@ -261,11 +261,15 @@ function validateAll() {
 
 // What a finished project page needs, so a page tells the whole story. Run `portfolio story [slug]`.
 const STORY_PARTS = [
+  ['Overview (for hiring managers)', (d) => d.story?.overview],
+  ['Impact', (d) => d.story?.impact?.length],
   ['User pain', (d) => d.story?.pain],
   ['Pain evidence (quote, ticket, data)', (d) => d.story?.pain?.evidence?.length],
   ['The bet', (d) => d.story?.bet],
   ['Priorities (built / cut / later)', (d) => d.story?.priorities?.length],
   ['PRD link', (d) => d.links?.prd],
+  ['Tech spec link', (d) => d.links?.techspec || d.kind === 'product'],
+  ['Screenshots', (d) => d.cover || d.images?.some((i) => i.kind === 'screenshot')],
   ['Architecture (doc or diagram)', (d) => d.links?.architecture || d.images?.some((i) => i.kind === 'architecture')],
   ['Data flow (doc or diagram)', (d) => d.links?.dataflow || d.images?.some((i) => i.kind === 'dataflow')],
   ['Demo or live site', (d) => d.links?.demo || d.links?.site || d.links?.video],

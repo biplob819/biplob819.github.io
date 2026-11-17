@@ -12,6 +12,11 @@ tags:
   - GEO
 links:
   repo: https://github.com/biplob819/ai-visibility
+  prd: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
+  techspec: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20Tech%20Spec.md
+proof:
+  - label: Data card
+    url: https://github.com/biplob819/ai-visibility/blob/main/DATA_CARD.md
 source:
   repo: biplob819/ai-visibility
   synced: 2026-11-16

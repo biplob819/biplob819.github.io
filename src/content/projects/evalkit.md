@@ -30,6 +30,8 @@ links:
   package: https://pypi.org/project/evalkit-harness/
   report: https://biplob819.github.io/evalkit/
   demo: https://evalkit-demo.streamlit.app/
+  prd: https://github.com/biplob819/evalkit/blob/main/EvalKit%20PRD.md
+  techspec: https://github.com/biplob819/evalkit/blob/main/EvalKit%20Tech%20Spec.md
 stack:
   - Python 3.12
   - uv
@@ -50,6 +52,18 @@ images:
     alt: "EvalKit headline chart: correct and fully grounded rate by model with 95% confidence intervals"
     kind: result
     caption: Correct and fully grounded rate per model, with 95% confidence intervals.
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/demo-replay.png
+    alt: "EvalKit demo: four models answer the same question, each claim checked against the sentences it cites"
+    kind: screenshot
+    caption: The live demo in replay mode
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/report-headline.png
+    alt: "EvalKit results report: correct and fully grounded rate per model with confidence intervals"
+    kind: screenshot
+    caption: Results report, headline view
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/report-explorer.png
+    alt: "EvalKit failure explorer: each claim with both judges' verdicts and the cited sentence"
+    kind: screenshot
+    caption: Failure explorer
 proof:
   - label: Results summary (JSON)
     url: https://github.com/biplob819/evalkit/blob/main/docs/results/summary.json
@@ -59,6 +73,8 @@ proof:
     url: https://evalkit-demo.streamlit.app/
   - label: Package on PyPI
     url: https://pypi.org/project/evalkit-harness/
+  - label: Data card
+    url: https://github.com/biplob819/evalkit/blob/main/DATA_CARD.md
 story:
   evals:
     - name: Grounded answers

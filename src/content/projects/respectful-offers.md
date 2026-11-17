@@ -12,10 +12,28 @@ tags:
   - experimentation
 links:
   repo: https://github.com/biplob819/respectful-offers
+  prd: https://github.com/biplob819/respectful-offers/blob/main/Respectful%20Offers%20PRD.md
+  techspec: https://github.com/biplob819/respectful-offers/blob/main/Respectful%20Offers%20Tech%20Spec.md
+  demo: https://respectful-offers.streamlit.app
+  report: https://biplob819.github.io/respectful-offers/
 stack:
   - Python
   - contextual bandits
   - KKBox churn data
+proof:
+  - label: Data card
+    url: https://github.com/biplob819/respectful-offers/blob/main/DATA_CARD.md
+  - label: PR/FAQ (PDF)
+    url: https://biplob819.github.io/respectful-offers/prfaq.pdf
+images:
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/demo.png
+    alt: Respectful Offers policy simulator demo
+    kind: screenshot
+    caption: Policy simulator demo
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/report.png
+    alt: Respectful Offers results report
+    kind: screenshot
+    caption: Results report
 source:
   repo: biplob819/respectful-offers
   synced: 2026-11-16
