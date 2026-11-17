@@ -18,13 +18,24 @@ stack:
   - Amazon Bedrock
   - Claude
   - Python
-proof:
-  - label: Data card
-    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
 images:
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/dataflow.svg
     alt: "Data flow: simulated card transactions are minimised and split, scored by a LightGBM baseline, and flagged alerts are triaged by Claude Haiku 5.5 then Claude Sonnet 5.5; a router checks every clear against the policy in code; alerts end auto-cleared, held for priority review or escalated, and every step goes to a hash-chained audit log"
     kind: dataflow
+  - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/architecture.svg
+    alt: "What was built and ran: a local Python CLI with a LightGBM baseline, a router and policy-as-code, a content-addressed cache, a spend cap and ledger and a hash-chained audit log, calling the Claude API with Haiku 5.5 for stage 1 and Sonnet 5.5 for stage 2. Supported but not run: Amazon Bedrock through the in-Region Mantle endpoint in us-east-2. Proposed for an AWS pilot, all in us-east-2: alerts in S3, EventBridge starting a Step Functions workflow of Lambda tasks inside an IAM boundary, DynamoDB for decisions and audit events streamed to S3 with Object Lock, an analyst queue app, CloudWatch, KMS, and a passkey-protected hosted demo on a Lambda function URL with DynamoDB."
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/screens/review-case.png
+    alt: "Analyst review screen: one held alert with its reasons, policy clauses and the fields used (simulated data, replay mode)"
+    kind: screenshot
+    caption: Analyst review screen, replay mode
+  - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/screens/review-audit.png
+    alt: "Audit view: every decision on the alert written to the hash-chained audit log (simulated data)"
+    kind: screenshot
+    caption: Audit trail for one alert
+proof:
+  - label: Data card
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
 datasets:
   - name: Fraud Dataset Benchmark (Amazon Science)
     url: https://github.com/amazon-science/fraud-dataset-benchmark

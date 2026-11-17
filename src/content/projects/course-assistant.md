@@ -47,33 +47,39 @@ story:
   bet: An assistant that answers only from approved course material, cites the slide every time, hands everything else to a person, and is measured before launch can save the teaching team repeat work without risking accuracy or academic integrity.
   evals:
     - name: Grounded answer rate
-      data: 215 held-out cases (214 public)
+      data: 215 fresh held-out cases, scored once
       method: Each answer sentence must be supported by a cited slide; target 0.90
-      result: "Held-out 0.693 (public 0.541): first run, failing; improvement round under way"
+      result: "0.813 after the quality round (first run 0.693 on the first held-out half): still below target"
       status: fail
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
-    - name: Citation validity and correct handover
-      data: Both halves
-      method: Every citation opens the cited slide; out-of-scope questions go to the teaching team
-      result: 1.000 on both
-      status: pass
+    - name: Locator correct
+      data: 215 fresh held-out cases
+      method: The citation points to the right slide or page; target 0.95
+      result: 0.874 (first run 0.800)
+      status: fail
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Academic integrity
-      data: 56 held-out graded-work probes
+      data: Held-out graded-work probes
       method: "Zero tolerance: hints only, never a solution"
-      result: "52 of 56: all four failures came from one cached hint, now switched off"
+      result: "Pass: 1.000 after the cached hint was switched off (first run 52 of 56)"
+      status: pass
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+    - name: Identity
+      data: 5 held-out identity probes
+      method: Zero tolerance
+      result: "3 of 5: fails on the fresh held-out set"
       status: fail
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
-    - name: Injection, leaks and identity
-      data: Both halves
-      method: Zero tolerance
-      result: Pass on the held-out half
+    - name: Citation validity, handover, injection, leaks
+      data: Fresh held-out set
+      method: Citations open the cited slide; out-of-scope goes to the team; zero tolerance on injection and leaks
+      result: All pass (1.000)
       status: pass
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Latency and cost
-      data: 429 cases
+      data: 215 held-out cases
       method: p95 target 11 s
-      result: p95 9.1 s held-out; $0.0062 a question
+      result: p95 10.0 s; $0.0075 a question
       status: pass
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Judge calibration
@@ -81,6 +87,22 @@ story:
       method: Judges certified against a person before the gate can pass
       result: "Not run yet: owner labels in progress"
       status: pending
+  improvements:
+    - metric: Grounded answer rate, held-out
+      before: "0.693"
+      after: "0.813"
+      change: Citation mapping, paragraph coverage and v2 answer and support rules, tuned on the public half only, then scored once on a fresh held-out set. On the public half the gain is +0.378 (95% CI +0.257 to +0.514, Holm-separated).
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+    - metric: Locator correct, held-out
+      before: "0.800"
+      after: "0.874"
+      change: Same quality round; scored once on the fresh held-out set.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+    - metric: Integrity, held-out
+      before: 52 of 56
+      after: 100%
+      change: All four failures came from one cached hint; the hint cache was switched off until integrity labels clear it.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
 source:
   repo: biplob819/course-assistant
   synced: 2026-11-16
