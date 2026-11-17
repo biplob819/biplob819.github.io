@@ -103,7 +103,7 @@ export const education = [
 export const teaching = {
   course: 'Building AI Products, Systems & Services',
   program: 'Executive Post Graduate Certificate, IIT Kharagpur with upGrad',
-  role: 'Teaching with Prof. Mrigank Sharad, IIT Kharagpur',
+  role: 'Co-Instructor with Prof. Mrigank Sharad, IIT Kharagpur',
   url: 'https://www.upgrad.com/executive-post-graduate-certificate-in-building-ai-products-services/',
   students: '187',
   studentsLabel: 'students in the first cohort',
@@ -119,7 +119,7 @@ export const teaching = {
 };
 
 export const now = [
-  'Teaching Building AI Products, Systems & Services at IIT Kharagpur with upGrad: 187 students in the first cohort.',
+  'Co-Instructor on Building AI Products, Systems & Services at IIT Kharagpur with upGrad: 187 students in the first cohort.',
   'Shipping Kova, an AI-native HR platform for US small businesses.',
   'Getting Insightsflow, embedded analytics for SaaS teams, ready to launch.',
   'Finishing eight public AI builds, each scored with EvalKit.',
