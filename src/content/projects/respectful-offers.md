@@ -86,6 +86,10 @@ datasets:
     note: Real subscription and listening behaviour
 story:
   overview: A retention-offer policy for a subscription service that learns when to make no offer at all. A contextual bandit chooses between no offer, a content nudge, a discount or a plan change, under two respect rules it can't learn its way around, and is judged against a no-offer holdout.
+  impact:
+    - On 200,000 real KKBox members (offer responses simulated), the respectful bandit spent 97 NTD of discount per extra member kept, against 211 NTD for the rule-following baseline and 289 NTD for the status quo.
+    - The pre-registered claim held in all three simulator variants with zero respect-rule violations, and both are enforced as release gates in CI.
+    - Published on PyPI with a live policy simulator, a PR/FAQ and a five-section case study.
   pain:
     who: Subscription growth PMs who own retention offers and their discount budget, and the members at risk of leaving.
     problem: Subscription services send discounts to everyone who looks likely to leave. That trains members to wait for a deal, costs margin, and annoys loyal members with repeated offers.
