@@ -34,6 +34,8 @@ const projects = defineCollection({
         prd: url.optional(),
         // Long-form design docs: system architecture, data flow, methodology write-up or notebook.
         techspec: url.optional(),
+        prdOnePage: url.optional(),
+        howBuilt: url.optional(),
         architecture: url.optional(),
         dataflow: url.optional(),
         methodology: url.optional(),

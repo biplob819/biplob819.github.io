@@ -17,6 +17,8 @@ stack:
   - httpx
   - EvalKit
 links:
+  prdOnePage: https://github.com/biplob819/ai-visibility/blob/main/docs/prd-one-page.md
+  howBuilt: https://github.com/biplob819/ai-visibility/blob/main/docs/how-i-built-it.md
   report: https://biplob819.github.io/ai-visibility/
   repo: https://github.com/biplob819/ai-visibility
   prd: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
