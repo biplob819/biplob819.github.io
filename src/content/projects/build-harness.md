@@ -37,7 +37,6 @@ proof:
   - { label: "CI: tests on Python 3.11 to 3.13", url: "https://github.com/biplob819/build-harness/actions" }
 ---
 
-
 ## The problem
 
 Coding agents repeat mistakes. A rule written in a prompt is forgotten twenty turns later, a "done" claim isn't the same as working software, and a solo builder can't review every diff by hand. [Harness engineering](https://martinfowler.com/articles/harness-engineering.html) is the discipline of building the environment around the agent so that each failure becomes a permanent control.

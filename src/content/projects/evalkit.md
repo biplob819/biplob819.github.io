@@ -181,5 +181,3 @@ source:
 Evaluate **your own task** across Claude and OpenAI models: accuracy, groundedness, citation validity, cost and latency side by side, with confidence intervals and two cross-family judges whose error rate is measured against held-out hand labels.
 
 **Try it in the browser:** the [live demo](https://evalkit-demo.streamlit.app/) shows four models answering the same question from a study abstract, with every claim checked against the sentences it cites. Replay mode is free; live mode runs on your own API keys or the owner's passcode.
-
-The full write-up (the user pain, decisions and trade-offs, what failed, and how to reproduce) is in the repo and the results report linked above.

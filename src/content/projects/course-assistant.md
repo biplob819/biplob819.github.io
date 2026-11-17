@@ -30,5 +30,3 @@ source:
 A course assistant that answers learner questions only from approved session materials, cites the slide or page it used, and hands everything else to the teaching team. It is measured on an [EvalKit](https://github.com/biplob819/evalkit) golden set before anyone relies on it.
 
 This repo will never contain real course material or learner data. The demo runs on a sample course written for it, under CC BY 4.0.
-
-The full case study (the user pain, decisions and trade-offs, results, what failed, cost and how to reproduce) is published here with the evaluation run.

@@ -23,22 +23,25 @@ const STATUS_TAG = { pass: 'Pass', final: 'Final', provisional: 'Provisional', f
 const showTarget = st.monitoring?.some((m) => m.target);
 const showNow = st.monitoring?.some((m) => m.current);
 const LINK_NOTE: Record<string, string> = { demo: 'Try it in the browser', site: 'The live product', repo: 'Source code on GitHub', report: 'Full results, charts and failures', prd: 'Problem, users, requirements and success metrics', techspec: 'Architecture, data model and how it is built', architecture: 'Architecture write-up', dataflow: 'Data flow write-up', methodology: 'Methodology write-up', package: 'Install it', video: 'Walkthrough video' };
-const hasHow = diagrams.length > 0 || d.links.techspec || d.links.architecture || d.links.dataflow;
+const hasHow = diagrams.length > 0 || !!d.links.techspec || !!d.links.architecture || !!d.links.dataflow;
+const stackAlone = !hasHow && d.stack.length > 0;
+const bodyHasProof = headings.some((h) => h.slug === 'proof');
 const hasMethod = d.methodology.length > 0 || d.links.methodology;
-const hasLinks = links.length > 0 || d.proof.length > 0;
+const linkUrls = new Set(links.map(([, v]) => v));
+const proofOnly = headings.some((h) => h.slug === 'proof') ? [] : d.proof.filter((pr) => !linkUrls.has(pr.url));
 const pypi = d.links.package;
 // Page order: hiring-manager essentials first, then the deep dive.
 const toc = [
-  st.pain && { slug: 'pain', text: 'User pain' },
+  st.pain && { slug: 'pain', text: 'User pain and hypothesis' },
+  st.evals?.length && { slug: 'evals', text: 'Evals and performance' },
+  st.improvements?.length && { slug: 'improvements', text: 'How it improved' },
   hasHow && { slug: 'how-it-works', text: 'Architecture and data flow' },
   hasMethod && { slug: 'methodology', text: 'Methodology' },
+  ...headings.filter((h) => h.depth === 2 && !['how-it-works', 'methodology'].includes(h.slug)).map((h) => ({ slug: h.slug, text: h.text })),
+  st.monitoring?.length && { slug: 'monitoring', text: 'Metrics and monitoring' },
   d.install.length > 0 && { slug: 'install', text: 'Install and run' },
   d.datasets.length > 0 && { slug: 'datasets', text: 'Datasets' },
-  ...headings.filter((h) => h.depth === 2 && !['how-it-works', 'methodology'].includes(h.slug)).map((h) => ({ slug: h.slug, text: h.text })),
-  st.evals?.length && { slug: 'evals', text: 'Evals' },
-  st.improvements?.length && { slug: 'improvements', text: 'How it improved' },
-  st.monitoring?.length && { slug: 'monitoring', text: 'Metrics and monitoring' },
-  hasLinks && { slug: 'links', text: 'Links and proof' },
+  proofOnly.length > 0 && { slug: 'proof', text: 'Proof' },
   st.learnings?.length && { slug: 'learnings', text: 'What I learned' },
   st.next?.length && { slug: 'next', text: "What's next" },
   { slug: 'feedback', text: 'Feedback' },
@@ -107,7 +110,7 @@ const facts = [
       <div class="prose">
         {st.pain && (
           <section class="story" aria-labelledby="pain">
-            <h2 id="pain">User pain</h2>
+            <h2 id="pain">User pain and hypothesis</h2>
             <p class="who"><span class="label">Who hurts</span>{st.pain.who}</p>
             <p>{st.pain.problem}</p>
             {st.pain.evidence?.map((e) => (
@@ -116,57 +119,13 @@ const facts = [
                 {(e.source || e.url) && <cite class="label">{e.url ? <a href={e.url} rel="noopener">{e.source ?? 'Source'} ↗</a> : e.source}</cite>}
               </blockquote>
             ))}
-            {st.bet && <p class="bet"><span class="label">The bet</span>{st.bet}</p>}
+            {st.bet && <p class="bet"><span class="label">Hypothesis</span>{st.bet}</p>}
           </section>
-        )}
-
-        {hasHow && (
-          <section class="story" aria-labelledby="how-it-works">
-            <h2 id="how-it-works">Architecture and data flow</h2>
-            {diagrams.map((im) => (
-              <figure class="panel"><img src={im.src} alt={im.alt} loading="lazy" /><figcaption class="label">{im.kind === 'dataflow' ? 'Data flow' : 'Architecture'}{im.caption && ` · ${im.caption}`}</figcaption></figure>
-            ))}
-            {diagrams.length === 0 && <p class="muted-note">Diagrams are being exported from the design docs. Until then, the tech spec below has the full architecture.</p>}
-            <p class="doc-links">
-              {d.links.techspec && <a href={d.links.techspec} rel="noopener">Tech spec ↗</a>}
-              {d.links.architecture && <a href={d.links.architecture} rel="noopener">Architecture doc ↗</a>}
-              {d.links.dataflow && <a href={d.links.dataflow} rel="noopener">Data flow doc ↗</a>}
-              {d.links.prd && <a href={d.links.prd} rel="noopener">PRD ↗</a>}
-            </p>
-          </section>
-        )}
-
-        {hasMethod && (
-          <section class="story" aria-labelledby="methodology">
-            <h2 id="methodology">Methodology</h2>
-            {d.methodology.length > 0 && <ol class="method-main">{d.methodology.map((m) => <li>{m}</li>)}</ol>}
-            {d.links.methodology && <p class="doc-links"><a href={d.links.methodology} rel="noopener">Full methodology ↗</a></p>}
-          </section>
-        )}
-
-        {d.install.length > 0 && (
-          <section class="story" aria-labelledby="install">
-            <h2 id="install">Install and run</h2>
-            <p>Open source{pypi && <>, on <a href={pypi} rel="noopener">PyPI ↗</a></>}{d.links.repo && <>, code on <a href={d.links.repo} rel="noopener">GitHub ↗</a></>}. From the README:</p>
-            <pre class="cmds"><code>{d.install.map((c) => `${c.cmd}${c.note ? `   # ${c.note}` : ''}`).join('\n')}</code></pre>
-          </section>
-        )}
-
-        {d.datasets.length > 0 && (
-          <section class="story" aria-labelledby="datasets">
-            <h2 id="datasets">Datasets</h2>
-            <ul class="linklist">{d.datasets.map((ds) => <li><a href={ds.url} rel="noopener">{ds.name} ↗</a>{ds.note && <span>{ds.note}</span>}</li>)}</ul>
-          </section>
-        )}
-
-        <Content />
-        {shots.length > 0 && (
-          <div class="shots">{shots.map((im) => <figure class="panel"><a href={im.src} rel="noopener"><img src={im.src} alt={im.alt} loading="lazy" /></a>{im.caption && <figcaption class="label">{im.caption}</figcaption>}</figure>)}</div>
         )}
 
         {st.evals?.length && (
           <section class="story" aria-labelledby="evals">
-            <h2 id="evals">Evals</h2>
+            <h2 id="evals">Evals and performance</h2>
             <p class="lead">Every test the build was put through, with the data it ran on and the result, including what is still provisional.</p>
             <table class="evals">
               <thead><tr><th>Eval</th><th>Data</th><th>Method</th><th>Result</th></tr></thead>
@@ -195,6 +154,37 @@ const facts = [
           </section>
         )}
 
+        {hasHow && (
+          <section class="story" aria-labelledby="how-it-works">
+            <h2 id="how-it-works">Architecture and data flow</h2>
+            {diagrams.map((im) => (
+              <figure class="panel"><img src={im.src} alt={im.alt} loading="lazy" /><figcaption class="label">{im.kind === 'dataflow' ? 'Data flow' : 'Architecture'}{im.caption && ` · ${im.caption}`}</figcaption></figure>
+            ))}
+            {diagrams.length === 0 && <p class="muted-note">Diagrams are being exported from the design docs. Until then, the tech spec below has the full architecture.</p>}
+            {d.stack.length > 0 && <div class="stackrow"><span class="label">Tech stack</span><div class="stack">{d.stack.map((x) => <span>{x}</span>)}</div></div>}
+            <p class="doc-links">
+              {d.links.techspec && <a href={d.links.techspec} rel="noopener">Tech spec ↗</a>}
+              {d.links.architecture && <a href={d.links.architecture} rel="noopener">Architecture doc ↗</a>}
+              {d.links.dataflow && <a href={d.links.dataflow} rel="noopener">Data flow doc ↗</a>}
+              {d.links.prd && <a href={d.links.prd} rel="noopener">PRD ↗</a>}
+            </p>
+          </section>
+        )}
+
+        {hasMethod && (
+          <section class="story" aria-labelledby="methodology">
+            <h2 id="methodology">Methodology</h2>
+            {d.methodology.length > 0 && <ol class="method-main">{d.methodology.map((m) => <li>{m}</li>)}</ol>}
+            {d.links.methodology && <p class="doc-links"><a href={d.links.methodology} rel="noopener">Full methodology ↗</a></p>}
+          </section>
+        )}
+
+        {stackAlone && <div class="stackrow"><span class="label">Tech stack</span><div class="stack">{d.stack.map((x) => <span>{x}</span>)}</div></div>}
+        <Content />
+        {shots.length > 0 && (
+          <div class="shots">{shots.map((im) => <figure class="panel"><a href={im.src} rel="noopener"><img src={im.src} alt={im.alt} loading="lazy" /></a>{im.caption && <figcaption class="label">{im.caption}</figcaption>}</figure>)}</div>
+        )}
+
         {st.monitoring?.length && (
           <section class="story" aria-labelledby="monitoring">
             <h2 id="monitoring">Metrics and monitoring</h2>
@@ -212,13 +202,26 @@ const facts = [
           </section>
         )}
 
-        {hasLinks && (
-          <section class="story" aria-labelledby="links">
-            <h2 id="links">Links and proof</h2>
-            <ul class="linklist">
-              {links.map(([k, v]) => <li><a href={v} rel="noopener">{LINK_LABEL[k] ?? k} ↗</a><span>{LINK_NOTE[k] ?? ''}</span></li>)}
-              {d.proof.filter((pr) => !links.some(([, v]) => v === pr.url)).map((pr) => <li><a href={pr.url} rel="noopener">{pr.label} ↗</a><span>Evidence</span></li>)}
-            </ul>
+        {d.install.length > 0 && (
+          <section class="story" aria-labelledby="install">
+            <h2 id="install">Install and run</h2>
+            <p>Open source{pypi && <>, on <a href={pypi} rel="noopener">PyPI ↗</a></>}{d.links.repo && <>, code on <a href={d.links.repo} rel="noopener">GitHub ↗</a></>}. From the README:</p>
+            <pre class="cmds"><code>{d.install.map((c) => `${c.cmd}${c.note ? `   # ${c.note}` : ''}`).join('\n')}</code></pre>
+          </section>
+        )}
+
+        {d.datasets.length > 0 && (
+          <section class="story" aria-labelledby="datasets">
+            <h2 id="datasets">Datasets</h2>
+            <ul class="linklist">{d.datasets.map((ds) => <li><a href={ds.url} rel="noopener">{ds.name} ↗</a>{ds.note && <span>{ds.note}</span>}</li>)}</ul>
+          </section>
+        )}
+
+        {proofOnly.length > 0 && (
+          <section class="story" aria-labelledby="proof">
+            <h2 id="proof">Proof</h2>
+            <p class="lead">Evidence files a reviewer can open and check, beyond the links at the top.</p>
+            <ul class="linklist">{proofOnly.map((pr) => <li><a href={pr.url} rel="noopener">{pr.label} ↗</a></li>)}</ul>
           </section>
         )}
 
@@ -259,10 +262,6 @@ const facts = [
         {toc.length > 3 && (
           <nav class="block" aria-label="On this page"><p class="label">On this page</p>{toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}</nav>
         )}
-        {d.proof.length > 0 && (
-          <div class="block"><p class="label">Proof</p>{d.proof.map((p) => <a class="proof" href={p.url} rel="noopener">{p.label} ↗</a>)}</div>
-        )}
-        {d.stack.length > 0 && (<div class="block"><p class="label">Tech stack</p><div class="stack">{d.stack.map((s) => <span>{s}</span>)}</div></div>)}
         {d.cost && (<div class="block"><p class="label">Cost</p><p>{d.cost}</p></div>)}
       </aside>
     </div>
@@ -339,6 +338,8 @@ const facts = [
   .lead { margin-top: -4px; }
   .cmds { background: var(--ink); color: var(--bg); border-radius: var(--r); padding: 16px 18px; font-size: 13.5px; line-height: 1.7; }
   .cmds code { background: none !important; color: inherit; }
+  .stackrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 18px 0 6px; }
+  .stackrow .label { margin: 0; }
   .muted-note { color: var(--muted) !important; font-size: 15px; }
   .method-main { padding-left: 20px; display: grid; gap: 8px; }
   .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 24px; }

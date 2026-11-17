@@ -36,7 +36,6 @@ Every SaaS product eventually needs customer-facing reporting. Building it in-ho
 
 I lead the product and build it end to end with a small engineering team.
 
-
 Insightsflow is a multi-tenant analytics layer that SaaS companies embed in their own product. Their customers get self-serve dashboards and reports, white-labelled, with an AI layer to ask questions in plain language. It's live at [insightsflow.live](https://insightsflow.live/) ahead of launch.
 
 ## How it works

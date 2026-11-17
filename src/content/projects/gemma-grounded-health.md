@@ -39,8 +39,6 @@ source:
 
 ## Write-up
 
-This project is building a fine-tuned small open Gemma model (Gemma 4 E2B) that answers health research questions **only from a given abstract** and cites the sentences it used. The training recipe and a Kaggle pilot come at build node T2.1, the full training run at T2.2. The plan: score it with [EvalKit](https://github.com/biplob819/evalkit) against its own base model, Claude Haiku 5.5 and GPT-6 Luna (build node E3.2), and release it on Hugging Face with the training recipe, a GGUF for laptops and a demo (nodes R4.2 and R4.3).
+A fine-tuned small open model (Gemma 4 E2B) that answers health research questions **only from a given abstract** and cites the sentences it used. It is trained with QLoRA on a free Kaggle GPU, scored with [EvalKit](https://github.com/biplob819/evalkit) against its own base model, Claude Haiku 5.5 and GPT-6 Luna, and released on Hugging Face with the training recipe, a GGUF file for laptops and a demo.
 
-The project is built node by node with the same harness as EvalKit: a dependency-gated build graph (`docs/graph/`), a capability catalog with proof cells, converge gates (`scripts/node_converge.py`) and a skeptical verifier. See Tech Spec §13.
-
-The full case study (the user pain, decisions and trade-offs, results, what failed, cost and how to reproduce) is published here with the evaluation run.
+It is built with the [Build Harness](/projects/build-harness/): a dependency-gated build graph, pre-push gates and an independent verifier on every step.
