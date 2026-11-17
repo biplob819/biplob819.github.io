@@ -40,6 +40,10 @@ images:
     alt: One-page spec for a paid freshness and provenance signal
     kind: screenshot
     caption: Signal spec
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/cli.png
+    alt: "The citewatch CLI: report, init, doctor and a dry run, with no keys and no spend"
+    kind: screenshot
+    caption: The citewatch CLI
 headline:
   value: 43% vs 12%
   label: "of time-sensitive health answers with no source updated in the past year: GPT-6.1 Sol against Claude Sonnet 5.5"

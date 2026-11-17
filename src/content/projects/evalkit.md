@@ -195,8 +195,8 @@ story:
       url: https://github.com/biplob819/evalkit/blob/main/changelog.md
     - metric: Build harness, 14 to 17 Nov
       before: 26 nodes
-      after: 42 nodes
-      change: Capabilities grew from 144 to 209 (184 green, each with named tests as proof), and 40 lessons were each turned into a rule a gate or test now enforces.
+      after: 43 nodes
+      change: Capabilities grew from 144 to 209 (193 green, each with named tests as proof), and 41 lessons were each turned into a rule a gate or test now enforces.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
   monitoring:
     - metric: Spend per run
