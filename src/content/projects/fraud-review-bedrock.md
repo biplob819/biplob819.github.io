@@ -33,11 +33,32 @@ images:
     alt: "Audit view: every decision on the alert written to the hash-chained audit log (simulated data)"
     kind: screenshot
     caption: Audit trail for one alert
+  - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/screens/dashboard.png
+    alt: "Results dashboard: safety, value, explanation checks, monitoring trend and run facts, every number labelled simulated"
+    kind: screenshot
+    caption: Results dashboard (not deployed yet)
+headline:
+  value: 0 of 55
+  label: frauds auto-cleared on a fresh 500-alert evaluation the agent had never seen, with every auto-clear correct
+  note: Simulated data (Sparkov). Exact 95% upper bound on leakage 5.3%. 8.8% of alerts auto-cleared (44 of 44 correct); every fraud reached a person (55 of 55). The first frozen evaluation leaked 2 of 79 and stays in the record.
+metrics:
+  - value: 352 min
+    label: analyst time saved per 1,000 alerts, estimated at 4 minutes an alert (95% interval 256 to 456)
+  - value: $6.24
+    label: model cost per 1,000 alerts
+  - value: 100%
+    label: of the sample's frauds reached a person (55 of 55)
+  - value: 48%
+    label: "of explanation claims supported by the alert data: provisional, one judge"
 proof:
   - label: Data card
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
   - label: Evaluation runs (JSONL)
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+  - label: Evaluation summary (JSON)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
+  - label: Faithfulness summary (JSON)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/faithfulness-cache-summary.json
 datasets:
   - name: Fraud Dataset Benchmark (Amazon Science)
     url: https://github.com/amazon-science/fraud-dataset-benchmark
@@ -76,11 +97,24 @@ story:
       result: 55 of 55
       status: pass
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+    - name: Explanation checks
+      data: 965 explanations, fresh sample
+      method: Valid schema, real policy clauses, allowed fields, and every stated value true
+      result: Schema 964 of 965; clauses and fields 100%; 1,098 of 1,098 stated values true; no protected attributes mentioned
+      status: pass
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
     - name: Explanation faithfulness
-      data: Final evaluation
-      method: Do the stated reasons match what drove the decision?
-      result: "Not run yet: part of the final evaluation"
-      status: pending
+      data: 4,159 claims from 458 explanations
+      method: Does each claim in the explanation follow from the alert data? Claude Opus 5.5 judge (single judge, partial coverage)
+      result: 48% of claims supported; 0 of 342 fully judged explanations fully supported. Provisional
+      status: provisional
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/faithfulness-cache-summary.json
+    - name: Cost and latency
+      data: Fresh 500-alert sample
+      method: Billed model cost; p95 latency per stage
+      result: $6.24 per 1,000 alerts; p95 4.6 s for the Haiku screen, 6.9 s for the Sonnet review
+      status: final
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
   improvements:
     - metric: Frauds auto-cleared
       before: 2 of 79
