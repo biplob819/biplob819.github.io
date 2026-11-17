@@ -99,7 +99,27 @@ export const education = [
   { name: 'BE (Honours)', place: 'Girijananda Chowdhury Institute (Gauhati University)', period: '2016' },
 ];
 
+// Teaching. Student count from Biplob (17 Nov 2026); course facts from the public course page.
+export const teaching = {
+  course: 'Building AI Products, Systems & Services',
+  program: 'Executive Post Graduate Certificate, IIT Kharagpur with upGrad',
+  role: 'Teaching with Prof. Mrigank Sharad, IIT Kharagpur',
+  url: 'https://www.upgrad.com/executive-post-graduate-certificate-in-building-ai-products-services/',
+  students: '187',
+  studentsLabel: 'students in the first cohort',
+  facts: [
+    '24 weeks of live online classes for product managers, founders and operators',
+    'Nine modules: AI-native product design with LLMs, RAG and agents; evaluating AI with metrics and red teaming; AI economics and go-to-market',
+    'Each learner builds one AI product end to end and defends it before an IIT Kharagpur faculty panel',
+  ],
+  images: [
+    { src: '/images/upgrad-hero.jpg', alt: 'The course page: IIT Kharagpur Executive Post Graduate Certificate in Building AI Products, Systems & Services, 6 months, 100% live online', width: 1250, height: 470 },
+    { src: '/images/upgrad-curriculum.jpg', alt: 'Course overview: 24 weeks, 9 modules, 1 AI product, from AI opportunity to deployment', width: 640, height: 420 },
+  ],
+};
+
 export const now = [
+  'Teaching Building AI Products, Systems & Services at IIT Kharagpur with upGrad: 187 students in the first cohort.',
   'Shipping Kova, an AI-native HR platform for US small businesses.',
   'Getting Insightsflow, embedded analytics for SaaS teams, ready to launch.',
   'Finishing eight public AI builds, each scored with EvalKit.',

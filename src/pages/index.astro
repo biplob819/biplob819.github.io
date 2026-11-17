@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Icon from '../components/Icon.astro';
-import { site, atWork, sport, education, now } from '../site.config';
+import { site, atWork, sport, education, now, teaching } from '../site.config';
 import { projects, STATUS_LABEL } from '../lib/projects';
 
 const platforms = await projects('product');
@@ -102,6 +102,25 @@ const INSTALL: Record<string, string> = {
     </ol>
   </section>
 
+  <section class="block wrap" id="teaching">
+    <div class="sec-head"><h2 class="cond">Teaching</h2><span class="label">IIT Kharagpur · upGrad</span></div>
+    <div class="teach">
+      <div class="ttext">
+        <p class="label">{teaching.program}</p>
+        <h3 class="cond">{teaching.course}</h3>
+        <p class="trole">{teaching.role}</p>
+        <p class="pmetric"><span class="num"><span class="hl">{teaching.students}</span></span><span class="label">{teaching.studentsLabel}</span></p>
+        <ul class="tfacts">{teaching.facts.map((f) => <li>{f}</li>)}</ul>
+        <a class="tlink" href={teaching.url} rel="noopener">Course page ↗</a>
+      </div>
+      <div class="tshots">
+        {teaching.images.map((im) => (
+          <a href={teaching.url} rel="noopener" class="tshot"><img src={im.src} alt={im.alt} width={im.width} height={im.height} loading="lazy" /></a>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <section class="sport" id="sport">
     <div class="wrap sgrid">
       <div>
@@ -145,6 +164,16 @@ const INSTALL: Record<string, string> = {
     .board div:nth-last-child(-n+2) { border-bottom: 0; }
   }
 
+  .teach { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+  .ttext { display: flex; flex-direction: column; gap: 12px; }
+  .ttext > .label { margin: 0; }
+  .ttext h3 { font-size: clamp(32px, 4vw, 48px); margin: 0; line-height: .95; }
+  .trole { margin: 0; font-weight: 500; font-size: 17px; }
+  .tfacts { margin: 4px 0 6px; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; font-size: 15.5px; }
+  .tshots { display: grid; gap: 14px; }
+  .tshot img { width: 100%; height: auto; border-radius: var(--r); border: 1px solid var(--line); display: block; }
+  .tshot:nth-child(2) { width: 62%; justify-self: end; margin-top: -48px; box-shadow: 0 12px 32px rgb(13 17 23 / .14); border-radius: var(--r); background: #fff; }
+  @media (max-width: 860px) { .teach { grid-template-columns: 1fr; } .tshot:nth-child(2) { width: 80%; margin-top: -32px; } }
   .rows { display: grid; gap: clamp(40px, 6vw, 72px); }
   .prow { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(24px, 4vw, 48px); align-items: center; }
   .prow.flip .shot { order: 2; }
