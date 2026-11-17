@@ -28,6 +28,18 @@ images:
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/dataflow.svg
     alt: "Row 1 collects citations: 100 frozen questions are asked of two models with web search, answers are stored verbatim and citations extracted. Row 2 fetches each cited page politely, resolves its date, and computes metrics into summary.json, which feeds the dashboard, domain cards and post. Two checked samples (support and dates) feed error rates into the metrics."
     kind: dataflow
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/dashboard.png
+    alt: "citewatch findings dashboard: who gets cited, stale answers and how far to trust each number"
+    kind: screenshot
+    caption: Findings dashboard
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/post.png
+    alt: The write-up post on what AI search cites for UK health questions
+    kind: screenshot
+    caption: The post
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/signal-spec.png
+    alt: One-page spec for a paid freshness and provenance signal
+    kind: screenshot
+    caption: Signal spec
 headline:
   value: 43% vs 12%
   label: "of time-sensitive health answers with no source updated in the past year: GPT-6.1 Sol against Claude Sonnet 5.5"
@@ -56,6 +68,10 @@ proof:
     url: https://github.com/biplob819/ai-visibility/blob/main/docs/preregistration.md
   - label: One-page signal spec (PDF)
     url: https://github.com/biplob819/ai-visibility/blob/main/docs/signal-spec.pdf
+  - label: "The post: what AI search cites"
+    url: https://biplob819.github.io/ai-visibility/post/
+  - label: Deviations from the pre-registration
+    url: https://github.com/biplob819/ai-visibility/blob/main/docs/deviations.md
 story:
   overview: A study of which web pages Claude and GPT cite when answering 100 health and fitness questions, and how out of date those pages are. It shows publishers whether AI answers use their content, and shows AI labs how often answers rest on stale pages. It ships as an open-source tool, citewatch, so anyone can run the study on their own questions.
   pain:
