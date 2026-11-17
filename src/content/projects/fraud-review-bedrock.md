@@ -36,6 +36,8 @@ images:
 proof:
   - label: Data card
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
+  - label: Evaluation runs (JSONL)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
 datasets:
   - name: Fraud Dataset Benchmark (Amazon Science)
     url: https://github.com/amazon-science/fraud-dataset-benchmark
@@ -49,6 +51,42 @@ story:
     who: Fraud operations leads at mid-size banks, their analysts, and the model risk reviewers who sign off any automation.
     problem: "Fraud analysts spend most of the day on alerts that turn out to be legitimate. Banks want faster triage, but risk teams and regulators won't accept a black box: every decision needs a reason and an audit trail."
   bet: If an agent clears only obvious false positives, never auto-clears fraud, and shows its reasons, policy clauses and fields for every hold, a bank can cut analyst time without losing recall, and its risk team can sign off.
+  evals:
+    - name: Fraud leakage, first frozen evaluation
+      data: 500 alerts, 79 frauds (simulated)
+      method: Frauds the agent auto-cleared; the bar is zero
+      result: "2 of 79 leaked (both small purchases at 11 p.m.): failed the bar; the run stays in the log"
+      status: fail
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+    - name: Fraud leakage, fresh sample after the fix
+      data: 500 alerts never seen before, 55 frauds (simulated)
+      method: Same bar, on a disjoint sample drawn in advance
+      result: 0 of 55 leaked; exact 95% upper bound 5.3%
+      status: pass
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+    - name: Auto-clear precision
+      data: Fresh sample
+      method: Share of auto-cleared alerts that were really legitimate
+      result: 44 of 44 correct; 8.8% of alerts auto-cleared
+      status: pass
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+    - name: End-to-end recall
+      data: Fresh sample
+      method: Frauds that reached a person
+      result: 55 of 55
+      status: pass
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+    - name: Explanation faithfulness
+      data: Final evaluation
+      method: Do the stated reasons match what drove the decision?
+      result: "Not run yet: part of the final evaluation"
+      status: pending
+  improvements:
+    - metric: Frauds auto-cleared
+      before: 2 of 79
+      after: 0 of 55
+      change: "One policy change chosen on the dev set (never auto-clear at night), then proven on a fresh, disjoint 500-alert sample, never on the run that exposed the leak. The cost: auto-clear fell from 36.8% to 8.8%. Simulated data."
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16
