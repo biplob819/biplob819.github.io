@@ -28,6 +28,7 @@ links:
   report: https://biplob819.github.io/assay-pipeline/
   prd: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20PRD.md
   techspec: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20Tech%20Spec.md
+  package: https://pypi.org/project/assay-pipeline/
 stack:
   - Python
   - DuckDB
@@ -65,6 +66,24 @@ images:
     alt: Compound explorer over the EGFR snapshot with provenance and quality flags
     kind: screenshot
     caption: Data explorer
+install:
+  - cmd: uv tool install assay-pipeline
+    note: "or: pip install assay-pipeline"
+  - cmd: assay doctor
+    note: checks Python, keys and network
+  - cmd: assay ingest chembl
+  - cmd: assay ingest pubchem
+  - cmd: assay snapshot
+    note: normalise, flag QC1 to QC5, write a snapshot
+  - cmd: assay attack --db agent.duckdb --k 3 --dry-run
+    note: cost estimate, no API calls
+datasets:
+  - name: ChEMBL
+    url: https://www.ebi.ac.uk/chembl/
+    note: EGFR bioactivity records
+  - name: PubChem
+    url: https://pubchem.ncbi.nlm.nih.gov/
+    note: EGFR bioassays
 story:
   overview: "A data pipeline and an AI agent for drug-discovery assay data. Every row keeps its source, every agent query passes a SQL guard and lands in a tamper-evident log, and the whole system was attacked with the OWASP Top 10 for LLM applications. Built for two readers: the scientist who needs data they can trust, and the CISO who must approve agent access."
   impact:
@@ -75,69 +94,7 @@ story:
   pain:
     who: Computational chemists who train models on assay data, and the CISOs who must decide whether an AI agent may touch research data.
     problem: "Assay data arrives from many sources with mixed units, duplicates and thin provenance, so chemists lose days reconciling it. Giving agents access opens new attack paths: instructions hidden in data fields, over-broad permissions and leaks of restricted results. A CISO needs evidence, not promises."
-  segments:
-    - name: Computational chemist
-      need: Trains models on assay data and loses days reconciling units and duplicates.
-      primary: true
-    - name: ML engineer
-      need: Needs to name exactly which data a model was trained on.
-      primary: false
-    - name: CISO
-      need: Must decide whether an agent may touch research data, and needs evidence, not promises.
-      primary: true
   bet: If every row carries its provenance and every agent query passes a guard and lands in a tamper-evident log, a CISO can approve agent access on evidence, and an attack suite shows where the defence actually sits.
-  priorities:
-    - item: One table in one unit (nM), with the source on every row
-      call: built
-      why: Chemists stop reconciling by hand.
-    - item: A SQL guard that blocks writes, restricted tables and unbounded queries before the database sees them
-      call: built
-      why: Approval has to rest on enforced controls, not on the model behaving.
-    - item: A hash-chained audit log and attack results by OWASP category and by the layer that stopped each one
-      call: built
-      why: A CISO can audit after the fact and see where defence sits.
-    - item: Training a model
-      call: cut
-      why: The project proves the data and the access are trustworthy, not the model.
-    - item: Proprietary data and a production identity system
-      call: cut
-      why: Public ChEMBL and PubChem data is enough to prove the controls.
-    - item: A compound explorer
-      call: later
-      why: Useful for sanity checks, but not needed to prove trust.
-  stories:
-    - as: Chemist
-      want: get EGFR IC50 values from two sources in one table, in nM, with the source on every row
-      why: I stop reconciling by hand
-      priority: must
-    - as: Chemist
-      want: see which rows each quality rule flagged and why
-      why: I decide what to exclude
-      priority: must
-    - as: ML engineer
-      want: rebuild any snapshot from its manifest
-      why: I can name the data a model used
-      priority: must
-    - as: CISO
-      want: know the agent cannot write, read restricted tables or run unbounded queries
-      why: approval rests on enforced controls
-      priority: must
-    - as: CISO
-      want: see every agent query in a log nobody can quietly edit
-      why: I can audit after the fact
-      priority: must
-    - as: CISO
-      want: see attack results by OWASP category and by the layer that stopped each one
-      why: I know where defence actually sits
-      priority: must
-    - as: Chemist
-      want: catch planted impossible values before they reach an approved view
-      why: poisoned data never trains a model
-      priority: must
-    - as: Chemist
-      want: explore compounds and values in a simple view
-      why: I can sanity-check the data
-      priority: could
   evals:
     - name: Attack suite
       data: 60 attack cases across the OWASP LLM Top 10, 3 trials each on public and held-out cases, plus 10 data-poisoning cases
@@ -196,7 +153,7 @@ source:
   synced: 2026-11-16
 ---
 
-## Overview
+## Write-up
 
 Public bioactivity data (EGFR IC50 by default, any target from config) from ChEMBL and PubChem, normalised into one versioned table with provenance on every row and quality problems flagged, never deleted. An AI agent answers questions about that table through a SQL guard and read-only access. Every query goes into a tamper-evident audit log, and the agent is attacked with cases mapped to the OWASP Top 10 for LLM Applications (2025) and MITRE ATLAS.
 

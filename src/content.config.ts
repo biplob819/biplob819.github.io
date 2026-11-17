@@ -57,6 +57,10 @@ const projects = defineCollection({
     // Evidence a stranger can open: results files, dashboards, run logs, write-ups.
     proof: z.array(z.object({ label: z.string(), url })).default([]),
     cost: z.string().optional(),
+    // Commands from the README that install and run it (open-source builds).
+    install: z.array(z.object({ cmd: z.string(), note: z.string().optional() })).default([]),
+    // The real, public datasets it runs on.
+    datasets: z.array(z.object({ name: z.string(), url, note: z.string().optional() })).default([]),
     // The story the page tells, in order: whose pain, the bet, what was cut, how it is
     // measured and watched, what comes next. Every part is optional; a part shows when filled.
     story: z
@@ -73,16 +77,7 @@ const projects = defineCollection({
             evidence: z.array(z.object({ text: z.string(), source: z.string().optional(), url: url.optional() })).optional(),
           })
           .optional(),
-        // User segments from the PRD's personas; `primary` marks the one the product is built for first.
-        segments: z.array(z.object({ name: z.string(), need: z.string(), primary: z.boolean().default(false) })).optional(),
-        // The PRD's user stories with their MoSCoW priority.
-        stories: z
-          .array(z.object({ as: z.string(), want: z.string(), why: z.string(), priority: z.enum(['must', 'should', 'could', "won't"]) }))
-          .optional(),
         bet: z.string().optional(),
-        priorities: z
-          .array(z.object({ item: z.string(), call: z.enum(['built', 'cut', 'later']), why: z.string() }))
-          .optional(),
         monitoring: z
           .array(z.object({
             metric: z.string(),

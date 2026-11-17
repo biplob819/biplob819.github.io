@@ -31,7 +31,7 @@ const CALLS = ['built', 'cut', 'later'];
 const MONITOR_KINDS = ['north-star', 'adoption', 'quality', 'guardrail', 'cost'];
 const EVAL_STATUS = ['pass', 'final', 'provisional', 'fail', 'pending'];
 // Frontmatter fields copied from a manifest, in this order. Keep in step with src/content.config.ts.
-const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost', 'story'];
+const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost', 'install', 'datasets', 'story'];
 // Page body headings. The pain, priorities, monitoring and next steps live in `story`, so the body is the deep dive.
 const SECTIONS = ['What I built', 'Decisions and trade-offs', 'What failed', 'Cost and how to reproduce'];
 
@@ -77,11 +77,12 @@ function validate(data, where) {
   const st = data.story ?? {};
   if (st.pain && (!st.pain.who || !st.pain.problem)) errs.push('story.pain needs who and problem');
   for (const e of st.pain?.evidence ?? []) if (!e.text || (e.url && !/^https?:\/\//.test(e.url))) errs.push('every story.pain.evidence item needs text, and url must be a URL');
-  for (const pr of st.priorities ?? []) if (!pr.item || !pr.why || !CALLS.includes(pr.call)) errs.push(`every story.priorities item needs item, why and call (${CALLS.join(', ')})`);
   for (const m of st.monitoring ?? []) if (!m.metric || !m.how || (m.kind && !MONITOR_KINDS.includes(m.kind))) errs.push(`every story.monitoring item needs metric and how; kind is one of ${MONITOR_KINDS.join(', ')}`);
   for (const e of st.evals ?? []) if (!e.name || !e.data || !e.method || !e.result || (e.status && !EVAL_STATUS.includes(e.status))) errs.push(`every story.evals item needs name, data, method and result; status is one of ${EVAL_STATUS.join(', ')}`);
   for (const i of st.improvements ?? []) if (!i.metric || !i.before || !i.after || !i.change) errs.push('every story.improvements item needs metric, before, after and change');
   for (const l of st.learnings ?? []) if (!l.lesson || !l.now) errs.push('every story.learnings item needs lesson and now');
+  for (const ds of data.datasets ?? []) if (!ds.name || !/^https?:\/\//.test(ds.url ?? '')) errs.push('every dataset needs a name and a URL');
+  for (const c of data.install ?? []) if (!c.cmd) errs.push('every install step needs cmd');
   if (data.tagline && data.tagline.length > 200) errs.push('tagline is over 200 characters; keep it to one line');
   return errs.map((e) => `${where}: ${e}`);
 }
@@ -265,10 +266,7 @@ const STORY_PARTS = [
   ['Impact', (d) => d.story?.impact?.length],
   ['User pain', (d) => d.story?.pain],
   ['Pain evidence (quote, ticket, data)', (d) => d.story?.pain?.evidence?.length],
-  ['User segments', (d) => d.story?.segments?.length],
-  ['Prioritised user stories (MoSCoW)', (d) => d.story?.stories?.length],
   ['The bet', (d) => d.story?.bet],
-  ['Priorities (built / cut / later)', (d) => d.story?.priorities?.length],
   ['PRD link', (d) => d.links?.prd],
   ['Tech spec link', (d) => d.links?.techspec || d.kind === 'product'],
   ['Screenshots', (d) => d.cover || d.images?.some((i) => i.kind === 'screenshot')],
@@ -279,6 +277,7 @@ const STORY_PARTS = [
   ['Headline result', (d) => d.headline],
   ['Result screenshots or charts', (d) => d.images?.some((i) => i.kind === 'result')],
   ['Methodology', (d) => d.methodology?.length || d.links?.methodology],
+  ['Datasets (real, linked)', (d) => d.datasets?.length || d.kind === 'product'],
   ['Evals (what was tested and the result)', (d) => d.story?.evals?.length],
   ['Improvements (measured before and after)', (d) => d.story?.improvements?.length],
   ['Metrics and monitoring', (d) => d.story?.monitoring?.length],

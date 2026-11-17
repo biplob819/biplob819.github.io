@@ -75,6 +75,21 @@ proof:
     url: https://pypi.org/project/evalkit-harness/
   - label: Data card
     url: https://github.com/biplob819/evalkit/blob/main/DATA_CARD.md
+install:
+  - cmd: pip install 'evalkit-harness[anthropic,openai]'
+  - cmd: evalkit init
+    note: scaffold a project and a three-case sample task
+  - cmd: evalkit run evalkit.yaml --task tasks/my_task.yaml --n 3 --dry-run
+    note: cost estimate, no API calls
+  - cmd: evalkit run evalkit.yaml --task tasks/my_task.yaml --n 3
+    note: needs keys in .env
+datasets:
+  - name: PubMedQA
+    url: https://pubmedqa.github.io/
+    note: Biomedical questions with expert-labelled answers from PubMed abstracts
+  - name: SciFact
+    url: https://github.com/allenai/scifact
+    note: Scientific claim verification, the second built-in task
 story:
   overview: An open-source Python tool (pip install evalkit-harness) that tells a team which AI model answers their own task best, how often each answer is backed by its source, and what each correct answer costs. Two judges from different model families check every claim, and every number carries a confidence interval. It is the evaluation engine behind the other seven projects here.
   impact:
@@ -85,106 +100,7 @@ story:
   pain:
     who: AI engineers and product managers choosing a model for a domain task, such as patient-facing health answers.
     problem: They pick a model from public leaderboards that don't match their task, then grade outputs with an LLM judge nobody has checked, often from the same family as the model it grades. So they can't say how often answers are unsupported by the source, whether the grader is biased, or what quality each extra dollar buys.
-  segments:
-    - name: AI engineer at a health-tech startup
-      need: Has to pick a model for patient-facing answers. Comfortable in Python, short on time, distrusts leaderboards, and needs to evaluate their task, not a public one.
-      primary: true
-    - name: Product manager
-      need: Owns the launch decision and needs a quality bar and a cost line, not a notebook.
-      primary: false
-    - name: Downstream maintainer
-      need: Imports EvalKit's scorers into other repos and needs them stable and versioned.
-      primary: false
-    - name: Eval lead at an AI lab
-      need: Owns how agents are evaluated. Trusts a comparison only when scores are stable across trials, separate the models, and come from tasks the agents weren't tuned on.
-      primary: false
-    - name: Open-source user
-      need: Finds EvalKit on GitHub or PyPI, installs it, and runs it on their own laptop with their own API keys and money. Might have only one provider's key, or only a local model. Gives up if the first result takes more than a few minutes, or if a run costs more than expected.
-      primary: false
   bet: If a team can evaluate its own task on four models with one command, with a grounded headline metric, confidence intervals and judges checked against hand labels, it will choose models on evidence instead of leaderboards.
-  priorities:
-    - item: One command runs your own task, defined in YAML, on four models with 95% confidence intervals
-      call: built
-      why: The core promise. Failed calls count as wrong, never dropped.
-    - item: Two judges from different model families, with a calibration panel
-      call: built
-      why: A judge grading its own family can't be trusted, so the bias is measured, not assumed away.
-    - item: "Reproducible results: rescoring saved answers gives the same numbers"
-      call: built
-      why: Results you can't reproduce can't be shared or trusted.
-    - item: A public leaderboard
-      call: cut
-      why: It would repeat the problem the tool exists to solve.
-    - item: Model training and clinical use
-      call: cut
-      why: EvalKit measures; its outputs are research benchmarks, not medical advice.
-    - item: Latency percentiles and dashboard polish
-      call: later
-      why: First to go if scope shrinks. Judge calibration and confidence intervals are never cut, because without them the headline is unverified.
-    - item: A Gemini adapter
-      call: later
-      why: The adapter interface leaves room; it's a small, separate step.
-  stories:
-    - as: AI engineer
-      want: run a benchmark on four models with one command
-      why: I can compare quality and cost on my task
-      priority: must
-    - as: AI engineer
-      want: see each answer's claims marked supported or unsupported beside the source
-      why: I can see why a model failed
-      priority: must
-    - as: Product manager
-      want: know how far to trust the judges
-      why: I don't ship on a broken metric
-      priority: must
-    - as: AI engineer
-      want: rerun and get the same numbers
-      why: I can trust and share results
-      priority: must
-    - as: Downstream maintainer
-      want: import a scorer from another repo
-      why: every project reuses one tested implementation
-      priority: must
-    - as: Product manager
-      want: see cost per correct answer and a pass or fail against my bar
-      why: I can make a go or no-go call
-      priority: must
-    - as: Open-source user
-      want: know and cap what a run will cost before it starts
-      why: I never get a surprise bill
-      priority: must
-    - as: Demo owner
-      want: keep a public link from draining my API budget or collecting personal data
-      why: sharing the demo is safe
-      priority: should
-    - as: AI engineer
-      want: add my own task in YAML without writing Python
-      why: I can evaluate my use case, not a public benchmark
-      priority: should
-    - as: Eval lead
-      want: score an agent on full multi-step runs, with repeated trials and confidence intervals
-      why: I can tell a real gap between agents from noise
-      priority: should
-    - as: Open-source user
-      want: install EvalKit and see a result before spending anything
-      why: I can decide whether it's worth setting up
-      priority: should
-    - as: Open-source user with one provider key
-      want: still evaluate my models
-      why: I'm not blocked by needing two accounts
-      priority: should
-    - as: Open-source user
-      want: run my own task before I've hand-labelled anything
-      why: I get a first read quickly and know how far to trust it
-      priority: should
-    - as: Open-source user
-      want: use EvalKit as a CI quality gate
-      why: a model or prompt change that breaks my bar fails the build
-      priority: could
-    - as: Open-source user
-      want: evaluate local models and add my own scorers without forking
-      why: EvalKit fits my stack
-      priority: could
   evals:
     - name: Grounded answers
       data: 200 PubMedQA questions, 4 models (2 Claude, 2 OpenAI)
@@ -260,7 +176,7 @@ source:
   synced: 2026-11-16
 ---
 
-## Overview
+## Write-up
 
 Evaluate **your own task** across Claude and OpenAI models: accuracy, groundedness, citation validity, cost and latency side by side, with confidence intervals and two cross-family judges whose error rate is measured against held-out hand labels.
 
