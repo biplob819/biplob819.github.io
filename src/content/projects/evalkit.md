@@ -113,13 +113,20 @@ timeline:
       - "A downstream registry and weekly canary: 7 projects pinned, 1,303 of their tests passing against current EvalKit"
       - Release gates on any metric with fail and warn severity and exact one-sided bounds, asked for by Assay Pipeline
       - Calibration sheets for any criterion, and a standard efficiency block (tokens, cache hits, cost per correct answer, latency)
+  - when: 17 Nov 2026
+    title: "v0.3.0: one public API for every project"
+    status: released
+    url: https://pypi.org/project/evalkit-harness/0.3.0/
+    items:
+      - A public API for the internals two or more projects used, with a migration guide for all seven
+      - Release gates on any metric, run-versus-run comparison, and agent and decision scorers (answer-from-rows, clarification, rule compliance)
+      - Approved by the owner; published by trusted publishing, install-checked on Linux, macOS and Windows
   - when: Next
-    title: v0.3.0 and v0.4.0
+    title: v0.4.0
     status: planned
     url: https://github.com/biplob819/evalkit/blob/main/docs/graph/graph.md
     items:
-      - "v0.3.0: a public API for internals two or more projects use, gates, and run-versus-run comparison"
-      - "v0.4.0: a monitoring and improvement ledger (from Field PM Pack), a paraphrase contamination probe (from Gemma Grounded Health), a calibration integrity sheet (from the AI Teaching Assistant) and an agent security kit (from Assay Pipeline)"
+      - A monitoring and improvement ledger (from Field PM Pack), a paraphrase contamination probe (from Gemma Grounded Health), a calibration integrity sheet (from the AI Teaching Assistant), an agent security kit (from Assay Pipeline) and a stricter value check
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
@@ -240,4 +247,4 @@ Claude Code wrote the code, tests and docs under a lean adaptation of the Kova n
 
 1. **Two judges from different families check every claim (OWNER D-4).** Claude Opus 5.5 and GPT-6.1 Sol rule on every claim of the full run, on one claim set from a single fixed extractor (D-3), with model names redacted (D-35). Why: a judge can favour its own family, and that only shows when both judge every answer. Here both rated GPT answers better grounded than Claude answers (Opus 88.8% against 81.4%, Sol 80.9% against 72.0% mean groundedness), so the ranking is not one judge favouring its own. *Trade-off:* every claim is paid for twice, and the report carries two headline numbers that disagree instead of one clean figure.
 2. **Report judge agreement only on held-out hand labels (D-5, D-41, D-43).** Hand labels are split into a tuning half and a held-out half; agreement (Cohen's kappa, with an interval that resamples whole answers) comes from the held-out half only, and a run is stamped calibrated only when every judge has been scored that way for the task under the current rubric. Why: a kappa measured on the labels used to tune the rubric is training accuracy, not an error rate. *Trade-off:* the published benchmark stays marked uncalibrated and provisional until the hand labels are done; EvalKit will not call it anything else.
-3. **EvalKit grows with the projects built on it, behind a canary (OWNER D-61 to D-63).** Before a release, a canary runs each downstream project's own offline EvalKit tests against the current code; an internal name that two or more projects use joins the public API; and every change made for a project ships with that project's failing case as an EvalKit test. On the first baseline five projects passed all their tests (1,303), gemma-grounded-health showed one known drift that cannot affect it until it upgrades from its v0.1.0 pin, and respectful-offers imports nothing, so has none to run; the canary cost $0. Why: projects were rebuilding the same gates, comparisons and labelling checks, and without a canary a release could break them silently. *Trade-off:* a wider surface to maintain, with the next release (v0.3.0) still unreleased while requests queue; a capability with one user and no likely second stays in its own project (D-63).
+3. **EvalKit grows with the projects built on it, behind a canary (OWNER D-61 to D-63).** Before a release, a canary runs each downstream project's own offline EvalKit tests against the current code; an internal name that two or more projects use joins the public API; and every change made for a project ships with that project's failing case as an EvalKit test. On the first baseline five projects passed all their tests (1,303), gemma-grounded-health showed one known drift that cannot affect it until it upgrades from its v0.1.0 pin, and respectful-offers imports nothing, so has none to run; the canary cost $0. Why: projects were rebuilding the same gates, comparisons and labelling checks, and without a canary a release could break them silently. *Trade-off:* a wider surface to maintain; a capability with one user and no likely second stays in its own project (D-63).
