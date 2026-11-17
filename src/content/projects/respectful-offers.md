@@ -35,6 +35,12 @@ images:
     alt: Respectful Offers results report
     kind: screenshot
     caption: Results report
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/architecture.svg
+    alt: "Architecture: interfaces (CLI, report, demo, EvalKit gates) on the respectful_offers library (features, churn, simulator, policies with the respect filter, auditor, off-policy estimators, evaluation, report) over a cached stage runner, built and released by a gated harness and CI"
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/dataflow.svg
+    alt: "Data flow: raw KKBox files to features, a calibrated churn model, a cohort split, a respect filter in front of every policy, simulated rollouts, an independent audit and off-policy checks, aggregated into the report, PR/FAQ, demo and EvalKit release gates. Every outcome is simulated"
+    kind: dataflow
 install:
   - cmd: pip install respectful-offers
     note: Python 3.11 to 3.13
