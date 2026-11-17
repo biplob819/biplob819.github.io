@@ -27,8 +27,14 @@ const storyToc = [
   (st.bet || st.priorities?.length) && { slug: 'priorities', text: 'The bet and the cuts' },
   (diagrams.length || designLinks.length) && { slug: 'how-it-works', text: 'How it works' },
 ].filter(Boolean) as { slug: string; text: string }[];
+const showTarget = st.monitoring?.some((m) => m.target);
+const showNow = st.monitoring?.some((m) => m.current);
+const STATUS_TAG = { pass: 'Pass', final: 'Final', provisional: 'Provisional', fail: 'Fail', pending: 'Not run yet' } as const;
 const tailToc = [
+  st.evals?.length && { slug: 'evals', text: 'Evals' },
+  st.improvements?.length && { slug: 'improvements', text: 'How it improved' },
   st.monitoring?.length && { slug: 'monitoring', text: 'Metrics and monitoring' },
+  st.learnings?.length && { slug: 'learnings', text: 'What I learned' },
   st.next?.length && { slug: 'next', text: "What's next" },
   { slug: 'feedback', text: 'Feedback' },
 ].filter(Boolean) as { slug: string; text: string }[];
@@ -131,20 +137,60 @@ const facts = [
         <Content />
         {shots.map((im) => <figure class="panel"><img src={im.src} alt={im.alt} loading="lazy" />{im.caption && <figcaption class="label">{im.caption}</figcaption>}</figure>)}
 
+        {st.evals?.length && (
+          <section class="story" aria-labelledby="evals">
+            <h2 id="evals">Evals</h2>
+            <p class="lead">Every test the build was put through, with the data it ran on and the result, including what is still provisional.</p>
+            <table class="evals">
+              <thead><tr><th>Eval</th><th>Data</th><th>Method</th><th>Result</th></tr></thead>
+              <tbody>{st.evals.map((e) => (
+                <tr>
+                  <td><strong>{e.url ? <a href={e.url} rel="noopener">{e.name} ↗</a> : e.name}</strong></td>
+                  <td>{e.data}</td>
+                  <td>{e.method}</td>
+                  <td><span class:list={['est', e.status]}>{STATUS_TAG[e.status]}</span>{e.result}</td>
+                </tr>
+              ))}</tbody>
+            </table>
+          </section>
+        )}
+
+        {st.improvements?.length && (
+          <section class="story" aria-labelledby="improvements">
+            <h2 id="improvements">How it improved</h2>
+            <div class="imp">{st.improvements.map((i) => (
+              <div class="imp-card">
+                <p class="label">{i.metric}</p>
+                <p class="ba"><span class="b">{i.before}</span><span class="arr" aria-label="became">→</span><span class="a"><span class="hl">{i.after}</span></span></p>
+                <p class="chg">{i.change}{i.url && <> <a href={i.url} rel="noopener">Record ↗</a></>}</p>
+              </div>
+            ))}</div>
+          </section>
+        )}
+
         {st.monitoring?.length && (
           <section class="story" aria-labelledby="monitoring">
             <h2 id="monitoring">Metrics and monitoring</h2>
             <table class="monitor">
-              <thead><tr><th>Metric</th><th>Target</th><th>Now</th><th>How it is watched</th></tr></thead>
+              <thead><tr><th>Metric</th>{showTarget && <th>Target</th>}{showNow && <th>Now</th>}<th>How it is watched</th></tr></thead>
               <tbody>{st.monitoring.map((m) => (
                 <tr>
                   <td><span class:list={['kind', m.kind]}>{KIND_TAG[m.kind]}</span><strong>{m.metric}</strong></td>
-                  <td>{m.target ?? '—'}</td>
-                  <td class="num-cell">{m.current ?? '—'}</td>
+                  {showTarget && <td>{m.target ?? '—'}</td>}
+                  {showNow && <td class="num-cell">{m.current ?? '—'}</td>}
                   <td>{m.how}</td>
                 </tr>
               ))}</tbody>
             </table>
+          </section>
+        )}
+
+        {st.learnings?.length && (
+          <section class="story" aria-labelledby="learnings">
+            <h2 id="learnings">What I learned</h2>
+            <ol class="learn">{st.learnings.map((l) => (
+              <li><p class="ls">{l.lesson}</p><p class="now"><span class="label">What I do now</span>{l.now}{l.url && <> <a href={l.url} rel="noopener">Source ↗</a></>}</p></li>
+            ))}</ol>
           </section>
         )}
 
@@ -252,6 +298,26 @@ const facts = [
   .kind { display: table; margin-bottom: 6px; color: var(--muted); }
   .kind.north-star { background: var(--ink); color: var(--bg); border-color: transparent; }
   .num-cell { font-family: var(--f-mono); white-space: nowrap; }
+  .lead { margin-top: -4px; }
+  .evals td:first-child { min-width: 130px; }
+  .evals td:last-child { min-width: 170px; color: var(--ink); }
+  .est { display: table; margin-bottom: 6px; font: 500 11px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
+  .est.pass { background: var(--lime); color: var(--on-lime); border-color: transparent; }
+  .est.provisional { color: var(--accent); border-color: currentColor; }
+  .est.fail { color: #c2410c; border-color: currentColor; }
+  .imp { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 18px 0; }
+  .imp-card { border: 1px solid var(--line); border-top: 3px solid var(--ink); border-radius: 0 0 var(--r) var(--r); padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .imp-card .label { margin: 0; text-transform: none; letter-spacing: 0; font-size: 12.5px; }
+  .ba { margin: 0; display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px; font: 800 clamp(26px, 3vw, 34px)/1 var(--f-display); font-stretch: 72%; color: var(--ink) !important; }
+  .ba .b { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; }
+  .ba .arr { font-size: .7em; color: var(--muted); }
+  .chg { margin: 0; font-size: 14.5px; }
+  .learn { list-style: none; padding: 0; margin: 18px 0; display: grid; gap: 12px; counter-reset: l; }
+  .learn li { counter-increment: l; position: relative; padding: 14px 16px 14px 52px; background: var(--surface); border-radius: var(--r); }
+  .learn li::before { content: counter(l, decimal-leading-zero); position: absolute; left: 16px; top: 14px; font: 500 13px/1.6 var(--f-mono); color: var(--muted); }
+  .ls { margin: 0; color: var(--ink) !important; font-weight: 500; }
+  .now { margin: 8px 0 0; font-size: 15px; display: flex; flex-direction: column; gap: 4px; }
+  .now .label { text-transform: uppercase; }
   .doc-links { display: flex; flex-wrap: wrap; gap: 8px 20px; }
   .fb { margin-top: 56px; padding: clamp(20px, 3vw, 32px); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 0 0 var(--r) var(--r); }
   .fb .label { margin: 0; }

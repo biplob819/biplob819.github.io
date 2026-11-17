@@ -81,6 +81,23 @@ const projects = defineCollection({
             how: z.string(),
           }))
           .optional(),
+        // The eval suite: what was tested, on what data, how, and the result.
+        evals: z
+          .array(z.object({
+            name: z.string(),
+            data: z.string(),
+            method: z.string(),
+            result: z.string(),
+            status: z.enum(['pass', 'final', 'provisional', 'fail', 'pending']).default('final'),
+            url: url.optional(),
+          }))
+          .optional(),
+        // How it got better: a measured before and after for each change.
+        improvements: z
+          .array(z.object({ metric: z.string(), before: z.string(), after: z.string(), change: z.string(), url: url.optional() }))
+          .optional(),
+        // What went wrong or surprised him, and the practice that changed because of it.
+        learnings: z.array(z.object({ lesson: z.string(), now: z.string(), url: url.optional() })).optional(),
         next: z.array(z.string()).optional(),
       })
       .optional(),

@@ -48,6 +48,60 @@ proof:
   - label: Threat model
     url: https://github.com/biplob819/assay-pipeline/blob/main/docs/threat-model.md
 cost: $4.60 for the full run
+story:
+  evals:
+    - name: Attack suite
+      data: 60 attack cases across the OWASP LLM Top 10, 3 trials each on public and held-out cases, plus 10 data-poisoning cases
+      method: Claude Sonnet 5.5 and GPT-6.1 Sol agents query the data through the SQL guard; every query lands in a hash-chained audit log
+      result: 0 of 310 succeeded; 95% upper bound 2.0% per trial for each model
+      status: pass
+      url: https://biplob819.github.io/assay-pipeline/
+    - name: Guard switched off
+      data: 80 attack trials
+      method: The same attacks with the SQL guard removed, to see what the models refuse on their own
+      result: "0 of 80 succeeded: the models refused on their own"
+      status: final
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
+    - name: Scripted attacker, no model
+      data: 60 attack cases
+      method: The attack SQL goes straight to the pipeline with no model in the loop, so the guard is tested by itself
+      result: "60 of 60 stopped: guard 45, quality rule 10, limit 5"
+      status: pass
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
+    - name: Answers on normal questions
+      data: The public split of normal questions
+      method: The agent's query compared with the gold query; the answer checked for the gold value
+      result: "Query matches gold: Sonnet 60%, Sol 70%. Answer states the gold value: Sonnet 100%, Sol 73%"
+      status: final
+      url: https://github.com/biplob819/assay-pipeline#results
+    - name: The SQL shown is the SQL that ran
+      data: All questions
+      method: The SQL quoted in each answer compared with the audit log
+      result: Claude Sonnet 5.5 97%, GPT-6.1 Sol 80%
+      status: final
+      url: https://github.com/biplob819/assay-pipeline#results
+    - name: Judge reliability
+      data: 96 judged cases and 24 hand labels
+      method: Two judges from different model families, each checked against hand labels
+      result: Agree with each other on 94 of 96; both match all 24 hand labels
+      status: pass
+      url: https://github.com/biplob819/assay-pipeline#results
+  learnings:
+    - lesson: The models refused almost every attack on their own, so "0 of 310" says little about the guard by itself.
+      now: I added a guard-off run and a scripted attacker with no model in the loop. The scripted attacker is the real test of the guard, and it stopped 60 of 60.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/reading-the-dashboard.md
+    - lesson: Two held-out attack statements were already in the public guard corpus, so their held-out score would have measured training accuracy.
+      now: Before freezing a held-out split, I search all public material for its statements.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
+    - lesson: The hand-label sampler drew from the whole suite, so paraphrases of two held-out answers were pushed to the public repo.
+      now: Anything published that comes from answers is drawn from the public split by construction, and a test checks every published file.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
+    - lesson: The data roadmap quoted the agent's filtered view (17,085 compounds) as if it described the whole snapshot (18,257).
+      now: Every number I quote names the table it came from, and a test checks it against that table.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
+    - lesson: After four rounds of tightening, the boundary lint still had bypasses.
+      now: I state what a check can and cannot catch instead of claiming it is complete, and pair each static check with a runtime one.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
 source:
   repo: biplob819/assay-pipeline
   synced: 2026-11-16

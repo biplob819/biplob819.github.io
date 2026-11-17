@@ -51,6 +51,12 @@ story:
     - { metric: The one number that says it works, kind: north-star, target: "60%", current: "57.5%", how: Where it's measured and what alerts on it }
     - { metric: Cost per run, kind: cost, target: "< $5", how: Token usage logged per call }
     - { metric: What must not get worse, kind: guardrail, how: How it's checked }
+  evals:                          # status: pass | final | provisional | fail | pending
+    - { name: What was tested, data: "200 questions, 4 models", method: How it was scored, result: "57.5% (95% CI 50.5 to 64.0)", status: provisional, url: https://... }
+  improvements:                   # a measured before and after for each change
+    - { metric: Cost per trial, before: "$0.040", after: "$0.018", change: What you changed to get there, url: https://... }
+  learnings:                      # what went wrong or surprised you, and what you do differently now
+    - { lesson: "The first headline was wrong because...", now: The practice that changed, url: https://.../docs/lessons.md }
   next:
     - The next experiment, and what result would change the plan
 

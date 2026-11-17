@@ -29,6 +29,7 @@ const STATUSES = ['live', 'launching', 'shipped', 'building', 'design'];
 const LINK_KEYS = ['repo', 'site', 'demo', 'report', 'package', 'video', 'prd', 'architecture', 'dataflow', 'methodology'];
 const CALLS = ['built', 'cut', 'later'];
 const MONITOR_KINDS = ['north-star', 'adoption', 'quality', 'guardrail', 'cost'];
+const EVAL_STATUS = ['pass', 'final', 'provisional', 'fail', 'pending'];
 // Frontmatter fields copied from a manifest, in this order. Keep in step with src/content.config.ts.
 const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost', 'story'];
 // Page body headings. The pain, priorities, monitoring and next steps live in `story`, so the body is the deep dive.
@@ -78,6 +79,9 @@ function validate(data, where) {
   for (const e of st.pain?.evidence ?? []) if (!e.text || (e.url && !/^https?:\/\//.test(e.url))) errs.push('every story.pain.evidence item needs text, and url must be a URL');
   for (const pr of st.priorities ?? []) if (!pr.item || !pr.why || !CALLS.includes(pr.call)) errs.push(`every story.priorities item needs item, why and call (${CALLS.join(', ')})`);
   for (const m of st.monitoring ?? []) if (!m.metric || !m.how || (m.kind && !MONITOR_KINDS.includes(m.kind))) errs.push(`every story.monitoring item needs metric and how; kind is one of ${MONITOR_KINDS.join(', ')}`);
+  for (const e of st.evals ?? []) if (!e.name || !e.data || !e.method || !e.result || (e.status && !EVAL_STATUS.includes(e.status))) errs.push(`every story.evals item needs name, data, method and result; status is one of ${EVAL_STATUS.join(', ')}`);
+  for (const i of st.improvements ?? []) if (!i.metric || !i.before || !i.after || !i.change) errs.push('every story.improvements item needs metric, before, after and change');
+  for (const l of st.learnings ?? []) if (!l.lesson || !l.now) errs.push('every story.learnings item needs lesson and now');
   if (data.tagline && data.tagline.length > 200) errs.push('tagline is over 200 characters; keep it to one line');
   return errs.map((e) => `${where}: ${e}`);
 }
@@ -269,7 +273,10 @@ const STORY_PARTS = [
   ['Headline result', (d) => d.headline],
   ['Result screenshots or charts', (d) => d.images?.some((i) => i.kind === 'result')],
   ['Methodology', (d) => d.methodology?.length || d.links?.methodology],
+  ['Evals (what was tested and the result)', (d) => d.story?.evals?.length],
+  ['Improvements (measured before and after)', (d) => d.story?.improvements?.length],
   ['Metrics and monitoring', (d) => d.story?.monitoring?.length],
+  ['Learnings', (d) => d.story?.learnings?.length],
   ['Proof a stranger can open', (d) => d.proof?.length],
   ["What's next", (d) => d.story?.next?.length],
 ];
