@@ -64,6 +64,12 @@ images:
     alt: "EvalKit failure explorer: each claim with both judges' verdicts and the cited sentence"
     kind: screenshot
     caption: Failure explorer
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/architecture.svg
+    alt: "EvalKit's layers: entry points (CLI, Python API, GitHub Action, demo), the evaluation pipeline, the typed DAG runtime with a content-addressed store and budget, model and system adapters, the public scorer library, outputs, the build harness, and the seven downstream projects that build on EvalKit and are checked by a weekly canary."
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/dataflow.svg
+    alt: "How one evalkit run turns a task and a config into a scored, reproducible result: load and sample, generate, validate, extract claims, judge with two model families, score, aggregate with confidence intervals, and write the summary, records and report. Every step is cached in a content-addressed store."
+    kind: dataflow
 proof:
   - label: Results summary (JSON)
     url: https://github.com/biplob819/evalkit/blob/main/docs/results/summary.json

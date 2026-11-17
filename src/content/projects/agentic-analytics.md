@@ -23,6 +23,13 @@ stack:
 proof:
   - label: Data card
     url: https://github.com/biplob819/agentic-analytics/blob/main/DATA_CARD.md
+images:
+  - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/architecture.svg
+    alt: "One Python package, agentic-analytics, with a CLI, a static dashboard and a Streamlit demo as front ends. Inside: loaders, read-only executors with a SQL guard, the ClickHouse remote MCP client, Claude and GPT adapters, the agent loop and the Cortex Analyst client, the runner with its answer cache, scorers, aggregate and report. External services: ClickHouse Cloud with its remote MCP server, Snowflake with Cortex Analyst, the Anthropic and OpenAI APIs, EvalKit as the eval engine, optional Langfuse traces, GitHub Pages, Streamlit Community Cloud, PyPI and a Postgres spend counter."
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/dataflow.svg
+    alt: "From the UK price paid snapshot to scored answers: both warehouses are loaded and checked for parity, gold SQL is checked across engines, each question goes to two MCP agents on ClickHouse and to Cortex Analyst on Snowflake, every answer's SQL is re-run read-only and compared with the gold result using EvalKit sql_match, and the scores are aggregated into the dashboard, README and demo."
+    kind: dataflow
 datasets:
   - name: HM Land Registry Price Paid Data
     url: https://www.gov.uk/government/statistical-data-sets/price-paid-data-downloads

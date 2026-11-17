@@ -66,6 +66,12 @@ images:
     alt: Compound explorer over the EGFR snapshot with provenance and quality flags
     kind: screenshot
     caption: Data explorer
+  - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/architecture.svg
+    alt: Two zones separated by a trust boundary. The pipeline zone ingests, normalises, flags and snapshots the data and builds the agent database; it never calls a model and holds no API keys. The agent zone runs the agent loop, the SQL guard, a read-only executor, the hash-chained audit log and EvalKit scoring; it cannot write to the snapshot. The only crossing is a read-only copy of the agent database. Results ship to GitHub Pages, Streamlit Community Cloud and PyPI, tested in CI on three operating systems.
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/dataflow.svg
+    alt: Public ChEMBL and PubChem data is ingested, normalised, flagged by quality rules and written as a hashed snapshot. The snapshot builds a read-only agent database. A question or attack goes to the agent, whose SQL passes the guard before an isolated read-only executor runs it. Every step is written to a hash-chained audit log, scored with EvalKit and two judges, and published as a results bundle, dashboard and release gates.
+    kind: dataflow
 install:
   - cmd: uv tool install assay-pipeline
     note: "or: pip install assay-pipeline"

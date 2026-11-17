@@ -22,6 +22,13 @@ stack:
 proof:
   - label: Data card
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/DATA_CARD.md
+images:
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/architecture.svg
+    alt: "Gemma Grounded Health: architecture"
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/dataflow.svg
+    alt: "Gemma Grounded Health: data flow"
+    kind: dataflow
 datasets:
   - name: PubMedQA
     url: https://pubmedqa.github.io/
