@@ -35,6 +35,7 @@ const toc = [
   st.pain && { slug: 'pain', text: 'User pain and hypothesis' },
   st.evals?.length && { slug: 'evals', text: 'Evals and performance' },
   st.improvements?.length && { slug: 'improvements', text: 'How it improved' },
+  d.timeline.length > 0 && { slug: 'grew', text: 'How it grew' },
   hasHow && { slug: 'how-it-works', text: 'Architecture and data flow' },
   hasMethod && { slug: 'methodology', text: 'Methodology' },
   ...headings.filter((h) => h.depth === 2 && !['how-it-works', 'methodology'].includes(h.slug)).map((h) => ({ slug: h.slug, text: h.text })),
@@ -151,6 +152,19 @@ const facts = [
                 <p class="chg">{i.change}{i.url && <> <a href={i.url} rel="noopener">Record ↗</a></>}</p>
               </div>
             ))}</div>
+          </section>
+        )}
+
+        {d.timeline.length > 0 && (
+          <section class="story" aria-labelledby="grew">
+            <h2 id="grew">How it grew</h2>
+            <ol class="tl">{d.timeline.map((t) => (
+              <li class:list={['tl-i', t.status]}>
+                <p class="tl-h"><span class="label">{t.when}</span><span class:list={['tl-s', t.status]}>{t.status === 'planned' ? 'Planned' : t.status === 'built' ? 'Built' : 'Released'}</span></p>
+                <p class="tl-t">{t.url ? <a href={t.url} rel="noopener">{t.title} ↗</a> : t.title}</p>
+                {t.items.length > 0 && <ul>{t.items.map((x) => <li>{x}</li>)}</ul>}
+              </li>
+            ))}</ol>
           </section>
         )}
 
@@ -338,6 +352,17 @@ const facts = [
   .lead { margin-top: -4px; }
   .cmds { background: var(--ink); color: var(--bg); border-radius: var(--r); padding: 16px 18px; font-size: 13.5px; line-height: 1.7; }
   .cmds code { background: none !important; color: inherit; }
+  .tl { list-style: none; padding: 0 0 0 18px; margin: 16px 0; border-left: 2px solid var(--line); display: grid; gap: 18px; }
+  .tl-i { position: relative; }
+  .tl-i::before { content: ''; position: absolute; left: -25px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--ink); }
+  .tl-i.planned::before { background: var(--bg); border: 2px solid var(--muted); width: 8px; height: 8px; }
+  .tl-h { display: flex; gap: 10px; align-items: center; margin: 0; }
+  .tl-h .label { margin: 0; }
+  .tl-s { font: 500 10.5px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; padding: 3px 6px; border-radius: 4px; background: var(--lime); color: var(--on-lime); }
+  .tl-s.planned { background: none; border: 1px solid var(--line); color: var(--muted); }
+  .tl-s.built { background: var(--ink); color: var(--bg); }
+  .tl-t { margin: 4px 0 0; font-weight: 600; color: var(--ink) !important; }
+  .tl-i ul { margin: 6px 0 0; padding-left: 18px; font-size: 15px; display: grid; gap: 4px; }
   .stackrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 18px 0 6px; }
   .stackrow .label { margin: 0; }
   .muted-note { color: var(--muted) !important; font-size: 15px; }

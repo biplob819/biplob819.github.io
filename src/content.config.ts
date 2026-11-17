@@ -57,6 +57,16 @@ const projects = defineCollection({
     // Evidence a stranger can open: results files, dashboards, run logs, write-ups.
     proof: z.array(z.object({ label: z.string(), url })).default([]),
     cost: z.string().optional(),
+    // How the project grew: releases, harness milestones and what's planned, from release records and the changelog.
+    timeline: z
+      .array(z.object({
+        when: z.string(),
+        title: z.string(),
+        status: z.enum(['released', 'built', 'planned']).default('released'),
+        items: z.array(z.string()).default([]),
+        url: url.optional(),
+      }))
+      .default([]),
     // Commands from the README that install and run it (open-source builds).
     install: z.array(z.object({ cmd: z.string(), note: z.string().optional() })).default([]),
     // The real, public datasets it runs on.

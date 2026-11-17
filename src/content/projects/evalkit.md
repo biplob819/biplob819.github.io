@@ -40,13 +40,6 @@ stack:
   - DuckDB
   - Vega-Lite
   - Streamlit
-methodology:
-  - Answers must cite sentences from the source abstract
-  - Two judges from different model families, checked against hand labels
-  - Bootstrap 95% confidence intervals and paired permutation tests
-  - Holm correction across model comparisons
-  - Self-preference measured, not assumed away
-  - Cost per correct answer from real token counts
 images:
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/headline.svg
     alt: "EvalKit headline chart: correct and fully grounded rate by model with 95% confidence intervals"
@@ -70,6 +63,13 @@ images:
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/dataflow.svg
     alt: "How one evalkit run turns a task and a config into a scored, reproducible result: load and sample, generate, validate, extract claims, judge with two model families, score, aggregate with confidence intervals, and write the summary, records and report. Every step is cached in a content-addressed store."
     kind: dataflow
+methodology:
+  - Answers must cite sentences from the source abstract
+  - Two judges from different model families, checked against hand labels
+  - Bootstrap 95% confidence intervals and paired permutation tests
+  - Holm correction across model comparisons
+  - Self-preference measured, not assumed away
+  - Cost per correct answer from real token counts
 proof:
   - label: Results summary (JSON)
     url: https://github.com/biplob819/evalkit/blob/main/docs/results/summary.json
@@ -81,6 +81,45 @@ proof:
     url: https://pypi.org/project/evalkit-harness/
   - label: Data card
     url: https://github.com/biplob819/evalkit/blob/main/DATA_CARD.md
+timeline:
+  - when: 14 Nov 2026
+    title: Build harness and first pipeline
+    status: built
+    url: https://github.com/biplob819/evalkit/blob/main/changelog.md
+    items:
+      - A dependency-gated build graph of 26 nodes and a catalog of 144 capabilities, each needing named tests as proof
+      - 12 gates per node, each with a self-test that must fail on planted bad input
+      - Generate, validate, extract claims, dual judging, scoring, and an agent track with a simulated user
+  - when: 15 Nov 2026
+    title: v0.1.0 on PyPI
+    status: released
+    url: https://pypi.org/project/evalkit-harness/0.1.0/
+    items:
+      - Published by GitHub trusted publishing, with install smoke tests on Linux, macOS and Windows
+      - PubMedQA benchmark plus SciFact as a second built-in task, CSV datasets, a CI action example and a public-API contract test
+  - when: 16 Nov 2026
+    title: "v0.2.0: evaluate your own system, not just a model"
+    status: released
+    url: https://pypi.org/project/evalkit-harness/0.2.0/
+    items:
+      - "Systems under test: plug in an app (retrieval, prompts, tools) and score it like a model"
+      - Task-declared scorers and per-slice results with 95% intervals
+      - Driven by the first downstream project, the AI Teaching Assistant
+  - when: 17 Nov 2026
+    title: One eval loop for every project (Wave 5)
+    status: built
+    url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    items:
+      - "A downstream registry and weekly canary: 7 projects pinned, 1,303 of their tests passing against current EvalKit"
+      - Release gates on any metric with fail and warn severity and exact one-sided bounds, asked for by Assay Pipeline
+      - Calibration sheets for any criterion, and a standard efficiency block (tokens, cache hits, cost per correct answer, latency)
+  - when: Next
+    title: v0.3.0 and v0.4.0
+    status: planned
+    url: https://github.com/biplob819/evalkit/blob/main/docs/graph/graph.md
+    items:
+      - "v0.3.0: a public API for internals two or more projects use, gates, and run-versus-run comparison"
+      - "v0.4.0: a monitoring and improvement ledger (from Field PM Pack), a paraphrase contamination probe (from Gemma Grounded Health), a calibration integrity sheet (from the AI Teaching Assistant) and an agent security kit (from Assay Pipeline)"
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
@@ -154,6 +193,11 @@ story:
       after: $6.16
       change: Estimated from tokens measured in a pilot instead of placeholders. The run then cost $3.81.
       url: https://github.com/biplob819/evalkit/blob/main/changelog.md
+    - metric: Build harness, 14 to 17 Nov
+      before: 26 nodes
+      after: 42 nodes
+      change: Capabilities grew from 144 to 209 (184 green, each with named tests as proof), and 40 lessons were each turned into a rule a gate or test now enforces.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
   monitoring:
     - metric: Spend per run
       kind: cost
