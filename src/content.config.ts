@@ -73,6 +73,12 @@ const projects = defineCollection({
             evidence: z.array(z.object({ text: z.string(), source: z.string().optional(), url: url.optional() })).optional(),
           })
           .optional(),
+        // User segments from the PRD's personas; `primary` marks the one the product is built for first.
+        segments: z.array(z.object({ name: z.string(), need: z.string(), primary: z.boolean().default(false) })).optional(),
+        // The PRD's user stories with their MoSCoW priority.
+        stories: z
+          .array(z.object({ as: z.string(), want: z.string(), why: z.string(), priority: z.enum(['must', 'should', 'could', "won't"]) }))
+          .optional(),
         bet: z.string().optional(),
         priorities: z
           .array(z.object({ item: z.string(), call: z.enum(['built', 'cut', 'later']), why: z.string() }))

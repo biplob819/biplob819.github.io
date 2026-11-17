@@ -60,6 +60,19 @@ const facts = [
       <p class="tagline">{d.tagline}</p>
     </header>
 
+    {links.length > 0 && (
+      <nav class="links" aria-label="Project links">
+        {links.map(([k, v], n) => <a class:list={['btn', { primary: n === 0 }]} href={v} rel="noopener">{LINK_LABEL[k] ?? k} ↗</a>)}
+      </nav>
+    )}
+
+    {(st.overview || st.impact?.length) && (
+      <section class="ovim" aria-label="Overview and impact">
+        {st.overview && <div><p class="label">Overview</p><p class="ov">{st.overview}</p></div>}
+        {st.impact?.length && <div><p class="label">Impact</p><ul class="im">{st.impact.map((x) => <li>{x}</li>)}</ul></div>}
+      </section>
+    )}
+
     <dl class="facts">
       {facts.map(([k, v]) => <div><dt class="label">{k}</dt><dd>{v}</dd></div>)}
     </dl>
@@ -81,18 +94,7 @@ const facts = [
       </section>
     )}
 
-    {links.length > 0 && (
-      <nav class="links" aria-label="Project links">
-        {links.map(([k, v], n) => <a class:list={['btn', { primary: n === 0 }]} href={v} rel="noopener">{LINK_LABEL[k] ?? k} ↗</a>)}
-      </nav>
-    )}
 
-    {(st.overview || st.impact?.length) && (
-      <section class="ovim" aria-label="Overview and impact">
-        {st.overview && <div><p class="label">Overview</p><p class="ov">{st.overview}</p></div>}
-        {st.impact?.length && <div><p class="label">Impact</p><ul class="im">{st.impact.map((x) => <li>{x}</li>)}</ul></div>}
-      </section>
-    )}
 
     {d.cover && <figure class="cover"><img src={d.cover} alt={`${d.title} product screen`} width="1440" height="900" /></figure>}
 
@@ -113,6 +115,18 @@ const facts = [
                 {(e.source || e.url) && <cite class="label">{e.url ? <a href={e.url} rel="noopener">{e.source ?? 'Source'} ↗</a> : e.source}</cite>}
               </blockquote>
             ))}
+            {st.segments?.length && (
+              <>
+                <h3 class="sub">Who it's for</h3>
+                <div class="segs">{st.segments.map((g) => (
+                  <div class:list={['seg', { primary: g.primary }]}>
+                    {g.primary && <span class="call built">Primary</span>}
+                    <p class="seg-n">{g.name}</p>
+                    <p class="seg-d">{g.need}</p>
+                  </div>
+                ))}</div>
+              </>
+            )}
           </section>
         )}
 
@@ -125,6 +139,21 @@ const facts = [
                 <thead><tr><th>Call</th><th>What</th><th>Why</th></tr></thead>
                 <tbody>{st.priorities.map((pr) => <tr><td><span class:list={['call', pr.call]}>{CALL_LABEL[pr.call]}</span></td><td>{pr.item}</td><td>{pr.why}</td></tr>)}</tbody>
               </table>
+            )}
+            {st.stories?.length && (
+              <>
+                <h3 class="sub">User stories, prioritised</h3>
+                <p class="lead small">From the PRD. Must ships in the first release; Should completes it; Could is a stretch.</p>
+                <table class="stories">
+                  <thead><tr><th>Priority</th><th>As a</th><th>I want to</th><th>So that</th></tr></thead>
+                  <tbody>{st.stories.slice(0, 8).map((u) => <tr><td><span class:list={['pri', u.priority.replace("'", '')]}>{u.priority}</span></td><td>{u.as}</td><td>{u.want}</td><td>{u.why}</td></tr>)}</tbody>
+                </table>
+                {st.stories.length > 8 && (
+                  <details class="more-l"><summary>{st.stories.length - 8} more user stor{st.stories.length - 8 > 1 ? 'ies' : 'y'}</summary>
+                    <table class="stories"><tbody>{st.stories.slice(8).map((u) => <tr><td><span class:list={['pri', u.priority.replace("'", '')]}>{u.priority}</span></td><td>{u.as}</td><td>{u.want}</td><td>{u.why}</td></tr>)}</tbody></table>
+                  </details>
+                )}
+              </>
             )}
           </section>
         )}
@@ -252,7 +281,7 @@ const facts = [
   .crumb a { color: var(--muted); text-decoration: none; }
   .crumb a:hover { color: var(--ink); }
   header { margin-top: 32px; }
-  h1 { font-size: clamp(56px, 10vw, 128px); margin: 14px 0 0; }
+  h1 { font-size: clamp(44px, 7.5vw, 100px); margin: 14px 0 0; }
   .tagline { font-size: clamp(18px, 2vw, 22px); color: var(--muted); max-width: 58ch; margin: 18px 0 0; }
   .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 36px 0 0; border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
   .facts div { padding: 14px 16px; border-right: 1px solid var(--line); min-width: 0; }
@@ -270,6 +299,7 @@ const facts = [
   .result.pending { border-top-color: var(--accent); }
   .result.pending p { margin: 0; color: var(--ink-2); max-width: 70ch; }
   .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .ovim + .facts, .links + .facts { margin-top: 28px; }
   .cover, .panel { margin: 32px 0 0; }
   .cover img { border-radius: var(--r); border: 1px solid var(--line); }
   .panel { background: var(--surface); border-radius: var(--r); padding: clamp(12px, 2vw, 24px); }
@@ -313,6 +343,18 @@ const facts = [
   .kind.north-star { background: var(--ink); color: var(--bg); border-color: transparent; }
   .num-cell { font-family: var(--f-mono); white-space: nowrap; }
   .lead { margin-top: -4px; }
+  .sub { font: 600 17px/1.3 var(--f-body); margin: 26px 0 10px; color: var(--ink); }
+  .segs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  .seg { border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .seg.primary { border-color: var(--ink); }
+  .seg-n { margin: 0; font-weight: 600; color: var(--ink) !important; font-size: 15.5px; }
+  .seg-d { margin: 0; font-size: 14.5px; }
+  .lead.small { font-size: 14.5px; margin: -4px 0 0; }
+  .pri { display: inline-block; font: 500 11px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; padding: 4px 6px; border-radius: 4px; border: 1px solid var(--line); white-space: nowrap; color: var(--muted); }
+  .pri.must { background: var(--ink); color: var(--bg); border-color: transparent; }
+  .pri.should { color: var(--ink); border-color: var(--ink); }
+  .stories td:nth-child(2) { white-space: nowrap; font-weight: 500; color: var(--ink); }
+  @media (max-width: 600px) { .stories td:nth-child(2) { white-space: normal; } }
   .ovim { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); margin-top: 28px; padding: clamp(18px, 3vw, 28px) 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .ovim .label { margin: 0 0 8px; }
   .ov { margin: 0; font-size: clamp(17px, 1.7vw, 19px); line-height: 1.55; color: var(--ink); }
