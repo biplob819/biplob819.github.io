@@ -17,6 +17,7 @@ links:
   prd: https://github.com/biplob819/fraud-review-bedrock/blob/main/PRD.md
   techspec: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
   prdOnePage: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/prd-onepager.md
+  report: https://biplob819.github.io/fraud-review-bedrock/
 stack:
   - Amazon Bedrock
   - Claude
