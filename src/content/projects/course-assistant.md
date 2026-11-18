@@ -1,6 +1,7 @@
 ---
 title: AI Teaching Assistant
-tagline: A course assistant that answers only from approved session materials, cites every slide and hands everything else to the teaching team.
+tagline: A course assistant that answers only from approved session materials,
+  cites every slide and hands everything else to the teaching team.
 kind: case-study
 status: building
 role: Product and build
@@ -20,18 +21,38 @@ links:
   prd: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20PRD.md
   techspec: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20Tech%20Spec.md
 images:
+  - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/walkthrough.gif
+    alt: "Walkthrough of ten screens: the learner page passcode gate, the privacy
+      notice and consent, an answer from the course materials with its source
+      while a pasted injection is ignored, graded work answered with a hint
+      instead of the work, a not-covered question answered with a fixed message,
+      an admin question sent to the teaching team, the teaching team’s pause
+      switches, the command-line tool, the release gate failing on the held-out
+      set, and the architecture"
+    caption: ten real screens from recorded answers, 25 seconds, loops
+    kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/architecture.svg
-    alt: "Four layers: course ingest, the runtime (Streamlit pages, answer pipeline, privacy, escalation, digest, store, LLM client), the evaluation stack built on EvalKit, and the release and CI layer."
+    alt: "Four layers: course ingest, the runtime (Streamlit pages, answer pipeline,
+      privacy, escalation, digest, store, LLM client), the evaluation stack
+      built on EvalKit, and the release and CI layer."
     kind: architecture
   - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/dataflow.svg
-    alt: A learner question passes the passcode gate, then route and answer run in parallel; the answer is grounded, integrity-checked and leak-scanned before a status is chosen. Not-covered answers can go to the teaching team's queue. Consenting learners' questions feed a k-anonymous weekly digest.
+    alt: A learner question passes the passcode gate, then route and answer run in
+      parallel; the answer is grounded, integrity-checked and leak-scanned
+      before a status is chosen. Not-covered answers can go to the teaching
+      team's queue. Consenting learners' questions feed a k-anonymous weekly
+      digest.
     kind: dataflow
 methodology:
-  - A 429-case golden set on a public sample course, written before any prompt tuning
-  - Split 50/50 by group; prompts and thresholds tuned on the public half only, the held-out half scored once
+  - A 429-case golden set on a public sample course, written before any prompt
+    tuning
+  - Split 50/50 by group; prompts and thresholds tuned on the public half only,
+    the held-out half scored once
   - Groundedness and integrity judged by two models from different vendors
-  - Judges calibrated against 100 owner-labelled items per check before the gate can pass
-  - A release gate with zero tolerance for integrity, injection, leaks and identity
+  - Judges calibrated against 100 owner-labelled items per check before the gate
+    can pass
+  - A release gate with zero tolerance for integrity, injection, leaks and
+    identity
 proof:
   - label: First full run report
     url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
@@ -40,16 +61,28 @@ proof:
   - label: Held-out manifest (hashes)
     url: https://github.com/biplob819/course-assistant/blob/main/golden/heldout/MANIFEST.json
 story:
-  overview: A course assistant for an executive programme that answers only from approved session materials, cites the slide every time, and hands everything else to the teaching team. It gives hints, never answers, on graded work, and is scored on a 280-case golden set before launch. The demo runs on a public sample course, with no learner data.
+  overview: A course assistant for an executive programme that answers only from
+    approved session materials, cites the slide every time, and hands everything
+    else to the teaching team. It gives hints, never answers, on graded work,
+    and is scored on a 280-case golden set before launch. The demo runs on a
+    public sample course, with no learner data.
   pain:
-    who: Working professionals on an executive programme who study around their jobs, and the teaching team that supports them.
-    problem: Questions come up between live sessions and wait for the forum or the next session, and the teaching team answers the same ones more than once. A general chatbot would reply at once, but from outside the course, sometimes wrongly, and it would write graded work on request.
-  bet: An assistant that answers only from approved course material, cites the slide every time, hands everything else to a person, and is measured before launch can save the teaching team repeat work without risking accuracy or academic integrity.
+    who: Working professionals on an executive programme who study around their
+      jobs, and the teaching team that supports them.
+    problem: Questions come up between live sessions and wait for the forum or the
+      next session, and the teaching team answers the same ones more than once.
+      A general chatbot would reply at once, but from outside the course,
+      sometimes wrongly, and it would write graded work on request.
+  bet: An assistant that answers only from approved course material, cites the
+    slide every time, hands everything else to a person, and is measured before
+    launch can save the teaching team repeat work without risking accuracy or
+    academic integrity.
   evals:
     - name: Grounded answer rate
       data: 215 fresh held-out cases, scored once
       method: Each answer sentence must be supported by a cited slide; target 0.90
-      result: "0.813 after the quality round (first run 0.693 on the first held-out half): still below target"
+      result: "0.813 after the quality round (first run 0.693 on the first held-out
+        half): still below target"
       status: fail
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Locator correct
@@ -72,7 +105,8 @@ story:
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Citation validity, handover, injection, leaks
       data: Fresh held-out set
-      method: Citations open the cited slide; out-of-scope goes to the team; zero tolerance on injection and leaks
+      method: Citations open the cited slide; out-of-scope goes to the team; zero
+        tolerance on injection and leaks
       result: All pass (1.000)
       status: pass
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
@@ -91,7 +125,10 @@ story:
     - metric: Grounded answer rate, held-out
       before: "0.693"
       after: "0.813"
-      change: Citation mapping, paragraph coverage and v2 answer and support rules, tuned on the public half only, then scored once on a fresh held-out set. On the public half the gain is +0.378 (95% CI +0.257 to +0.514, Holm-separated).
+      change: Citation mapping, paragraph coverage and v2 answer and support rules,
+        tuned on the public half only, then scored once on a fresh held-out set.
+        On the public half the gain is +0.378 (95% CI +0.257 to +0.514,
+        Holm-separated).
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - metric: Locator correct, held-out
       before: "0.800"
@@ -101,7 +138,8 @@ story:
     - metric: Integrity, held-out
       before: 52 of 56
       after: 100%
-      change: All four failures came from one cached hint; the hint cache was switched off until integrity labels clear it.
+      change: All four failures came from one cached hint; the hint cache was switched
+        off until integrity labels clear it.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
 source:
   repo: biplob819/course-assistant
