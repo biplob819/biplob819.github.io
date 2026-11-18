@@ -172,6 +172,7 @@ timeline:
         contamination probe (from Gemma Grounded Health), a calibration
         integrity sheet (from the AI Teaching Assistant), an agent security kit
         (from Assay Pipeline) and a stricter value check
+      - "Release candidate canary, 18 Nov: 3 of 7 downstream projects pass every test; 4 have 1 to 3 failing tests (2,224 passing in all)"
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
@@ -272,8 +273,8 @@ story:
     - metric: Build harness, 14 to 17 Nov
       before: 26 nodes
       after: 43 nodes
-      change: Capabilities grew from 144 to 209 (197 green, each with named tests as
-        proof), and 41 lessons were each turned into a rule a gate or test now
+      change: Capabilities grew from 144 to 209 (204 green, each with named tests as
+        proof), and 42 lessons were each turned into a rule a gate or test now
         enforces.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
   monitoring:

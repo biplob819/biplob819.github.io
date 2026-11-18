@@ -161,6 +161,11 @@ story:
       status: final
       url: https://biplob819.github.io/respectful-offers/
   monitoring:
+    - metric: Challenger retrain test
+      kind: quality
+      target: promote only if the claim improves in every simulator variant
+      current: "18 Nov: not promoted; improved in 1 of 3 variants"
+      how: offers challenge reruns a retrained model against the published run on the same members (results/kkbox/challenge)
     - metric: Respect violations
       kind: guardrail
       target: "0"
