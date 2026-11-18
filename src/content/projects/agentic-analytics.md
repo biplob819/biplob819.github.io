@@ -14,6 +14,7 @@ tags:
   - benchmarks
 links:
   repo: https://github.com/biplob819/agentic-analytics
+  report: https://biplob819.github.io/agentic-analytics/
   prd: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20PRD.md
   techspec: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20Tech%20Spec.md
 stack:

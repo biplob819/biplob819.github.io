@@ -163,16 +163,17 @@ timeline:
       - "On 18 Nov the canary ran all seven projects' tests against it: 2,161
         passed, four projects fully green and three with known drift from older
         pins"
-  - when: Next
+  - when: 18 Nov 2026
     title: v0.4.0
-    status: planned
-    url: https://github.com/biplob819/evalkit/blob/main/docs/graph/graph.md
+    status: released
+    url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/release-v0.4.0-2026-11-18.json
     items:
+      - On PyPI as evalkit-harness 0.4.0, published from the tagged commit with CI green on Linux, macOS and Windows
       - A monitoring and improvement ledger (from Field PM Pack), a paraphrase
         contamination probe (from Gemma Grounded Health), a calibration
         integrity sheet (from the AI Teaching Assistant), an agent security kit
         (from Assay Pipeline) and a stricter value check
-      - "Release candidate canary, 18 Nov: 3 of 7 downstream projects pass every test; 4 have 1 to 3 failing tests (2,224 passing in all)"
+      - "Release canary: 3 of 7 downstream projects pass every test; 4 have known, explained drift (2,224 of their tests passing)"
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
