@@ -2,7 +2,7 @@
 title: "Field PM Pack: Fraud Review Agent"
 tagline: A fraud-review agent on Amazon Bedrock that triages card alerts, explains each decision against a written policy and sends uncertain cases to a person.
 kind: case-study
-status: building
+status: shipped
 role: Product and build
 year: "2026"
 order: 34
@@ -14,6 +14,7 @@ links:
   repo: https://github.com/biplob819/fraud-review-bedrock
   prd: https://github.com/biplob819/fraud-review-bedrock/blob/main/PRD.md
   techspec: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+  prdOnePage: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/prd-onepager.md
 stack:
   - Amazon Bedrock
   - Claude
@@ -136,7 +137,7 @@ source:
 
 ## Write-up
 
-*Status: results pending the final evaluation (explanation judging and the dashboard). Every figure below comes from `docs/measurements/eval-runs.jsonl` and is on simulated data.*
+*Status: final evaluation done. Every figure below comes from `docs/measurements/eval-runs.jsonl` or `docs/measurements/summary-eval2.json` and is on simulated data.*
 
 Card-fraud teams drown in alerts, and most of them are legitimate. This project is a two-stage Claude agent that triages flagged transactions. Claude Haiku 5.5 screens each alert, and Claude Sonnet 5.5 reviews whatever Haiku will not clear. A router written in code, not the model, decides whether a clear is allowed, by checking the cited policy clause against the alert. Nothing that looks like fraud is closed without a person: the agent has no tool to block a card or contact anyone, and every step lands in a hash-chained audit log.
 
