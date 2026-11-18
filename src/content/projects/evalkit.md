@@ -106,6 +106,10 @@ proof:
     url: https://pypi.org/project/evalkit-harness/
   - label: Data card
     url: https://github.com/biplob819/evalkit/blob/main/DATA_CARD.md
+  - label: Cross-project eval index (each project's confirmed headline, checked against its source file)
+    url: https://biplob819.github.io/evalkit/index/
+  - label: User guide, 12 steps
+    url: https://github.com/biplob819/evalkit/blob/main/docs/guide.md
   - label: Downstream canary, 18 Nov (JSON)
     url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/downstream-canary-2026-11-18.json
 timeline:
@@ -169,6 +173,7 @@ timeline:
     url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/release-v0.4.0-2026-11-18.json
     items:
       - On PyPI as evalkit-harness 0.4.0, published from the tagged commit with CI green on Linux, macOS and Windows
+      - "A cross-project eval index: one table of every project's headline, each value checked against its source file at a recorded commit"
       - A monitoring and improvement ledger (from Field PM Pack), a paraphrase
         contamination probe (from Gemma Grounded Health), a calibration
         integrity sheet (from the AI Teaching Assistant), an agent security kit
@@ -274,7 +279,7 @@ story:
     - metric: Build harness, 14 to 17 Nov
       before: 26 nodes
       after: 43 nodes
-      change: Capabilities grew from 144 to 209 (204 green, each with named tests as
+      change: Capabilities grew from 144 to 209 (all 209 green, each with named tests as
         proof), and 42 lessons were each turned into a rule a gate or test now
         enforces.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
