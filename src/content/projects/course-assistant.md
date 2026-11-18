@@ -48,10 +48,14 @@ methodology:
     tuning
   - Split 50/50 by group; prompts and thresholds tuned on the public half only,
     the held-out half scored once
-  - Groundedness and integrity judged by two models from different vendors
+  - Groundedness and integrity judged by two models from different vendors in the
+    first full run (Claude Opus 5.5 and GPT Sol). While the Anthropic account is
+    unfunded, live runs use one judge, GPT Sol, with GPT Terra writing the answers
+    so the judge never grades its own work; that loses the cross-vendor check, and
+    EvalKit publishes no headline from a single-judge run
   - Judges calibrated before the gate can pass, against a blind model panel (two
-    labellers from two vendors that are not judges, a third breaking splits); a
-    person's labels can replace the panel's later
+    OpenAI labellers that are not judges, GPT Terra and GPT Luna, with GPT Terra
+    breaking splits); a person's labels can replace the panel's later
   - A release gate with zero tolerance for integrity, injection, leaks and
     identity
 proof:
@@ -118,14 +122,20 @@ story:
       status: pass
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Judge calibration
-      data: 336 groundedness claims and 100 integrity conversations, labelled and
-        relabelled blind
-      method: Judges checked against a model panel (claude-fable-5-2 and
-        gpt-6.1-terra, claude-sonnet-5-5 breaking splits) before the gate can pass;
-        every gate verdict names the labeller
-      result: "Labels made; agreement not yet scored"
-      status: pending
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+      data: 336 groundedness claims and 100 integrity conversations labelled blind,
+        a sample relabelled blind in fresh requests
+      method: Held-out agreement (Cohen's kappa, 95% bootstrap interval) with a
+        model panel of GPT Terra and GPT Luna, GPT Terra breaking splits; every gate
+        verdict names the labeller. Read with care - the integrity intervals are
+        wide because the 50 held-out conversations hold very few violations, and
+        the labellers share a vendor with GPT Sol and are now also the answer model
+        and claim extractor, so labelling and judging are not independent
+      result: "Certified 18 Nov 2026. GPT Sol (current judge): groundedness 0.88
+        [0.75, 0.97] on 155 claims, integrity 0.79 [0.00, 1.00] on 50
+        conversations. Claude Opus 5.5 (first run): 0.68 [0.51, 0.84] and 0.00
+        [0.00, 1.00]"
+      status: pass
+      url: https://github.com/biplob819/course-assistant#evaluation
   improvements:
     - metric: Grounded answer rate, held-out
       before: "0.693"
