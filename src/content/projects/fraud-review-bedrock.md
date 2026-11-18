@@ -154,3 +154,15 @@ I set the goals and the hard rules. Those were zero fraud leakage, a spend cap w
 **A failed evaluation stays in the record, and the fix is tested on fresh alerts (D-39, D-40).** When the first frozen eval leaked two frauds, both small purchases at 11 p.m., the fix (never auto-clear at night) was chosen on the dev set. It was then proven on a second, disjoint sample drawn in advance, never on the eval that exposed the problem. *Trade-off:* auto-clear fell from 36.8% to 8.8% (simulated data), and a fresh sample costs another paid run. Without both, the zero-leakage claim would not be honest.
 
 **Claude API instead of Amazon Bedrock for the published runs (D-35).** The AWS project stayed on the free plan with Claude not authorised, which blocked every node that calls a model. The request shape is identical on both providers, so the switch is one config line and Bedrock remains a supported path. *Trade-off:* the published results do not exercise Bedrock, which the architecture diagram marks as "supported, not run".
+
+## What the checks on the reasons found
+
+The reasons the agent writes were checked in four ways (simulated data). Every reason cites a real policy clause and an allowed field (964 of 964), and the numbers that could be checked were all true (1,098 of 1,098). Most claims could not be checked: 2,815 of 3,913 value claims were unverifiable, and none was contradicted. Driver agreement with the baseline's top features was 46%, and no reason mentioned a protected attribute.
+
+The faithfulness judging is a partial result on simulated data. One judge, Claude Opus 5.5, rated 1,996 of 4,159 claims as supported (48.0%, with 74.9% of claims reached). The second judge never produced a verdict, and the judge was not calibrated against human labels. The evidence sentences also round numbers and carry no policy text, so correct claims read as unsupported. The number is a lower bound on a weak measurement, not a score for the agent (simulated data).
+
+The judging run, on simulated data, cost more than I had approved: about $28.79 against a $15 cap, because a resumed run restarted the cap. The cap is now a total across reruns, and the ledger records the overrun.
+
+## What it costs and what real data would change
+
+The simulated run cost about $6.24 per 1,000 alerts. The ROI model turns the 8.8% auto-clear rate into analyst hours, and at the 5.3% leakage upper bound it shows no payback, because 0 leaks in 55 frauds is too small a sample to rule out a loss that size. Real data would replace every illustrative input, and a much larger labelled sample would be needed before any saving could be quoted.
