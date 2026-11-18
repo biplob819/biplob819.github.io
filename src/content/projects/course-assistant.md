@@ -169,7 +169,7 @@ The first held-out run failed: grounded 0.693 against a 0.90 target. A tuning ro
 
 ## My role
 
-I wrote the product requirements and owned every ruling that shaped the system: multi-turn conversations, a passcode on every page, the monthly spend cap, the order in which held-out data may be used, and the restated latency target. I approved each paid evaluation run and own the human calibration labels and the live deploy, which are still pending.
+I wrote the product requirements and owned every ruling that shaped the system: multi-turn conversations, a passcode on every page, the monthly spend cap, the order in which held-out data may be used, and the restated latency target. I approved each paid evaluation run, chose a model panel to label the calibration sets, and own the live deploy, which is still pending.
 
 Claude Code built the code, tests, evaluation runs and documents under EvalKit's node harness. Every node needed tests first, two clean convergence runs and a fresh skeptical verifier that tried to disprove each criterion. Nodes went green only when nothing was left to disprove. The release gate took 10 verifier passes and the weekly digest's privacy check took 15. Every scope limit is written down as a decision ([decisions](https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md)).
 
