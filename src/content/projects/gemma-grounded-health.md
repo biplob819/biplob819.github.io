@@ -1,6 +1,8 @@
 ---
 title: Gemma Grounded Health
-tagline: A small open Gemma model fine-tuned to answer health questions only from a given abstract and cite its sentences. Research only, not medical advice.
+tagline: A small open Gemma model fine-tuned to answer health questions only
+  from a given abstract and cite its sentences. Research only, not medical
+  advice.
 kind: case-study
 status: building
 role: Product and build
@@ -20,6 +22,14 @@ stack:
   - Hugging Face
   - EvalKit
 images:
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/walkthrough.gif
+    alt: "Walkthrough of ten screens: the overview of base against fine-tuned
+      results, the data flow and architecture diagrams, the command-line tool
+      and its checks, the hand-audit page, results for four models with
+      intervals per judge, what failed and why, the laptop speed benchmark, and
+      the parity and contamination checks"
+    caption: ten screens from committed results (v1), 25 seconds, loops
+    kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/architecture.svg
     alt: "Gemma Grounded Health: architecture"
     kind: architecture
@@ -28,15 +38,21 @@ images:
     kind: dataflow
 headline:
   value: 50.1% → 72.8%
-  label: label accuracy of a fine-tuned Gemma 4 E2B on 1,000 expert-labelled PubMedQA questions, against its base model
-  note: "But \"correct and fully grounded\" fell from 41.8% to 38.8% (Claude Opus 5.5 judge; not separated): the fine-tune learned to cite the study's aim instead of its results. Cause traced to the training data; v2 is being built on dev data only. Run r-f0f3b432a413. Research only, not medical advice."
+  label: label accuracy of a fine-tuned Gemma 4 E2B on 1,000 expert-labelled
+    PubMedQA questions, against its base model
+  note: "But \"correct and fully grounded\" fell from 41.8% to 38.8% (Claude Opus
+    5.5 judge; not separated): the fine-tune learned to cite the study's aim
+    instead of its results. Cause traced to the training data; v2 is being built
+    on dev data only. Run r-f0f3b432a413. Research only, not medical advice."
 metrics:
   - value: 52% vs 86%
-    label: "of claims supported by the cited sentences: fine-tuned vs base (Opus judge)"
+    label: "of claims supported by the cited sentences: fine-tuned vs base (Opus
+      judge)"
   - value: 3.3 GB
     label: model file at 4-bit; runs offline on a laptop
   - value: "4"
-    label: "models on the same 1,000 questions: Gemma base and fine-tuned, Claude Haiku 5.5, GPT-6 Luna"
+    label: "models on the same 1,000 questions: Gemma base and fine-tuned, Claude
+      Haiku 5.5, GPT-6 Luna"
   - value: $53.68
     label: for the main run (4,000 answers, dual judging), against a $63.65 estimate
 proof:
@@ -53,28 +69,39 @@ datasets:
     url: https://pubmedqa.github.io/
     note: Biomedical questions with expert-labelled answers from PubMed abstracts
 story:
-  overview: A small open model, Gemma 4 E2B, fine-tuned in a day on free hardware to answer health questions only from the abstract in front of it, citing each sentence it used. It is measured with EvalKit against frontier small models, and timed running offline on a laptop.
+  overview: A small open model, Gemma 4 E2B, fine-tuned in a day on free hardware
+    to answer health questions only from the abstract in front of it, citing
+    each sentence it used. It is measured with EvalKit against frontier small
+    models, and timed running offline on a laptop.
   pain:
     who: Developers building on-device health features.
-    problem: They need a model that answers only from the source in front of it and shows where each claim came from. Small open models tend to answer from memory and cite loosely, and there are few public recipes that measure this honestly.
-  bet: A small open model, tuned in a day on free hardware, can give grounded answers close to frontier small models while running on a laptop.
+    problem: They need a model that answers only from the source in front of it and
+      shows where each claim came from. Small open models tend to answer from
+      memory and cite loosely, and there are few public recipes that measure
+      this honestly.
+  bet: A small open model, tuned in a day on free hardware, can give grounded
+    answers close to frontier small models while running on a laptop.
   evals:
     - name: Label accuracy
       data: 1,000 expert-labelled PubMedQA questions
       method: Yes / no / maybe against the expert label; paired bootstrap
-      result: Fine-tuned 0.728, base 0.501 (separated, +22.7 points); Haiku 0.685, Luna 0.579
+      result: Fine-tuned 0.728, base 0.501 (separated, +22.7 points); Haiku 0.685,
+        Luna 0.579
       status: final
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main/summary.json
     - name: Correct and fully grounded
       data: Same 1,000 questions, four models
-      method: Right label and every claim supported by the cited sentences; two judges from different families; Holm correction
-      result: "Opus judge: Luna 0.431, base 0.418, fine-tuned 0.388, Haiku 0.345. The fine-tune did not beat its base (tie)"
+      method: Right label and every claim supported by the cited sentences; two judges
+        from different families; Holm correction
+      result: "Opus judge: Luna 0.431, base 0.418, fine-tuned 0.388, Haiku 0.345. The
+        fine-tune did not beat its base (tie)"
       status: fail
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main/summary.json
     - name: Claims supported
       data: Every claim in every answer
       method: Judged only against the sentences the answer cites
-      result: "Fine-tuned 0.519 vs base 0.863 (Opus judge): 45% of the fine-tune's claims unsupported"
+      result: "Fine-tuned 0.519 vs base 0.863 (Opus judge): 45% of the fine-tune's
+        claims unsupported"
       status: final
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main/summary.json
     - name: Laptop file vs full precision
@@ -85,18 +112,26 @@ story:
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/parity_report.json
     - name: v2 with a dev grounding bar
       data: Same 1,000 questions, separately pre-registered
-      method: Citations chosen from result sentences only; bars fixed on dev before measuring
+      method: Citations chosen from result sentences only; bars fixed on dev before
+        measuring
       result: "Pending: v2 is being built"
       status: pending
   learnings:
-    - lesson: '"Valid citation" was not "supporting citation": every automatic dev check passed because it only asked whether the cited sentence existed.'
-      now: Check that each cited sentence supports the claim, and turn what a hand-read sample shows into a measured dev bar.
+    - lesson: '"Valid citation" was not "supporting citation": every automatic dev
+        check passed because it only asked whether the cited sentence existed.'
+      now: Check that each cited sentence supports the claim, and turn what a
+        hand-read sample shows into a measured dev bar.
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
-    - lesson: Training citations were picked by word overlap, which rewards the sentence that asks the question over the one that answers it; 43% of training answers cited an aim-like sentence.
-      now: Training answers never cite aim or method sentences; citations must come from result sentences an entailment check confirms.
+    - lesson: Training citations were picked by word overlap, which rewards the
+        sentence that asks the question over the one that answers it; 43% of
+        training answers cited an aim-like sentence.
+      now: Training answers never cite aim or method sentences; citations must come
+        from result sentences an entailment check confirms.
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
-    - lesson: The 50-example data audit checked citation sets; the model learned citations one sentence at a time.
-      now: "Audit the unit the model will copy: each cited sentence has to earn its place."
+    - lesson: The 50-example data audit checked citation sets; the model learned
+        citations one sentence at a time.
+      now: "Audit the unit the model will copy: each cited sentence has to earn its
+        place."
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
 source:
   repo: biplob819/gemma-grounded-health
