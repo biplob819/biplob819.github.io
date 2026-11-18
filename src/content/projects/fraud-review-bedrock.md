@@ -59,6 +59,14 @@ proof:
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
   - label: Faithfulness summary (JSON)
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/faithfulness-cache-summary.json
+  - label: PR/FAQ (working backwards)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/pr-faq.md
+  - label: ROI model (spreadsheet with editable inputs)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/roi/README.md
+  - label: Discovery summary for a bank sponsor
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/discovery-summary.md
+  - label: Reusable patterns for the next engagement
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/patterns.md
 datasets:
   - name: Fraud Dataset Benchmark (Amazon Science)
     url: https://github.com/amazon-science/fraud-dataset-benchmark

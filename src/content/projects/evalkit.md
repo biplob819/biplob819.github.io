@@ -81,6 +81,8 @@ proof:
     url: https://pypi.org/project/evalkit-harness/
   - label: Data card
     url: https://github.com/biplob819/evalkit/blob/main/DATA_CARD.md
+  - label: Downstream canary, 18 Nov (JSON)
+    url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/downstream-canary-2026-11-18.json
 timeline:
   - when: 14 Nov 2026
     title: Build harness and first pipeline
@@ -121,6 +123,7 @@ timeline:
       - A public API for the internals two or more projects used, with a migration guide for all seven
       - Release gates on any metric, run-versus-run comparison, and agent and decision scorers (answer-from-rows, clarification, rule compliance)
       - Approved by the owner; published by trusted publishing, install-checked on Linux, macOS and Windows
+      - "On 18 Nov the canary ran all seven projects' tests against it: 2,161 passed, four projects fully green and three with known drift from older pins"
   - when: Next
     title: v0.4.0
     status: planned
