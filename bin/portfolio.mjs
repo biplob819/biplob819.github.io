@@ -270,6 +270,7 @@ const STORY_PARTS = [
   ['PRD link', (d) => d.links?.prd],
   ['Tech spec link', (d) => d.links?.techspec || d.kind === 'product'],
   ['Screenshots', (d) => d.cover || d.images?.some((i) => i.kind === 'screenshot')],
+  ['Walkthrough GIF', (d) => d.images?.some((i) => i.kind === 'walkthrough')],
   ['Architecture (doc or diagram)', (d) => d.links?.architecture || d.images?.some((i) => i.kind === 'architecture')],
   ['Data flow (doc or diagram)', (d) => d.links?.dataflow || d.images?.some((i) => i.kind === 'dataflow')],
   ['Demo or live site', (d) => d.links?.demo || d.links?.site || d.links?.video],

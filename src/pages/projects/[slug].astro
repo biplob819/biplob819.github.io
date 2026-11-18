@@ -14,6 +14,7 @@ const { Content, headings } = await render(project);
 const results = d.images.filter((im) => im.kind === 'result');
 const diagrams = d.images.filter((im) => im.kind === 'architecture' || im.kind === 'dataflow');
 const shots = d.images.filter((im) => im.kind === 'screenshot');
+const walk = d.images.find((im) => im.kind === 'walkthrough');
 const LINK_LABEL: Record<string, string> = { site: 'Website', demo: 'Live demo', repo: 'Code', report: 'Results report', package: 'Package', video: '90-second video', prd: 'PRD', prdOnePage: 'One-page PRD', techspec: 'Tech spec', howBuilt: 'How I built it', architecture: 'Architecture', dataflow: 'Data flow', methodology: 'Methodology' };
 const LINK_ORDER = ['demo', 'site', 'repo', 'video', 'report', 'prd', 'prdOnePage', 'techspec', 'howBuilt', 'architecture', 'dataflow', 'methodology', 'package'];
 const links = LINK_ORDER.filter((k) => (d.links as Record<string, string | undefined>)[k]).map((k) => [k, (d.links as Record<string, string>)[k]]) as [string, string][];
@@ -100,6 +101,8 @@ const facts = [
         {st.impact?.length && <div><p class="label">Impact</p><ul class="im">{st.impact.map((x) => <li>{x}</li>)}</ul></div>}
       </section>
     )}
+
+    {walk && <figure class="cover walk"><img src={walk.src} alt={walk.alt} loading="lazy" /><figcaption class="label">Walkthrough{walk.caption && ` · ${walk.caption}`}</figcaption></figure>}
 
     {d.cover && <figure class="cover"><img src={d.cover} alt={`${d.title} product screen`} width="1440" height="900" /></figure>}
 
@@ -312,6 +315,7 @@ const facts = [
   .links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
   .cover, .panel { margin: 32px 0 0; }
   .cover img { border-radius: var(--r); border: 1px solid var(--line); }
+  .walk figcaption { margin-top: 8px; }
   .panel { background: var(--surface); border-radius: var(--r); padding: clamp(12px, 2vw, 24px); }
   .panel img { border-radius: 8px; background: #fff; }
   .panel figcaption { margin-top: 10px; text-transform: none; letter-spacing: 0; font-size: 12.5px; }

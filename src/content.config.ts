@@ -53,7 +53,7 @@ const projects = defineCollection({
         src: z.string(),
         alt: z.string(),
         caption: z.string().optional(),
-        kind: z.enum(['architecture', 'dataflow', 'result', 'screenshot']).default('screenshot'),
+        kind: z.enum(['architecture', 'dataflow', 'result', 'screenshot', 'walkthrough']).default('screenshot'),
       }))
       .default([]),
     // Evidence a stranger can open: results files, dashboards, run logs, write-ups.

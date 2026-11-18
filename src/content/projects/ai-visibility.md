@@ -1,6 +1,8 @@
 ---
 title: AI Visibility Report
-tagline: Which websites Claude and GPT cite when they answer UK health questions with web search, how fresh those pages are, and what a freshness signal would be worth.
+tagline: Which websites Claude and GPT cite when they answer UK health questions
+  with web search, how fresh those pages are, and what a freshness signal would
+  be worth.
 kind: case-study
 status: shipped
 role: Product and build
@@ -24,14 +26,32 @@ links:
   prd: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
   techspec: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20Tech%20Spec.md
 images:
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/walkthrough.gif
+    alt: "Walkthrough of nine screens: the dashboard's findings, who gets cited
+      (nhs.uk 83% vs 10%), stale answers, whether the two models cite the same
+      sources, how far to trust the numbers, the command-line tool, the demo's
+      domain lookup and what could help, and the opening of the post"
+    caption: nine real screens, 22.5 seconds, loops
+    kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/architecture.svg
-    alt: The citewatch Python package and CLI talks to the Anthropic and OpenAI APIs and fetches cited web pages politely. It keeps run data as JSONL in the repository, a temporary page cache outside it, and uses EvalKit for support judging. Its outputs are a static dashboard on Cloudflare Pages, domain cards for a Streamlit demo behind passkeys, and a PyPI package, all gated by GitHub Actions CI.
+    alt: The citewatch Python package and CLI talks to the Anthropic and OpenAI APIs
+      and fetches cited web pages politely. It keeps run data as JSONL in the
+      repository, a temporary page cache outside it, and uses EvalKit for
+      support judging. Its outputs are a static dashboard on Cloudflare Pages,
+      domain cards for a Streamlit demo behind passkeys, and a PyPI package, all
+      gated by GitHub Actions CI.
     kind: architecture
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/dataflow.svg
-    alt: "Row 1 collects citations: 100 frozen questions are asked of two models with web search, answers are stored verbatim and citations extracted. Row 2 fetches each cited page politely, resolves its date, and computes metrics into summary.json, which feeds the dashboard, domain cards and post. Two checked samples (support and dates) feed error rates into the metrics."
+    alt: "Row 1 collects citations: 100 frozen questions are asked of two models
+      with web search, answers are stored verbatim and citations extracted. Row
+      2 fetches each cited page politely, resolves its date, and computes
+      metrics into summary.json, which feeds the dashboard, domain cards and
+      post. Two checked samples (support and dates) feed error rates into the
+      metrics."
     kind: dataflow
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/dashboard.png
-    alt: "citewatch findings dashboard: who gets cited, stale answers and how far to trust each number"
+    alt: "citewatch findings dashboard: who gets cited, stale answers and how far to
+      trust each number"
     kind: screenshot
     caption: Findings dashboard
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/post.png
@@ -43,28 +63,39 @@ images:
     kind: screenshot
     caption: Signal spec
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/cli.png
-    alt: "The citewatch CLI: report, init, doctor and a dry run, with no keys and no spend"
+    alt: "The citewatch CLI: report, init, doctor and a dry run, with no keys and no
+      spend"
     kind: screenshot
     caption: The citewatch CLI
 headline:
   value: 43% vs 12%
-  label: "of time-sensitive health answers with no source updated in the past year: GPT-6.1 Sol against Claude Sonnet 5.5"
-  note: "Both runs pooled: 49/114 (95% CI 31% to 55%) vs 14/114 (5.8% to 20%). 100 pre-registered UK health and fitness questions, each asked twice with web search on, from London. Directional for this setup; it measures sourcing, not medical accuracy."
+  label: "of time-sensitive health answers with no source updated in the past
+    year: GPT-6.1 Sol against Claude Sonnet 5.5"
+  note: "Both runs pooled: 49/114 (95% CI 31% to 55%) vs 14/114 (5.8% to 20%). 100
+    pre-registered UK health and fitness questions, each asked twice with web
+    search on, from London. Directional for this setup; it measures sourcing,
+    not medical accuracy."
 metrics:
   - value: 83% vs 10%
-    label: "of answers citing nhs.uk: GPT-6.1 Sol vs Claude Sonnet 5.5 (run 1, separated after Holm correction)"
+    label: "of answers citing nhs.uk: GPT-6.1 Sol vs Claude Sonnet 5.5 (run 1,
+      separated after Holm correction)"
   - value: 10%
-    label: overlap between the two models' cited sources per question (Jaccard, 95% CI 7.4% to 13%)
+    label: overlap between the two models' cited sources per question (Jaccard, 95%
+      CI 7.4% to 13%)
   - value: 78% vs 24%
-    label: "of citation weight held by each model's own top 10 publishers: GPT vs Claude"
+    label: "of citation weight held by each model's own top 10 publishers: GPT vs
+      Claude"
   - value: $15.03
     label: for 400 answers across two runs, 0 errors
 methodology:
   - 100 questions across five intents, frozen and pre-registered before any run
   - Two full runs per model with web search on, to measure run-to-run stability
-  - Every cited page fetched once, politely, respecting robots.txt; each date recorded with its source
-  - Every percentage reported with its count and a 95% interval; Holm correction across comparisons
-  - Support checked by two AI judges and by hand; date parsing checked against a hand-checked sample
+  - Every cited page fetched once, politely, respecting robots.txt; each date
+    recorded with its source
+  - Every percentage reported with its count and a 95% interval; Holm correction
+    across comparisons
+  - Support checked by two AI judges and by hand; date parsing checked against a
+    hand-checked sample
 proof:
   - label: Data card
     url: https://github.com/biplob819/ai-visibility/blob/main/DATA_CARD.md
@@ -79,15 +110,31 @@ proof:
   - label: Deviations from the pre-registration
     url: https://github.com/biplob819/ai-visibility/blob/main/docs/deviations.md
 story:
-  overview: A study of which web pages Claude and GPT cite when answering 100 health and fitness questions, and how out of date those pages are. It shows publishers whether AI answers use their content, and shows AI labs how often answers rest on stale pages. It ships as an open-source tool, citewatch, so anyone can run the study on their own questions.
+  overview: A study of which web pages Claude and GPT cite when answering 100
+    health and fitness questions, and how out of date those pages are. It shows
+    publishers whether AI answers use their content, and shows AI labs how often
+    answers rest on stale pages. It ships as an open-source tool, citewatch, so
+    anyone can run the study on their own questions.
   impact:
-    - "Showed the two leading AI search models source UK health answers very differently: nhs.uk appears in 83% of GPT-6.1 Sol's answers but 10% of Claude Sonnet 5.5's, and their cited sources overlap only 10% per question."
-    - "43% of GPT's time-sensitive answers had no source updated in the past year, against 12% for Claude: the freshness gap the proposed signal targets."
-    - Turned the finding into a one-page spec for a paid freshness and provenance signal, with a live findings dashboard.
+    - "Showed the two leading AI search models source UK health answers very
+      differently: nhs.uk appears in 83% of GPT-6.1 Sol's answers but 10% of
+      Claude Sonnet 5.5's, and their cited sources overlap only 10% per
+      question."
+    - "43% of GPT's time-sensitive answers had no source updated in the past
+      year, against 12% for Claude: the freshness gap the proposed signal
+      targets."
+    - Turned the finding into a one-page spec for a paid freshness and
+      provenance signal, with a live findings dashboard.
   pain:
-    who: Content leads at UK health publishers, and data partnerships leads at AI labs.
-    problem: Search traffic is falling and publishers can't see whether AI answers cite them, or whether those answers rely on outdated pages. AI labs lack reliable freshness and provenance signals for the pages their search tools pull in.
-  bet: If you measure which pages AI answers rest on and how stale they are, from both sides, you can size the market for a paid freshness and provenance signal.
+    who: Content leads at UK health publishers, and data partnerships leads at AI
+      labs.
+    problem: Search traffic is falling and publishers can't see whether AI answers
+      cite them, or whether those answers rely on outdated pages. AI labs lack
+      reliable freshness and provenance signals for the pages their search tools
+      pull in.
+  bet: If you measure which pages AI answers rest on and how stale they are, from
+    both sides, you can size the market for a paid freshness and provenance
+    signal.
   evals:
     - name: Stale answers
       data: 114 time-sensitive answers per model, both runs
@@ -110,15 +157,19 @@ story:
     - name: Does the cited page support the claim?
       data: 24 Claude and 23 to 25 GPT citations
       method: Two AI judges against the owner's hand labels
-      result: "Owner: 100% supported for both models; AI judges 43% to 67%, so they under-call support"
+      result: "Owner: 100% supported for both models; AI judges 43% to 67%, so they
+        under-call support"
       status: final
       url: https://biplob819.github.io/ai-visibility/
   learnings:
-    - lesson: The AI judges said only 43% to 67% of cited pages supported the claim; read by hand, all of them did.
-      now: "Never publish a judge-only rate: calibrate the judge against hand labels first, and show both numbers."
+    - lesson: The AI judges said only 43% to 67% of cited pages supported the claim;
+        read by hand, all of them did.
+      now: "Never publish a judge-only rate: calibrate the judge against hand labels
+        first, and show both numbers."
       url: https://biplob819.github.io/ai-visibility/
     - lesson: Date coverage came in at 89% against a pre-registered 90% target.
-      now: Report a missed target as missed, beside the number, instead of moving the target after the run.
+      now: Report a missed target as missed, beside the number, instead of moving the
+        target after the run.
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/preregistration.md
 source:
   repo: biplob819/ai-visibility
