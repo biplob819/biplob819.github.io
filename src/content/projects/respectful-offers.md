@@ -161,6 +161,11 @@ story:
       status: final
       url: https://biplob819.github.io/respectful-offers/
   monitoring:
+    - metric: Feature drift and churn-model calibration, month on month
+      kind: guardrail
+      target: every feature PSI below EvalKit's tolerance; Brier and ECE within tolerance
+      current: "Feb → Mar 2017: no feature drifted (every PSI below 0.01); calibration worsened out of time (Brier +0.015, ECE +0.024), so it warns and a challenger is the response"
+      how: offers monitor drift runs EvalKit 0.4's drift monitor on real KKBox features and scores (results/kkbox/monitor)
     - metric: Challenger retrain test
       kind: quality
       target: promote only if the claim improves in every simulator variant

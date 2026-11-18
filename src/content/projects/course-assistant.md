@@ -49,8 +49,9 @@ methodology:
   - Split 50/50 by group; prompts and thresholds tuned on the public half only,
     the held-out half scored once
   - Groundedness and integrity judged by two models from different vendors
-  - Judges calibrated against 100 owner-labelled items per check before the gate
-    can pass
+  - Judges calibrated before the gate can pass, against a blind model panel (two
+    labellers from two vendors that are not judges, a third breaking splits); a
+    person's labels can replace the panel's later
   - A release gate with zero tolerance for integrity, injection, leaks and
     identity
 proof:
@@ -117,10 +118,14 @@ story:
       status: pass
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Judge calibration
-      data: 100 owner-labelled items per check
-      method: Judges certified against a person before the gate can pass
-      result: "Not run yet: owner labels in progress"
+      data: 336 groundedness claims and 100 integrity conversations, labelled and
+        relabelled blind
+      method: Judges checked against a model panel (claude-fable-5-2 and
+        gpt-6.1-terra, claude-sonnet-5-5 breaking splits) before the gate can pass;
+        every gate verdict names the labeller
+      result: "Labels made; agreement not yet scored"
       status: pending
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
   improvements:
     - metric: Grounded answer rate, held-out
       before: "0.693"
