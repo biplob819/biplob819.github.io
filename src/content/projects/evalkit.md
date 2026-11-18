@@ -1,6 +1,7 @@
 ---
 title: EvalKit
-tagline: "Evaluate your own task across Claude and OpenAI models: grounded, calibrated, cost-aware, with confidence intervals."
+tagline: "Evaluate your own task across Claude and OpenAI models: grounded,
+  calibrated, cost-aware, with confidence intervals."
 kind: open-source
 status: shipped
 role: Creator
@@ -14,8 +15,11 @@ tags:
   - PyPI
 headline:
   value: 57.5%
-  label: of answers correct and fully grounded for the best model, on 200 PubMedQA questions
-  note: "GPT-6.1 Sol, judged by Claude Opus 5.5 (95% CI 50.5% to 64.0%); separated from every other model after a Holm correction. Provisional: the judge is not yet calibrated for this task. Run r-e8dac378d2d3, 14 Nov 2026."
+  label: of answers correct and fully grounded for the best model, on 200 PubMedQA
+    questions
+  note: "GPT-6.1 Sol, judged by Claude Opus 5.5 (95% CI 50.5% to 64.0%); separated
+    from every other model after a Holm correction. Provisional: the judge is
+    not yet calibrated for this task. Run r-e8dac378d2d3, 14 Nov 2026."
 metrics:
   - value: "4"
     label: models compared, two from each family
@@ -41,27 +45,48 @@ stack:
   - Vega-Lite
   - Streamlit
 images:
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/walkthrough.gif
+    alt: "Walkthrough of ten screens: the README headline, the report with its
+      calibration stamp and accuracy-against-cost chart, the failure explorer
+      with each judge’s verdicts, a dry-run cost quote, release gates passing, a
+      run comparison with corrected intervals, the ledger trend raising an
+      alarm, the security kit summary, the downstream canary across seven
+      projects, and the decision log"
+    caption: ten real screens, 25 seconds, loops; nothing live or paid
+    kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/headline.svg
-    alt: "EvalKit headline chart: correct and fully grounded rate by model with 95% confidence intervals"
+    alt: "EvalKit headline chart: correct and fully grounded rate by model with 95%
+      confidence intervals"
     kind: result
     caption: Correct and fully grounded rate per model, with 95% confidence intervals.
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/demo-replay.png
-    alt: "EvalKit demo: four models answer the same question, each claim checked against the sentences it cites"
+    alt: "EvalKit demo: four models answer the same question, each claim checked
+      against the sentences it cites"
     kind: screenshot
     caption: The live demo in replay mode
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/report-headline.png
-    alt: "EvalKit results report: correct and fully grounded rate per model with confidence intervals"
+    alt: "EvalKit results report: correct and fully grounded rate per model with
+      confidence intervals"
     kind: screenshot
     caption: Results report, headline view
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/report-explorer.png
-    alt: "EvalKit failure explorer: each claim with both judges' verdicts and the cited sentence"
+    alt: "EvalKit failure explorer: each claim with both judges' verdicts and the
+      cited sentence"
     kind: screenshot
     caption: Failure explorer
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/architecture.svg
-    alt: "EvalKit's layers: entry points (CLI, Python API, GitHub Action, demo), the evaluation pipeline, the typed DAG runtime with a content-addressed store and budget, model and system adapters, the public scorer library, outputs, the build harness, and the seven downstream projects that build on EvalKit and are checked by a weekly canary."
+    alt: "EvalKit's layers: entry points (CLI, Python API, GitHub Action, demo), the
+      evaluation pipeline, the typed DAG runtime with a content-addressed store
+      and budget, model and system adapters, the public scorer library, outputs,
+      the build harness, and the seven downstream projects that build on EvalKit
+      and are checked by a weekly canary."
     kind: architecture
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/dataflow.svg
-    alt: "How one evalkit run turns a task and a config into a scored, reproducible result: load and sample, generate, validate, extract claims, judge with two model families, score, aggregate with confidence intervals, and write the summary, records and report. Every step is cached in a content-addressed store."
+    alt: "How one evalkit run turns a task and a config into a scored, reproducible
+      result: load and sample, generate, validate, extract claims, judge with
+      two model families, score, aggregate with confidence intervals, and write
+      the summary, records and report. Every step is cached in a
+      content-addressed store."
     kind: dataflow
 methodology:
   - Answers must cite sentences from the source abstract
@@ -89,22 +114,28 @@ timeline:
     status: built
     url: https://github.com/biplob819/evalkit/blob/main/changelog.md
     items:
-      - A dependency-gated build graph of 26 nodes and a catalog of 144 capabilities, each needing named tests as proof
-      - 12 gates per node, each with a self-test that must fail on planted bad input
-      - Generate, validate, extract claims, dual judging, scoring, and an agent track with a simulated user
+      - A dependency-gated build graph of 26 nodes and a catalog of 144
+        capabilities, each needing named tests as proof
+      - 12 gates per node, each with a self-test that must fail on planted bad
+        input
+      - Generate, validate, extract claims, dual judging, scoring, and an agent
+        track with a simulated user
   - when: 15 Nov 2026
     title: v0.1.0 on PyPI
     status: released
     url: https://pypi.org/project/evalkit-harness/0.1.0/
     items:
-      - Published by GitHub trusted publishing, with install smoke tests on Linux, macOS and Windows
-      - PubMedQA benchmark plus SciFact as a second built-in task, CSV datasets, a CI action example and a public-API contract test
+      - Published by GitHub trusted publishing, with install smoke tests on
+        Linux, macOS and Windows
+      - PubMedQA benchmark plus SciFact as a second built-in task, CSV datasets,
+        a CI action example and a public-API contract test
   - when: 16 Nov 2026
     title: "v0.2.0: evaluate your own system, not just a model"
     status: released
     url: https://pypi.org/project/evalkit-harness/0.2.0/
     items:
-      - "Systems under test: plug in an app (retrieval, prompts, tools) and score it like a model"
+      - "Systems under test: plug in an app (retrieval, prompts, tools) and
+        score it like a model"
       - Task-declared scorers and per-slice results with 95% intervals
       - Driven by the first downstream project, the AI Teaching Assistant
   - when: 17 Nov 2026
@@ -112,24 +143,35 @@ timeline:
     status: built
     url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
     items:
-      - "A downstream registry and weekly canary: 7 projects pinned, 1,303 of their tests passing against current EvalKit"
-      - Release gates on any metric with fail and warn severity and exact one-sided bounds, asked for by Assay Pipeline
-      - Calibration sheets for any criterion, and a standard efficiency block (tokens, cache hits, cost per correct answer, latency)
+      - "A downstream registry and weekly canary: 7 projects pinned, 1,303 of
+        their tests passing against current EvalKit"
+      - Release gates on any metric with fail and warn severity and exact
+        one-sided bounds, asked for by Assay Pipeline
+      - Calibration sheets for any criterion, and a standard efficiency block
+        (tokens, cache hits, cost per correct answer, latency)
   - when: 17 Nov 2026
     title: "v0.3.0: one public API for every project"
     status: released
     url: https://pypi.org/project/evalkit-harness/0.3.0/
     items:
-      - A public API for the internals two or more projects used, with a migration guide for all seven
-      - Release gates on any metric, run-versus-run comparison, and agent and decision scorers (answer-from-rows, clarification, rule compliance)
-      - Approved by the owner; published by trusted publishing, install-checked on Linux, macOS and Windows
-      - "On 18 Nov the canary ran all seven projects' tests against it: 2,161 passed, four projects fully green and three with known drift from older pins"
+      - A public API for the internals two or more projects used, with a
+        migration guide for all seven
+      - Release gates on any metric, run-versus-run comparison, and agent and
+        decision scorers (answer-from-rows, clarification, rule compliance)
+      - Approved by the owner; published by trusted publishing, install-checked
+        on Linux, macOS and Windows
+      - "On 18 Nov the canary ran all seven projects' tests against it: 2,161
+        passed, four projects fully green and three with known drift from older
+        pins"
   - when: Next
     title: v0.4.0
     status: planned
     url: https://github.com/biplob819/evalkit/blob/main/docs/graph/graph.md
     items:
-      - A monitoring and improvement ledger (from Field PM Pack), a paraphrase contamination probe (from Gemma Grounded Health), a calibration integrity sheet (from the AI Teaching Assistant), an agent security kit (from Assay Pipeline) and a stricter value check
+      - A monitoring and improvement ledger (from Field PM Pack), a paraphrase
+        contamination probe (from Gemma Grounded Health), a calibration
+        integrity sheet (from the AI Teaching Assistant), an agent security kit
+        (from Assay Pipeline) and a stricter value check
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
@@ -146,21 +188,41 @@ datasets:
     url: https://github.com/allenai/scifact
     note: Scientific claim verification, the second built-in task
 story:
-  overview: An open-source Python tool (pip install evalkit-harness) that tells a team which AI model answers their own task best, how often each answer is backed by its source, and what each correct answer costs. Two judges from different model families check every claim, and every number carries a confidence interval. It is the evaluation engine behind the other seven projects here.
+  overview: An open-source Python tool (pip install evalkit-harness) that tells a
+    team which AI model answers their own task best, how often each answer is
+    backed by its source, and what each correct answer costs. Two judges from
+    different model families check every claim, and every number carries a
+    confidence interval. It is the evaluation engine behind the other seven
+    projects here.
   impact:
-    - Published on PyPI as evalkit-harness, with a live demo anyone can try in the browser.
-    - "Even the best model was correct and fully grounded only 57.5% of the time on 200 PubMedQA questions (95% CI 50.5% to 64.0%), while the best label accuracy was 77.0%: a right label is not the same as a supported answer."
-    - Caught its own wrong first headline (88% of sampled 'unsupported' claims were actually supported), withdrew it, and re-judged the run before publishing.
+    - Published on PyPI as evalkit-harness, with a live demo anyone can try in
+      the browser.
+    - "Even the best model was correct and fully grounded only 57.5% of the time
+      on 200 PubMedQA questions (95% CI 50.5% to 64.0%), while the best label
+      accuracy was 77.0%: a right label is not the same as a supported answer."
+    - Caught its own wrong first headline (88% of sampled 'unsupported' claims
+      were actually supported), withdrew it, and re-judged the run before
+      publishing.
     - Now the shared evaluation engine for seven downstream projects.
   pain:
-    who: AI engineers and product managers choosing a model for a domain task, such as patient-facing health answers.
-    problem: They pick a model from public leaderboards that don't match their task, then grade outputs with an LLM judge nobody has checked, often from the same family as the model it grades. So they can't say how often answers are unsupported by the source, whether the grader is biased, or what quality each extra dollar buys.
-  bet: If a team can evaluate its own task on four models with one command, with a grounded headline metric, confidence intervals and judges checked against hand labels, it will choose models on evidence instead of leaderboards.
+    who: AI engineers and product managers choosing a model for a domain task, such
+      as patient-facing health answers.
+    problem: They pick a model from public leaderboards that don't match their task,
+      then grade outputs with an LLM judge nobody has checked, often from the
+      same family as the model it grades. So they can't say how often answers
+      are unsupported by the source, whether the grader is biased, or what
+      quality each extra dollar buys.
+  bet: If a team can evaluate its own task on four models with one command, with a
+    grounded headline metric, confidence intervals and judges checked against
+    hand labels, it will choose models on evidence instead of leaderboards.
   evals:
     - name: Grounded answers
       data: 200 PubMedQA questions, 4 models (2 Claude, 2 OpenAI)
-      method: Each answer must cite sentences from the abstract; every claim is checked by two judges from different model families; bootstrap 95% CIs and a Holm correction
-      result: "Best: 57.5% correct and fully grounded (GPT-6.1 Sol, 95% CI 50.5% to 64.0%), separated from every other model"
+      method: Each answer must cite sentences from the abstract; every claim is
+        checked by two judges from different model families; bootstrap 95% CIs
+        and a Holm correction
+      result: "Best: 57.5% correct and fully grounded (GPT-6.1 Sol, 95% CI 50.5% to
+        64.0%), separated from every other model"
       status: provisional
       url: https://biplob819.github.io/evalkit/
     - name: Label accuracy
@@ -177,8 +239,10 @@ story:
       url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/planted-2026-11-14.json
     - name: Text-to-SQL agents
       data: 300 agent trials on public and held-out tasks
-      method: A fresh read-only DuckDB copy per trial, a simulated user for ambiguous questions, task-level bootstrap and Holm-adjusted comparisons
-      result: "Claude Sonnet 5.5 81% vs GPT-6.1 Sol 82% to 83% success on public tasks, 75% each on held-out tasks: no separated gap"
+      method: A fresh read-only DuckDB copy per trial, a simulated user for ambiguous
+        questions, task-level bootstrap and Holm-adjusted comparisons
+      result: "Claude Sonnet 5.5 81% vs GPT-6.1 Sol 82% to 83% success on public
+        tasks, 75% each on held-out tasks: no separated gap"
       status: final
       url: https://github.com/biplob819/evalkit/blob/main/changelog.md
     - name: Simulated user keeps the answer secret
@@ -196,40 +260,60 @@ story:
     - metric: Agent cost per trial
       before: $0.040
       after: $0.018
-      change: Sent the agent's history as conversation turns so provider caches hit (66% of Sonnet's input cached).
+      change: Sent the agent's history as conversation turns so provider caches hit
+        (66% of Sonnet's input cached).
       url: https://github.com/biplob819/evalkit/blob/main/changelog.md
     - metric: Estimated cost of the full agent run
       before: $31.52
       after: $6.16
-      change: Estimated from tokens measured in a pilot instead of placeholders. The run then cost $3.81.
+      change: Estimated from tokens measured in a pilot instead of placeholders. The
+        run then cost $3.81.
       url: https://github.com/biplob819/evalkit/blob/main/changelog.md
     - metric: Build harness, 14 to 17 Nov
       before: 26 nodes
       after: 43 nodes
-      change: Capabilities grew from 144 to 209 (197 green, each with named tests as proof), and 41 lessons were each turned into a rule a gate or test now enforces.
+      change: Capabilities grew from 144 to 209 (197 green, each with named tests as
+        proof), and 41 lessons were each turned into a rule a gate or test now
+        enforces.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
   monitoring:
     - metric: Spend per run
       kind: cost
-      how: Every API call is written to a public spend ledger; each run prints its estimate before the first call and stops at a hard cap.
+      how: Every API call is written to a public spend ledger; each run prints its
+        estimate before the first call and stops at a hard cap.
     - metric: Demo spend per day
       kind: guardrail
-      how: A Postgres daily counter reserves each request's worst-case cost before it runs; live mode sits behind a passcode or the visitor's own keys.
+      how: A Postgres daily counter reserves each request's worst-case cost before it
+        runs; live mode sits behind a passcode or the visitor's own keys.
   learnings:
-    - lesson: "My first headline said the most accurate model was the least grounded. Every unit test passed, because each step was tested alone: the claim extractor was matching claims to sentences it never saw, and 88% of sampled 'unsupported' claims were in fact supported."
-      now: Before publishing any number, I read a sample of real failures end to end. I withdrew that headline and re-judged the whole run.
+    - lesson: "My first headline said the most accurate model was the least grounded.
+        Every unit test passed, because each step was tested alone: the claim
+        extractor was matching claims to sentences it never saw, and 88% of
+        sampled 'unsupported' claims were in fact supported."
+      now: Before publishing any number, I read a sample of real failures end to end.
+        I withdrew that headline and re-judged the whole run.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
-    - lesson: On the first agent run, most 'failures' were correct answers with extra helpful columns, and one gold answer used a different month format from the agents' correct one.
-      now: After the first real run of any scorer, I group failures by reason and confirm each reason is a real error before reporting a number.
+    - lesson: On the first agent run, most 'failures' were correct answers with extra
+        helpful columns, and one gold answer used a different month format from
+        the agents' correct one.
+      now: After the first real run of any scorer, I group failures by reason and
+        confirm each reason is a real error before reporting a number.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
-    - lesson: Resampling at the wrong level made a one-task difference look like a real gap between models, and provider outages were scored as agent outcomes.
-      now: I bootstrap at the level the metric is defined, and infrastructure failures are excluded, never scored.
+    - lesson: Resampling at the wrong level made a one-task difference look like a
+        real gap between models, and provider outages were scored as agent
+        outcomes.
+      now: I bootstrap at the level the metric is defined, and infrastructure failures
+        are excluded, never scored.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
-    - lesson: A spend cap is only as strong as its weakest estimate. Three parts each used a different number, and a characters-divided-by-three token estimate under-priced non-English text 3 to 6 times.
-      now: Every hold comes from exact per-call reservations, every call has an output cap, and the chain is tested with long, non-English and cancelled calls.
+    - lesson: A spend cap is only as strong as its weakest estimate. Three parts each
+        used a different number, and a characters-divided-by-three token
+        estimate under-priced non-English text 3 to 6 times.
+      now: Every hold comes from exact per-call reservations, every call has an output
+        cap, and the chain is tested with long, non-English and cancelled calls.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
     - lesson: A check that has never failed is a check nobody has tested.
-      now: Every gate ships a self-test that feeds it bad input and must fail, naming the defect.
+      now: Every gate ships a self-test that feeds it bad input and must fail, naming
+        the defect.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
 source:
   repo: biplob819/evalkit
