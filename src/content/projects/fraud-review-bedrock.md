@@ -1,6 +1,8 @@
 ---
 title: "Field PM Pack: Fraud Review Agent"
-tagline: A fraud-review agent on Amazon Bedrock that triages card alerts, explains each decision against a written policy and sends uncertain cases to a person.
+tagline: A fraud-review agent on Amazon Bedrock that triages card alerts,
+  explains each decision against a written policy and sends uncertain cases to a
+  person.
 kind: case-study
 status: shipped
 role: Product and build
@@ -20,31 +22,59 @@ stack:
   - Claude
   - Python
 images:
+  - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/walkthrough.gif
+    alt: "Walkthrough of nine screens on simulated data: a title card, the
+      architecture where the model recommends and a router in code decides, the
+      analyst review screen with reasons, clauses and score drivers, the
+      hash-chained audit log, and dashboard panels for safety, value,
+      explanation checks, faithfulness and the monitoring trend"
+    caption: nine real screens, 22.5 seconds, loops; simulated data
+    kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/dataflow.svg
-    alt: "Data flow: simulated card transactions are minimised and split, scored by a LightGBM baseline, and flagged alerts are triaged by Claude Haiku 5.5 then Claude Sonnet 5.5; a router checks every clear against the policy in code; alerts end auto-cleared, held for priority review or escalated, and every step goes to a hash-chained audit log"
+    alt: "Data flow: simulated card transactions are minimised and split, scored by
+      a LightGBM baseline, and flagged alerts are triaged by Claude Haiku 5.5
+      then Claude Sonnet 5.5; a router checks every clear against the policy in
+      code; alerts end auto-cleared, held for priority review or escalated, and
+      every step goes to a hash-chained audit log"
     kind: dataflow
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/architecture.svg
-    alt: "What was built and ran: a local Python CLI with a LightGBM baseline, a router and policy-as-code, a content-addressed cache, a spend cap and ledger and a hash-chained audit log, calling the Claude API with Haiku 5.5 for stage 1 and Sonnet 5.5 for stage 2. Supported but not run: Amazon Bedrock through the in-Region Mantle endpoint in us-east-2. Proposed for an AWS pilot, all in us-east-2: alerts in S3, EventBridge starting a Step Functions workflow of Lambda tasks inside an IAM boundary, DynamoDB for decisions and audit events streamed to S3 with Object Lock, an analyst queue app, CloudWatch, KMS, and a passkey-protected hosted demo on a Lambda function URL with DynamoDB."
+    alt: "What was built and ran: a local Python CLI with a LightGBM baseline, a
+      router and policy-as-code, a content-addressed cache, a spend cap and
+      ledger and a hash-chained audit log, calling the Claude API with Haiku 5.5
+      for stage 1 and Sonnet 5.5 for stage 2. Supported but not run: Amazon
+      Bedrock through the in-Region Mantle endpoint in us-east-2. Proposed for
+      an AWS pilot, all in us-east-2: alerts in S3, EventBridge starting a Step
+      Functions workflow of Lambda tasks inside an IAM boundary, DynamoDB for
+      decisions and audit events streamed to S3 with Object Lock, an analyst
+      queue app, CloudWatch, KMS, and a passkey-protected hosted demo on a
+      Lambda function URL with DynamoDB."
     kind: architecture
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/screens/review-case.png
-    alt: "Analyst review screen: one held alert with its reasons, policy clauses and the fields used (simulated data, replay mode)"
+    alt: "Analyst review screen: one held alert with its reasons, policy clauses and
+      the fields used (simulated data, replay mode)"
     kind: screenshot
     caption: Analyst review screen, replay mode
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/screens/review-audit.png
-    alt: "Audit view: every decision on the alert written to the hash-chained audit log (simulated data)"
+    alt: "Audit view: every decision on the alert written to the hash-chained audit
+      log (simulated data)"
     kind: screenshot
     caption: Audit trail for one alert
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/screens/dashboard.png
-    alt: "Results dashboard: safety, value, explanation checks, monitoring trend and run facts, every number labelled simulated"
+    alt: "Results dashboard: safety, value, explanation checks, monitoring trend and
+      run facts, every number labelled simulated"
     kind: screenshot
     caption: Results dashboard (not deployed yet)
 headline:
   value: 0 of 55
-  label: frauds auto-cleared on a fresh 500-alert evaluation the agent had never seen, with every auto-clear correct
-  note: Simulated data (Sparkov). Exact 95% upper bound on leakage 5.3%. 8.8% of alerts auto-cleared (44 of 44 correct); every fraud reached a person (55 of 55). The first frozen evaluation leaked 2 of 79 and stays in the record.
+  label: frauds auto-cleared on a fresh 500-alert evaluation the agent had never
+    seen, with every auto-clear correct
+  note: Simulated data (Sparkov). Exact 95% upper bound on leakage 5.3%. 8.8% of
+    alerts auto-cleared (44 of 44 correct); every fraud reached a person (55 of
+    55). The first frozen evaluation leaked 2 of 79 and stays in the record.
 metrics:
   - value: 352 min
-    label: analyst time saved per 1,000 alerts, estimated at 4 minutes an alert (95% interval 256 to 456)
+    label: analyst time saved per 1,000 alerts, estimated at 4 minutes an alert (95%
+      interval 256 to 456)
   - value: $6.24
     label: model cost per 1,000 alerts
   - value: 100%
@@ -76,16 +106,26 @@ datasets:
     url: https://www.kaggle.com/datasets/kartik2112/fraud-detection
     note: Simulated, no real customer data
 story:
-  overview: "A fraud-alert triage agent, packaged the way a team would take it to a bank pilot: the agent, proof it doesn't let fraud through, the money it saves, and the documents a bank needs to say yes (PR/FAQ, ROI model, reference architecture). It clears obvious false alarms, explains every hold with policy clauses, and never blocks a card on its own."
+  overview: "A fraud-alert triage agent, packaged the way a team would take it to
+    a bank pilot: the agent, proof it doesn't let fraud through, the money it
+    saves, and the documents a bank needs to say yes (PR/FAQ, ROI model,
+    reference architecture). It clears obvious false alarms, explains every hold
+    with policy clauses, and never blocks a card on its own."
   pain:
-    who: Fraud operations leads at mid-size banks, their analysts, and the model risk reviewers who sign off any automation.
-    problem: "Fraud analysts spend most of the day on alerts that turn out to be legitimate. Banks want faster triage, but risk teams and regulators won't accept a black box: every decision needs a reason and an audit trail."
-  bet: If an agent clears only obvious false positives, never auto-clears fraud, and shows its reasons, policy clauses and fields for every hold, a bank can cut analyst time without losing recall, and its risk team can sign off.
+    who: Fraud operations leads at mid-size banks, their analysts, and the model
+      risk reviewers who sign off any automation.
+    problem: "Fraud analysts spend most of the day on alerts that turn out to be
+      legitimate. Banks want faster triage, but risk teams and regulators won't
+      accept a black box: every decision needs a reason and an audit trail."
+  bet: If an agent clears only obvious false positives, never auto-clears fraud,
+    and shows its reasons, policy clauses and fields for every hold, a bank can
+    cut analyst time without losing recall, and its risk team can sign off.
   evals:
     - name: Fraud leakage, first frozen evaluation
       data: 500 alerts, 79 frauds (simulated)
       method: Frauds the agent auto-cleared; the bar is zero
-      result: "2 of 79 leaked (both small purchases at 11 p.m.): failed the bar; the run stays in the log"
+      result: "2 of 79 leaked (both small purchases at 11 p.m.): failed the bar; the
+        run stays in the log"
       status: fail
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
     - name: Fraud leakage, fresh sample after the fix
@@ -108,31 +148,48 @@ story:
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
     - name: Explanation checks
       data: 965 explanations, fresh sample
-      method: Valid schema, real policy clauses, allowed fields, and every stated value true
-      result: Schema 964 of 965; clauses and fields 100%; 1,098 of 1,098 stated values true; no protected attributes mentioned
+      method: Valid schema, real policy clauses, allowed fields, and every stated
+        value true
+      result: Schema 964 of 965; clauses and fields 100%; 1,098 of 1,098 stated values
+        true; no protected attributes mentioned
       status: pass
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
     - name: Explanation faithfulness
       data: 4,159 claims from 458 explanations
-      method: Does each claim in the explanation follow from the alert data? Claude Opus 5.5 judge (single judge, partial coverage)
-      result: 48% of claims supported; 0 of 342 fully judged explanations fully supported. Provisional
+      method: Does each claim in the explanation follow from the alert data? Claude
+        Opus 5.5 judge (single judge, partial coverage)
+      result: 48% of claims supported; 0 of 342 fully judged explanations fully
+        supported. Provisional
       status: provisional
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/faithfulness-cache-summary.json
     - name: Cost and latency
       data: Fresh 500-alert sample
       method: Billed model cost; p95 latency per stage
-      result: $6.24 per 1,000 alerts; p95 4.6 s for the Haiku screen, 6.9 s for the Sonnet review
+      result: $6.24 per 1,000 alerts; p95 4.6 s for the Haiku screen, 6.9 s for the
+        Sonnet review
       status: final
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
   improvements:
     - metric: Frauds auto-cleared
       before: 2 of 79
       after: 0 of 55
-      change: "One policy change chosen on the dev set (never auto-clear at night), then proven on a fresh, disjoint 500-alert sample, never on the run that exposed the leak. The cost: auto-clear fell from 36.8% to 8.8%. Simulated data."
+      change: "One policy change chosen on the dev set (never auto-clear at night),
+        then proven on a fresh, disjoint 500-alert sample, never on the run that
+        exposed the leak. The cost: auto-clear fell from 36.8% to 8.8%.
+        Simulated data."
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16
+timeline:
+  - when: 18 Nov 2026
+    title: v0.1.0 released
+    status: released
+    items:
+      - Wheel and source archive on GitHub; not on PyPI
+      - "Final evaluation on simulated data: 0 of 55 frauds auto-cleared on 500
+        fresh alerts"
+    url: https://github.com/biplob819/fraud-review-bedrock/releases/tag/v0.1.0
 ---
 
 ## Write-up
