@@ -181,7 +181,7 @@ timeline:
   - when: 18 Nov 2026
     title: v0.4.1
     status: released
-    url: https://pypi.org/project/evalkit-harness/0.4.1/
+    url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/release-v0.4.1-2026-11-18.json
     items:
       - "A cross-project eval index: one table of every project's headline, each value checked against its source file at a recorded commit, and the command that rebuilds it byte for byte"
       - Two fixes, one of them to the drift monitor, reported by Respectful Offers
