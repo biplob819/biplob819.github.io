@@ -48,11 +48,12 @@ methodology:
     tuning
   - Split 50/50 by group; prompts and thresholds tuned on the public half only,
     the held-out half scored once
-  - Groundedness and integrity judged by two models from different vendors in the
-    first full run (Claude Opus 5.5 and GPT Sol). While the Anthropic account is
-    unfunded, live runs use one judge, GPT Sol, with GPT Terra writing the answers
-    so the judge never grades its own work; that loses the cross-vendor check, and
-    EvalKit publishes no headline from a single-judge run
+  - Groundedness and integrity judged by two models from different vendors in
+    the first full run (Claude Opus 5.5 and GPT Sol). While the Anthropic
+    account is unfunded, live runs use one judge, GPT Sol, with GPT Terra
+    writing the answers so the judge never grades its own work; that loses the
+    cross-vendor check, and EvalKit publishes no headline from a single-judge
+    run
   - Judges calibrated before the gate can pass, against a blind model panel (two
     OpenAI labellers that are not judges, GPT Terra and GPT Luna, with GPT Terra
     breaking splits); a person's labels can replace the panel's later
@@ -122,14 +123,14 @@ story:
       status: pass
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
     - name: Judge calibration
-      data: 336 groundedness claims and 100 integrity conversations labelled blind,
-        a sample relabelled blind in fresh requests
-      method: Held-out agreement (Cohen's kappa, 95% bootstrap interval) with a
-        model panel of GPT Terra and GPT Luna, GPT Terra breaking splits; every gate
+      data: 336 groundedness claims and 100 integrity conversations labelled blind, a
+        sample relabelled blind in fresh requests
+      method: Held-out agreement (Cohen's kappa, 95% bootstrap interval) with a model
+        panel of GPT Terra and GPT Luna, GPT Terra breaking splits; every gate
         verdict names the labeller. Read with care - the integrity intervals are
         wide because the 50 held-out conversations hold very few violations, and
-        the labellers share a vendor with GPT Sol and are now also the answer model
-        and claim extractor, so labelling and judging are not independent
+        the labellers share a vendor with GPT Sol and are now also the answer
+        model and claim extractor, so labelling and judging are not independent
       result: "Certified 18 Nov 2026. GPT Sol (current judge): groundedness 0.88
         [0.75, 0.97] on 155 claims, integrity 0.79 [0.00, 1.00] on 50
         conversations. Claude Opus 5.5 (first run): 0.68 [0.51, 0.84] and 0.00
@@ -156,6 +157,34 @@ story:
       change: All four failures came from one cached hint; the hint cache was switched
         off until integrity labels clear it.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+  learnings:
+    - lesson: A call wrapper counted 3 attempts while the model SDK underneath
+        made 9 requests with its own retries and a 600 s timeout, and test fakes
+        could not show it.
+      now: The library's own retries are off, each attempt gets the time left,
+        and retry counts are tested against the real client.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
+    - lesson: "Record keys built from a timestamp plus a row count were reused
+        once old data was purged, and \"365 days\" was a day short across a leap
+        year."
+      now: Keys come from a counter that only goes up, and legal retention
+        periods use calendar arithmetic, rounding towards keeping data the full
+        period.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
+    - lesson: A guard that reports where it found a secret can leak the secret.
+      now: Findings about private terms never echo the term, and withhold the
+        file path when the path itself holds it.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
+    - lesson: A text guard hardened pass after pass started flagging ordinary
+        prose.
+      now: I write the threat model down before hardening a guard, fix what it
+        covers, and record the rest as out of scope.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
+    - lesson: CI failed on every push for many steps while every local check
+        passed.
+      now: "Local checks are not CI: I read the CI result after every push
+        before starting the next step."
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
 source:
   repo: biplob819/course-assistant
   synced: 2026-11-16

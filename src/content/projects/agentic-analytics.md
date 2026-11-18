@@ -180,6 +180,36 @@ story:
         asking back on ambiguous questions. The cost: one injection probe it had
         resisted now succeeds."
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-2026-11-17.json
+  learnings:
+    - lesson: A rule list written from memory missed 8 of the database's documented
+        table functions, and each rule that keyed on where a word sat in the SQL
+        was bypassed through the next position.
+      now: Security rules key on names, not positions, and any deny list is checked in
+        a test against the vendor's documented list.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
+    - lesson: "Wiring up the data-load command turned an old test into a real load: it
+        inserted 31.7 million rows into ClickHouse and started a 5.5 GB
+        download."
+      now: Anything that loads data or spends money refuses to run outside an explicit
+        live mode, whatever a test calls.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
+    - lesson: "Two defects passed 139 offline tests and only showed against real model
+        outputs: a one-point chart from an answer shape no fixture had, and
+        trace timings that summed to 30-46% more than the measured wall time."
+      now: Every live run records an independent measurement next to each derived one,
+        and test fixtures include the shapes real models return.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
+    - lesson: Re-running the database setup dropped and recreated a role, so the
+        hosted query endpoint lost its read-only grant and its limits until they
+        were restored by hand.
+      now: Setup never drops and recreates a role or profile that a live endpoint
+        depends on; it creates once and alters in place.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
+    - lesson: A scoring patch applied while a run was in progress stopped that run
+        after all 2,160 answers. They were cached, so nothing was lost.
+      now: I never change code that a live run is using; patches go in between runs,
+        or the run uses a fixed copy.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
 source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16

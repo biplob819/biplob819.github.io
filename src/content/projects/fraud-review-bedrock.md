@@ -179,6 +179,33 @@ story:
         exposed the leak. The cost: auto-clear fell from 36.8% to 8.8%.
         Simulated data."
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/eval-runs.jsonl
+  learnings:
+    - lesson: The first frozen evaluation let 2 of 79 frauds through after a clean
+        development run.
+      now: The fix was chosen on the development data and proven on a second sample
+        drawn in advance. A frozen evaluation is never re-scored after a change,
+        and the failed run stays in the log.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
+    - lesson: A bad cost estimate (not a number, or negative) made the spend check
+        always pass, which switched the spend cap off.
+      now: Every money value is checked before use, and a bad value is an error, never
+        a pass.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
+    - lesson: The check that every metric is labelled as simulated missed phrasings
+        like "percent" and "USD", and one label anywhere in a paragraph covered
+        every number in it.
+      now: The label has to sit on the metric's own line and must not be negated, and
+        the check is tested against a table of cases.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
+    - lesson: A chained command marked a step done, committed and pushed even though
+        the quality check had just failed.
+      now: "Publishing depends on the check's result directly: check, then commit,
+        then push, each only if the last succeeded."
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
+    - lesson: Three release checks passed while the thing they checked was broken;
+        one only searched the workflow file for a command instead of running it.
+      now: A release check runs the documented command for real.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16
