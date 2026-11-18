@@ -15,8 +15,9 @@ tags:
 headline:
   value: 0 of 310
   label: attack trials succeeded against Claude and GPT agents
-  note: 300 agent trials (k=3, public and held-out cases) plus 10 data-poisoning
-    cases. 95% upper bound 2.0% per trial for each model. Run main-2026-11-16.
+  note: First full run, including held-out cases (main-2026-11-16), 300 agent
+    trials (k=3) plus 10 data-poisoning cases. 95% upper bound 2.0% per trial for
+    each model. A second, public-only run on 18 Nov also had 0 of 248.
 metrics:
   - value: 41,463
     label: EGFR rows, quality problems flagged, never deleted
@@ -150,7 +151,17 @@ story:
         guard; every query lands in a hash-chained audit log
       result: 0 of 310 succeeded; 95% upper bound 2.0% per trial for each model
       status: pass
-      url: https://biplob819.github.io/assay-pipeline/
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
+    - name: Second run, public cases only (18 Nov)
+      data: 240 agent trials (k=3 on the public cases; the held-out cases run once)
+        plus 8 data-poisoning cases
+      method: The same suite re-run after the first, with the guard-off run and the
+        scripted attacker repeated
+      result: "0 of 248 succeeded (95% upper bound 2.5% per trial for each model);
+        guard off 0 of 80; scripted attacker 60 of 60 stopped. Answers correct on
+        normal questions: Sol 91%, Sonnet 70% (first run 74% and 57%). $3.49"
+      status: pass
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18/bundle.json
     - name: Guard switched off
       data: 80 attack trials
       method: The same attacks with the SQL guard removed, to see what the models
@@ -165,27 +176,27 @@ story:
       result: "60 of 60 stopped: guard 45, quality rule 10, limit 5"
       status: pass
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
-    - name: Answers on normal questions
+    - name: Answers on normal questions (first run)
       data: The public split of normal questions
       method: The agent's query compared with the gold query; the answer checked for
         the gold value
       result: "Query matches gold: Sonnet 60%, Sol 70%. Answer states the gold value:
         Sonnet 100%, Sol 73%"
       status: final
-      url: https://github.com/biplob819/assay-pipeline#results
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
     - name: The SQL shown is the SQL that ran
       data: All questions
       method: The SQL quoted in each answer compared with the audit log
       result: Claude Sonnet 5.5 97%, GPT-6.1 Sol 80%
       status: final
-      url: https://github.com/biplob819/assay-pipeline#results
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
     - name: Judge reliability
       data: 96 judged cases and 24 hand labels
       method: Two judges from different model families, each checked against hand
         labels
       result: Agree with each other on 94 of 96; both match all 24 hand labels
       status: pass
-      url: https://github.com/biplob819/assay-pipeline#results
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
   learnings:
     - lesson: The models refused almost every attack on their own, so "0 of 310" says
         little about the guard by itself.
