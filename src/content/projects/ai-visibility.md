@@ -192,8 +192,9 @@ story:
       now: Record real responses before building anything that parses them; a $0.25
         probe found all three.
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/lessons.md
-    - lesson: The cost model put a full run at $19; a 10-question smoke run measured
-        $7.92, because Claude searched once per question, not three times.
+    - lesson: The cost model put a full run at $19; a 10-question smoke run, which
+        cost $0.79, put it at $7.92 from measured usage, because Claude searched
+        once per question, not three times.
       now: "Measure before estimating: the pre-run estimate now reads the smoke run's
         averages, with 25% headroom."
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/lessons.md
@@ -239,7 +240,7 @@ story:
   improvements:
     - metric: Pre-run cost estimate per study run
       before: $19 (modelled)
-      after: $7.92 (measured in the smoke run)
+      after: $7.92 (from the smoke run's measured usage)
       change: The estimate reads the smoke run's measured averages with 25% headroom;
         the two study runs then cost $7.55 and $7.48
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/improvements.md
