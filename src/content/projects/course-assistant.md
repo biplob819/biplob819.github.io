@@ -44,10 +44,11 @@ images:
       digest.
     kind: dataflow
 methodology:
-  - A 429-case golden set on a public sample course, written before any prompt
-    tuning
-  - Split 50/50 by group; prompts and thresholds tuned on the public half only,
-    the held-out half scored once
+  - "A 455-case golden set on a public sample course, written before any prompt
+    tuning: 240 public cases and 215 held-out"
+  - Prompts and thresholds tuned on the public cases only (the original 50/50
+    split by group, plus 26 identity cases added for tuning); each held-out set
+    is scored once, then retired and replaced by a fresh one
   - Groundedness and integrity judged by two models from different vendors in
     the first full run (Claude Opus 5.5 and GPT Sol). While the Anthropic
     account is unfunded, live runs use one judge, GPT Sol, with GPT Terra
@@ -72,7 +73,7 @@ story:
   overview: A course assistant for an executive programme that answers only from
     approved session materials, cites the slide every time, and hands everything
     else to the teaching team. It gives hints, never answers, on graded work,
-    and is scored on a 280-case golden set before launch. The demo runs on a
+    and is scored on a 455-case golden set before launch. The demo runs on a
     public sample course, with no learner data.
   pain:
     who: Working professionals on an executive programme who study around their
@@ -269,7 +270,7 @@ datasets:
 
 ## Write-up
 
-A teaching assistant for a course: learners ask questions and get answers that cite the slide or page they come from. It hands personal and admin questions to the teaching team, and gives hints, never solutions, on graded work. The hard part was proving it behaves, not building the chat. Every release goes through a gate built on EvalKit. The gate scores 429 golden cases, split into a public half for tuning and a private held-out half scored once, using judges from two vendors. It enforces zero tolerance on integrity, leaks, injection and identity, and checks latency and cost.
+A teaching assistant for a course: learners ask questions and get answers that cite the slide or page they come from. It hands personal and admin questions to the teaching team, and gives hints, never solutions, on graded work. The hard part was proving it behaves, not building the chat. Every release goes through a gate built on EvalKit. The gate scores 455 golden cases: 240 public cases for tuning and 215 held-out cases scored once. The first full run used judges from two vendors; live runs now use one. It enforces zero tolerance on integrity, leaks, injection and identity, and checks latency and cost.
 
 The first held-out run failed: grounded 0.693 against a 0.90 target. Two tuning rounds followed, each on the public half alone and each scored once on a fresh held-out set. The latest reached grounding 0.893 (0.959 on the public half it was tuned on) and locator accuracy 0.973, with two identity failures, so the gate still exits 1 and the README publishes that verdict. Integrity went from 0.929 to 56 of 56. Latency is 9.2 s at p95, and it costs $0.0058 a question. Live runs now use one judge, so EvalKit publishes no headline from them ([report](https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout3-report.md)).
 

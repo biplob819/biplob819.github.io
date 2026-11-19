@@ -35,6 +35,13 @@ images:
       domain lookup and what could help, and the opening of the post"
     caption: nine real screens, 22.5 seconds, loops
     kind: walkthrough
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/headline.svg
+    alt: "Dot-and-interval chart: answers citing nhs.uk, GPT-6.1 Sol 83% (83/100) vs
+      Claude Sonnet 5.5 10% (10/100) in run 1 and 84% vs 13% in run 2;
+      time-sensitive answers with no dated source under a year old, both runs,
+      GPT 43% (49/114) vs Claude 12% (14/114); 95% intervals"
+    kind: result
+    caption: The headline numbers with their 95% intervals
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/architecture.svg
     alt: The citewatch Python package and CLI talks to the Anthropic and OpenAI APIs
       and fetches cited web pages politely. It keeps run data as JSONL in the
@@ -229,6 +236,34 @@ story:
       current: The nhs.uk gap is separated in both runs after a Holm correction
       how: Each publisher's share is compared between runs 1 and 2, reported per
         model.
+  improvements:
+    - metric: Pre-run cost estimate per study run
+      before: $19 (modelled)
+      after: $7.92 (measured in the smoke run)
+      change: The estimate reads the smoke run's measured averages with 25% headroom;
+        the two study runs then cost $7.55 and $7.48
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/improvements.md
+    - metric: Support-check citations an AI judge could judge
+      before: 25 of 47
+      after: 48 of 49, for each judge
+      change: Kept page text breaks lines at block elements, so the judges'
+        exact-quote check works; 58 pages refetched and every citation judged
+        again (OWNER D-61)
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/improvements.md
+    - metric: Shortest gap between requests to one site when a run resumes
+      before: 0.4 s
+      after: 1.025 s or more
+      change: The per-host rate limiter is seeded from the fetch log, so a resumed run
+        waits for the last run's request
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/improvements.md
+  next:
+    - "citewatch 0.1.2: support judging as an extra on EvalKit 0.4, once it
+      reproduces the study's verdicts"
+    - A larger held-out date check (25 fresh pages per date source) before
+      changing which date source wins
+    - A second study in another country or with more models, to test whether the
+      nhs.uk gap is specific to UK health
+    - Run the demo's Claude path on a live question (checked only offline so far)
 source:
   repo: biplob819/ai-visibility
   synced: 2026-11-19

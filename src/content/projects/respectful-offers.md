@@ -40,6 +40,19 @@ images:
     alt: Respectful Offers results report
     kind: screenshot
     caption: Results report
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/audit.png
+    alt: "The report's respect audit: violations of rules R1, R2, R3, R7 and R8 for
+      every policy and variant; the status quo breaks R1 and R2 thousands of
+      times, every respectful policy shows zero, and the holdout check is
+      consistent"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/frontier.png
+    alt: "The report's frontier chart for the central variant: members retained per
+      1,000 against discount spend per member for the status quo, the
+      rule-following baseline and the bandit, with 95% intervals; the bandit
+      sits highest at low spend"
+    caption: Simulated outcomes, central variant
+    kind: result
   - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/architecture.svg
     alt: "Architecture: interfaces (CLI, report, demo, EvalKit gates) on the
       respectful_offers library (features, churn, simulator, policies with the
@@ -208,6 +221,44 @@ story:
       now: Report both the efficiency claim and the absolute numbers, so a growth PM
         can choose the trade-off knowingly.
       url: https://github.com/biplob819/respectful-offers#readme
+  improvements:
+    - metric: Respect violations, status quo → bandit (central variant, 200,000
+        members, outcomes simulated)
+      before: 31,490
+      after: "0"
+      change: The status quo broke two respect rules 6,540 and 24,950 times; the
+        bandit broke none. Run real-v2.
+      url: https://github.com/biplob819/respectful-offers#what-changed-measured
+    - metric: Discount per extra member kept, status quo → bandit (NTD, central
+        variant, simulated)
+      before: 288.70 (280.38 to 297.57)
+      after: 97.03 (91.81 to 102.60)
+      change: The bandit leans on free content nudges and a cheaper plan instead of
+        discounts. Run real-v2.
+      url: https://github.com/biplob819/respectful-offers#what-changed-measured
+    - metric: Discount per extra member kept, rule-following baseline → bandit (NTD,
+        central variant, simulated)
+      before: 211.17 (203.89 to 219.03)
+      after: 97.03 (91.81 to 102.60)
+      change: +5.57 extra members kept per 1,000 NTD (+5.06 to +6.10, Holm p =
+        0.0001). Run real-v2.
+      url: https://github.com/biplob819/respectful-offers#what-changed-measured
+    - metric: Drift monitor on a feature that is 0 for 96% of members (real data)
+      before: "One bin: drift score 0 by construction, a planted shift never alarmed"
+      after: "Three bins: March drift score (PSI) 0.0001, and a planted shift alarms
+        that feature alone"
+      change: A binning fix, found when a planted shift was tested on every feature
+        instead of one.
+      url: https://github.com/biplob819/respectful-offers#what-changed-measured
+  next:
+    - A second monitored period, so cost per extra member kept and the age-band
+      gap get a baseline and are checked
+    - "Recalibrate before the next challenger: March calibration warns (Brier
+      +0.015, ECE +0.024)"
+    - Decide whether the age-band offer-rate gap (0.36 for the bandit, 0.40 for
+      the rule-following baseline, against a 0.10 warning line) becomes a
+      constraint
+    - A small live pilot with a holdout to replace the simulated offer responses
 source:
   repo: biplob819/respectful-offers
   synced: 2026-11-16
