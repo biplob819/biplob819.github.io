@@ -212,6 +212,12 @@ datasets:
     url: https://github.com/biplob819/ai-visibility/tree/main/studies/uk-health/data
     note: The study's own answers, citations and cited-page dates, collected by
       citewatch
+install:
+  - cmd: pip install git+https://github.com/biplob819/ai-visibility
+    note: v0.1.0 is not on PyPI yet, so this installs it from the repository. Python
+      3.11 or newer
+  - cmd: citewatch report --example
+    note: An example report with no keys and no spend
 ---
 
 ## Write-up
