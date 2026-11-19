@@ -217,6 +217,13 @@ story:
       now: I never change code that a live run is using; patches go in between runs,
         or the run uses a fixed copy.
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
+    - lesson: In the first live demo timing run, a browser error printed the passcode
+        the script had just typed into a log. The tests used a fake browser that
+        never failed, so they could not catch it.
+      now: A script that types a secret replaces every error with a fixed message that
+        can't carry it, test fakes fail the way the real library does, and any
+        secret seen in output is rotated before it is used again.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
   monitoring:
     - metric: Accuracy on a 12-question smoke run, per backend
       kind: quality

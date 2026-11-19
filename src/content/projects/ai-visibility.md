@@ -25,6 +25,8 @@ links:
   repo: https://github.com/biplob819/ai-visibility
   prd: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
   techspec: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20Tech%20Spec.md
+  demo: https://citewatch.streamlit.app
+  package: https://pypi.org/project/citewatch/
 images:
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/walkthrough.gif
     alt: "Walkthrough of nine screens: the dashboard's findings, who gets cited
@@ -58,6 +60,11 @@ images:
     alt: The write-up post on what AI search cites for UK health questions
     kind: screenshot
     caption: The post
+  - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/demo.png
+    alt: "The demo looking up nhs.uk: how often the two models cited it in the
+      study, how fresh its cited pages were, who was cited instead and what
+      could help"
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/ai-visibility/main/docs/assets/screenshots/signal-spec.png
     alt: One-page spec for a paid freshness and provenance signal
     kind: screenshot
@@ -213,16 +220,17 @@ datasets:
     note: The study's own answers, citations and cited-page dates, collected by
       citewatch
 install:
-  - cmd: pip install git+https://github.com/biplob819/ai-visibility
-    note: v0.1.0 is not on PyPI yet, so this installs it from the repository. Python
-      3.11 or newer
-  - cmd: citewatch report --example
-    note: An example report with no keys and no spend
+  - cmd: pip install citewatch
+    note: "The core: report, score, dates, lookup. Python 3.11 or newer"
+  - cmd: pip install 'citewatch[anthropic,openai]'
+    note: Adds the provider SDKs for paid runs
+  - cmd: uvx citewatch report --example
+    note: An example report with no keys and no spend, without installing
 ---
 
 ## Write-up
 
-AI search answers now send readers to sources, but nobody could say which ones, or whether those pages are current. I built citewatch, an open-source tool that asks AI models questions with web search on, records every citation, visits each cited page politely to date it, and reports who gets cited with counts and 95% intervals. Its first study asked Claude Sonnet 5.5 and GPT-6.1 Sol 100 pre-registered UK health questions, twice. GPT cited nhs.uk in 83% of answers, Claude in 10%; the two models' sources overlapped by only 10% per question; and 43% of GPT's time-sensitive answers rested on no dated source under a year old, against 12% of Claude's. The study cost $15.03 in API calls. It ships with a dashboard, a write-up, a one-page signal spec for a data product, domain cards that tell each cited publisher what would make its pages readable and current, and a passkey-protected demo (deploying).
+AI search answers now send readers to sources, but nobody could say which ones, or whether those pages are current. I built citewatch, an open-source tool that asks AI models questions with web search on, records every citation, visits each cited page politely to date it, and reports who gets cited with counts and 95% intervals. Its first study asked Claude Sonnet 5.5 and GPT-6.1 Sol 100 pre-registered UK health questions, twice. GPT cited nhs.uk in 83% of answers, Claude in 10%; the two models' sources overlapped by only 10% per question; and 43% of GPT's time-sensitive answers rested on no dated source under a year old, against 12% of Claude's. The study cost $15.03 in API calls. It ships with a dashboard, a write-up, a one-page signal spec for a data product, domain cards that tell each cited publisher what would make its pages readable and current, and a passkey-protected demo.
 
 ## My role
 

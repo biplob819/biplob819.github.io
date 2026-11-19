@@ -42,8 +42,9 @@ headline:
     PubMedQA questions, against its base model
   note: "But \"correct and fully grounded\" fell from 41.8% to 38.8% (Claude Opus
     5.5 judge; not separated): the fine-tune learned to cite the study's aim
-    instead of its results. Cause traced to the training data; v2 is being built
-    on dev data only. Run r-f0f3b432a413. Research only, not medical advice."
+    instead of its results. Cause traced to the training data; v2 is trained and
+    checked on dev data only; its test run is next. Run r-f0f3b432a413. Research
+    only, not medical advice."
 metrics:
   - value: 52% vs 86%
     label: "of claims supported by the cited sentences: fine-tuned vs base (Opus
