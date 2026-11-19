@@ -74,6 +74,25 @@ images:
       cited sentence"
     kind: screenshot
     caption: Failure explorer
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screens/gate.png
+    alt: "evalkit gate: one row per gate and matched metric with bound, threshold,
+      observed value, severity and result, then the verdict"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screens/compare.png
+    alt: "evalkit compare: per metric and label, old and new values, the change with
+      its 95% interval, pairing and flag, then the verdict"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screens/ledger-trend.png
+    alt: "Trend page: a metric over seven runs with median line, warn and alarm
+      bands, settings markers and an alarm on the last run"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screens/security-summary.png
+    alt: "Security kit summary: pass^k, trial success rate and blocked rate per
+      split, stopping layers and public categories"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/screenshots/demo-live.png
+    alt: "Demo live mode: passcode, optional own API keys, question and abstract"
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/evalkit/main/docs/assets/architecture.svg
     alt: "EvalKit's layers: entry points (CLI, Python API, GitHub Action, demo), the
       evaluation pipeline, the typed DAG runtime with a content-addressed store

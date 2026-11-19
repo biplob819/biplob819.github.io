@@ -70,6 +70,16 @@ images:
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/cli.png
     alt: "Command line: init, pack check, an example report and a dry run"
     kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/demo-passcode.png
+    alt: "The demo page's ask-your-own mode with live compute off: the notice that
+      no question is asked live until the owner turns it on, the own-key notice,
+      and the passcode, question and optional Anthropic key fields"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/cli-doctor.png
+    alt: agentic-analytics doctor with no keys lists every environment variable by
+      name as missing, never a value, and skips the ClickHouse, MCP role and
+      Snowflake checks
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/categories.svg
     alt: Baseline accuracy by question category (aggregation, time, geography, top
       N, year on year, ambiguous) for Claude (MCP), GPT (MCP) and Cortex

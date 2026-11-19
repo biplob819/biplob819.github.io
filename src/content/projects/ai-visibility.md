@@ -124,8 +124,8 @@ story:
     anyone can run the study on their own questions.
   impact:
     - "Showed the two leading AI search models source UK health answers very
-      differently: nhs.uk appears in 83% of GPT-6.1 Sol's run-1 answers but 10% of
-      Claude Sonnet 5.5's, and their cited sources overlap only 10% per
+      differently: nhs.uk appears in 83% of GPT-6.1 Sol's run-1 answers but 10%
+      of Claude Sonnet 5.5's, and their cited sources overlap only 10% per
       question."
     - "43% of GPT's time-sensitive answers had no source updated in the past
       year, against 12% for Claude: the freshness gap the proposed signal
@@ -178,6 +178,24 @@ story:
       now: Report a missed target as missed, beside the number, instead of moving the
         target after the run.
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/deviations.md
+    - lesson: "The first real web-search calls broke three assumptions no
+        documentation showed: Claude's answers came back with no citations, the
+        page-age date was relative (\"198 days ago\"), and OpenAI added a
+        tracking tag to every cited link."
+      now: Record real responses before building anything that parses them; a $0.25
+        probe found all three.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/lessons.md
+    - lesson: The cost model put a full run at $19; a 10-question smoke run measured
+        $7.92, because Claude searched once per question, not three times.
+      now: "Measure before estimating: the pre-run estimate now reads the smoke run's
+        averages, with 25% headroom."
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/lessons.md
+    - lesson: Every number in the improvement report and the post was right, yet five
+        review passes still found sentences that claimed more than the tool
+        observed.
+      now: "Review what the text claims separately from the numbers: what was observed
+        versus what was inferred."
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/lessons.md
   monitoring:
     - metric: Share of cited pages dated (or with a logged reason)
       kind: quality

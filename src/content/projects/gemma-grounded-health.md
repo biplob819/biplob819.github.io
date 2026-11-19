@@ -138,6 +138,24 @@ story:
       now: "Audit the unit the model will copy: each cited sentence has to earn its
         place."
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
+    - lesson: The first Kaggle training pilot's numbers looked right, but its own log
+        showed the library had trained on a different copy of the model and
+        overridden the requested precision.
+      now: Read the remote run's own log before believing its metrics; every run
+        records what actually loaded and refuses a mismatch.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/lessons.md
+    - lesson: The laptop model file loaded cleanly and matched the prompt format 20 of
+        20, yet its answers disagreed with the full model on half the dev
+        prompts, because the server's answer-format grammar let it open a
+        thinking section that training never had.
+      now: Check a served model through the exact request the benchmark sends, and
+        narrow down the serving path before touching the weights.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/lessons.md
+    - lesson: The reference server reordered the answer format so the label came last;
+        every reply ran to the token cap with no label, 44 seconds each.
+      now: Watch the first few replies of any new serving path before a paid run, and
+        never change a payload that is then used, only a copy.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/lessons.md
   improvements:
     - metric: Label accuracy, 1,000 expert-labelled questions
       before: "0.501"
