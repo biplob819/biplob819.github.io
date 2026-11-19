@@ -18,6 +18,8 @@ links:
   techspec: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
   prdOnePage: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/prd-onepager.md
   report: https://biplob819.github.io/fraud-review-bedrock/
+  demo: https://fraud-review-bedrock.streamlit.app/
+  package: https://pypi.org/project/fraud-review-bedrock/
 stack:
   - Amazon Bedrock
   - Claude
@@ -248,12 +250,22 @@ story:
       how: Compares each numeric feature the agent sees in a new batch with the frozen
         evaluation alerts
   next:
-    - A hosted demo of the analyst review screen, planned for v0.2; today the
-      replay demo runs on your own machine
+    - A hosted demo with passkey sign-in; the hosted demo today replays recorded
+      cases on simulated data and calls no model
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16
 timeline:
+  - when: 19 Nov 2026
+    title: v0.2.0 released
+    status: released
+    items:
+      - "On PyPI: pip install fraud-review-bedrock runs the fraud command
+        outside a clone"
+      - Replay demo hosted on Streamlit (simulated data; it calls no model)
+      - A lock on the spend ledger lets only one judging run spend against the
+        cap at a time
+    url: https://github.com/biplob819/fraud-review-bedrock/releases/tag/v0.2.0
   - when: 18 Nov 2026
     title: v0.1.0 released
     status: released
@@ -284,6 +296,10 @@ methodology:
     the baseline's SHAP drivers and judged for faithfulness (one judge, partial,
     not calibrated)
   - Minutes saved are modelled at 4 analyst minutes per alert, not measured
+install:
+  - cmd: pip install fraud-review-bedrock
+    note: Runs the fraud command outside a clone; the demo and data still come from
+      a clone of the repository
 ---
 
 ## Write-up
