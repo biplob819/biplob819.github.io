@@ -210,10 +210,6 @@ story:
       how: Every API dollar goes into a spend ledger and every Kaggle GPU hour into a
         GPU ledger
   next:
-    - Rebuild the training answers so they never cite an aim, objective or
-      method sentence, and re-check them sentence by sentence
-    - Retrain once on Kaggle, choosing the checkpoint on dev data with a new
-      grounding bar
     - "A second pre-registered run on the same 1,000 questions: v2 against the
       base, v1, Claude Haiku 5.5 and GPT-6 Luna"
     - Judge calibration and a behaviour table per model before results are final
