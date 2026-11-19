@@ -39,7 +39,7 @@ images:
     alt: The citewatch Python package and CLI talks to the Anthropic and OpenAI APIs
       and fetches cited web pages politely. It keeps run data as JSONL in the
       repository, a temporary page cache outside it, and uses EvalKit for
-      support judging. Its outputs are a static dashboard on Cloudflare Pages,
+      support judging. Its outputs are a static dashboard on GitHub Pages,
       domain cards for a Streamlit demo behind passkeys, and a PyPI package, all
       gated by GitHub Actions CI.
     kind: architecture
@@ -101,8 +101,8 @@ methodology:
     recorded with its source
   - Every percentage reported with its count and a 95% interval; Holm correction
     across comparisons
-  - Support checked by two AI judges and by hand; date parsing checked against a
-    hand-checked sample
+  - Support checked by two AI judges and by hand; date parsing checked on
+    held-out pages (agent-checked, owner-approved)
 proof:
   - label: Data card
     url: https://github.com/biplob819/ai-visibility/blob/main/DATA_CARD.md
@@ -124,7 +124,7 @@ story:
     anyone can run the study on their own questions.
   impact:
     - "Showed the two leading AI search models source UK health answers very
-      differently: nhs.uk appears in 83% of GPT-6.1 Sol's answers but 10% of
+      differently: nhs.uk appears in 83% of GPT-6.1 Sol's run-1 answers but 10% of
       Claude Sonnet 5.5's, and their cited sources overlap only 10% per
       question."
     - "43% of GPT's time-sensitive answers had no source updated in the past
@@ -151,12 +151,12 @@ story:
       url: https://biplob819.github.io/ai-visibility/
     - name: Date coverage
       data: 841 cited URLs
-      method: URLs with a resolved date or a logged reason; pre-registered target 90%
+      method: URLs with a resolved date or a logged reason; the PRD's 90% target
       result: "89% (745/841): just below target, reported as such"
       status: fail
       url: https://biplob819.github.io/ai-visibility/
     - name: Date check
-      data: 27 hand-checked pages
+      data: 27 held-out pages, agent-checked and owner-approved
       method: Parser date within 7 days of the checked date
       result: 67% (18/27; 95% CI 48% to 81%)
       status: provisional
@@ -164,24 +164,24 @@ story:
     - name: Does the cited page support the claim?
       data: 24 Claude and 23 to 25 GPT citations
       method: Two AI judges against the owner's hand labels
-      result: "Owner: 100% supported for both models; AI judges 43% to 67%, so they
-        under-call support"
-      status: final
+      result: "Owner: 100% supported for both models (labelled one to two seconds
+        apart); AI judges 43% to 67%. The true rate is not settled"
+      status: provisional
       url: https://biplob819.github.io/ai-visibility/
   learnings:
-    - lesson: The AI judges said only 43% to 67% of cited pages supported the claim;
-        read by hand, all of them did.
-      now: "Never publish a judge-only rate: calibrate the judge against hand labels
-        first, and show both numbers."
+    - lesson: The AI judges said 43% to 67% of cited pages supported the claim; the
+        owner labelled every one supported, one to two seconds apart.
+      now: "Never publish a judge-only rate: calibrate judges against human labels,
+        show both numbers, and say when they cannot settle the rate."
       url: https://biplob819.github.io/ai-visibility/
-    - lesson: Date coverage came in at 89% against a pre-registered 90% target.
+    - lesson: Date coverage came in at 89% against the PRD's 90% target.
       now: Report a missed target as missed, beside the number, instead of moving the
         target after the run.
-      url: https://github.com/biplob819/ai-visibility/blob/main/docs/preregistration.md
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/deviations.md
   monitoring:
     - metric: Share of cited pages dated (or with a logged reason)
       kind: quality
-      target: 90% or more
+      target: 90% or more (PRD)
       current: "89% (745 of 841): below target, reported as such"
       how: Computed into the results summary after each run and shown on the
         dashboard.
@@ -213,7 +213,7 @@ story:
         model.
 source:
   repo: biplob819/ai-visibility
-  synced: 2026-11-16
+  synced: 2026-11-19
 datasets:
   - name: citewatch UK health study data
     url: https://github.com/biplob819/ai-visibility/tree/main/studies/uk-health/data
@@ -230,7 +230,7 @@ install:
 
 ## Write-up
 
-AI search answers now send readers to sources, but nobody could say which ones, or whether those pages are current. I built citewatch, an open-source tool that asks AI models questions with web search on, records every citation, visits each cited page politely to date it, and reports who gets cited with counts and 95% intervals. Its first study asked Claude Sonnet 5.5 and GPT-6.1 Sol 100 pre-registered UK health questions, twice. GPT cited nhs.uk in 83% of answers, Claude in 10%; the two models' sources overlapped by only 10% per question; and 43% of GPT's time-sensitive answers rested on no dated source under a year old, against 12% of Claude's. The study cost $15.03 in API calls. It ships with a dashboard, a write-up, a one-page signal spec for a data product, domain cards that tell each cited publisher what would make its pages readable and current, and a passkey-protected demo.
+AI search answers now send readers to sources, but nobody could say which ones, or whether those pages are current. I built citewatch, an open-source tool that asks AI models questions with web search on, records every citation, visits each cited page politely to date it, and reports who gets cited with counts and 95% intervals. Its first study asked Claude Sonnet 5.5 and GPT-6.1 Sol 100 pre-registered UK health questions, twice. GPT cited nhs.uk in 83% of run-1 answers, Claude in 10%; the two models' sources overlapped by only 10% per question; and 43% of GPT's time-sensitive answers rested on no dated source under a year old, against 12% of Claude's. The study cost $15.03 in API calls. It ships with a dashboard, a write-up, a one-page signal spec for a data product, domain cards that tell each cited publisher what would make its pages readable and current, and a passkey-protected demo.
 
 ## My role
 
