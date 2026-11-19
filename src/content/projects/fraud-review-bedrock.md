@@ -202,10 +202,54 @@ story:
       now: "Publishing depends on the check's result directly: check, then commit,
         then push, each only if the last succeeded."
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
-    - lesson: Three release checks passed while the thing they checked was broken;
-        one only searched the workflow file for a command instead of running it.
+    - lesson: Three release checks passed while the thing they checked was broken; one
+        only searched the workflow file for a command instead of running it.
       now: A release check runs the documented command for real.
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
+  monitoring:
+    - metric: Frauds auto-cleared (leakage)
+      kind: guardrail
+      target: 0; any leak fails the run
+      current: 0 of 55, exact 95% upper bound 5.3% (simulated data)
+      how: A monitor scores every finished run and adds a line to the run history; a
+        leak above zero always fails, whatever the other bands say
+    - metric: Auto-clear rate
+      kind: quality
+      target: Warn below 10%
+      current: 8.8% (44 of 500), which raises the warning (simulated data)
+      how: Alarm band in the run config, checked on every run and shown on the
+        dashboard's monitoring panel with the trend across runs
+    - metric: Auto-clear precision
+      kind: quality
+      target: Warn below 98%, fail below 95%
+      current: 44 of 44 (simulated data)
+      how: Alarm band in the run config, checked on every run
+    - metric: Model cost per 1,000 alerts
+      kind: cost
+      target: Warn above $8, fail above $10; a run whose estimate is over the $5 cap
+        will not start
+      current: $6.24 (simulated data)
+      how: Billed cost from the public spend ledger; a dry run estimates the cost
+        before any call, and a run that reaches the cap stops
+    - metric: Second-stage latency, p95
+      kind: guardrail
+      target: Warn above 10 s, fail above 20 s
+      current: 6,881 ms (simulated data)
+      how: Measured over live calls on every run
+    - metric: Schema errors and refusals
+      kind: guardrail
+      target: Warn above 1% of alerts, fail above 5%
+      current: 1 schema error, 0 refusals (simulated data)
+      how: Counted by type on every run; a failed reply escalates the alert to a
+        person
+    - metric: Drift in the alert mix
+      kind: guardrail
+      target: Warn above 0.1, alarm above 0.25 (population stability index)
+      how: Compares each numeric feature the agent sees in a new batch with the frozen
+        evaluation alerts
+  next:
+    - A hosted demo of the analyst review screen, planned for v0.2; today the
+      replay demo runs on your own machine
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16
@@ -218,6 +262,28 @@ timeline:
       - "Final evaluation on simulated data: 0 of 55 frauds auto-cleared on 500
         fresh alerts"
     url: https://github.com/biplob819/fraud-review-bedrock/releases/tag/v0.1.0
+methodology:
+  - "Simulated card transactions (Sparkov), split by time: train is 2019,
+    validation runs to June 2020, and the test period is the rest of 2020.
+    Names, addresses, locations and dates of birth are dropped before anything
+    is stored"
+  - A LightGBM baseline on seven allowed fields raises the alerts, with its
+    threshold set for 98% recall on validation, lowered if alerts would be
+    mostly fraud (simulated data)
+  - Prompts and policy are tuned on 100 alerts from the validation period;
+    reported results use 500 alerts from the test period
+  - Before the evaluation run, the policy, prompts and router settings are
+    hashed and frozen, and the run records the hashes
+  - If anything changes after an evaluation run, a fresh 500 alerts is drawn
+    from the test period and the earlier run stays in the log
+  - Rates carry Wilson 95% intervals; a zero leak count reports its exact
+    Clopper-Pearson upper bound; cost and analyst minutes use a seeded bootstrap
+    with 10,000 resamples
+  - Every reason is checked for valid schema, real policy clauses, allowed
+    fields, true stated values and no protected attributes, then compared with
+    the baseline's SHAP drivers and judged for faithfulness (one judge, partial,
+    not calibrated)
+  - Minutes saved are modelled at 4 analyst minutes per alert, not measured
 ---
 
 ## Write-up

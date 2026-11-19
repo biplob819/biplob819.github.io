@@ -171,9 +171,47 @@ story:
       now: Report a missed target as missed, beside the number, instead of moving the
         target after the run.
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/preregistration.md
+  monitoring:
+    - metric: Share of cited pages dated (or with a logged reason)
+      kind: quality
+      target: 90% or more
+      current: "89% (745 of 841): below target, reported as such"
+      how: Computed into the results summary after each run and shown on the
+        dashboard.
+    - metric: Failed answers per model (errors and refusals)
+      kind: guardrail
+      target: Errors below 5% per model
+      current: 400 answers, 0 errors
+      how: Checked in the audit after each run; refusals are reported but not counted
+        as errors.
+    - metric: API spend
+      kind: cost
+      target: $25 cap per paid command
+      current: $15.03 for the two study runs, inside the $38 approved
+      how: Every paid call is written to a spend ledger as soon as it returns; a dry
+        run prints the estimate first and the cap stops the run.
+    - metric: Politeness to the sites it reads
+      kind: guardrail
+      target: No site above one request a second, no page robots.txt disallows
+      how: CI replays the full fetch log on every push and fails the build on any
+        breach.
+    - metric: No page content stored
+      kind: guardrail
+      how: A storage audit runs in CI on every push and fails the build if any page
+        body or markup is committed.
+    - metric: Run-to-run stability
+      kind: quality
+      current: The nhs.uk gap is separated in both runs after a Holm correction
+      how: Each publisher's share is compared between runs 1 and 2, reported per
+        model.
 source:
   repo: biplob819/ai-visibility
   synced: 2026-11-16
+datasets:
+  - name: citewatch UK health study data
+    url: https://github.com/biplob819/ai-visibility/tree/main/studies/uk-health/data
+    note: The study's own answers, citations and cited-page dates, collected by
+      citewatch
 ---
 
 ## Write-up

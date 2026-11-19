@@ -106,7 +106,8 @@ proof:
     url: https://pypi.org/project/evalkit-harness/
   - label: Data card
     url: https://github.com/biplob819/evalkit/blob/main/DATA_CARD.md
-  - label: Cross-project eval index (each project's confirmed headline, checked against its source file)
+  - label: Cross-project eval index (each project's confirmed headline, checked
+      against its source file)
     url: https://biplob819.github.io/evalkit/index/
   - label: User guide, 12 steps
     url: https://github.com/biplob819/evalkit/blob/main/docs/guide.md
@@ -172,20 +173,26 @@ timeline:
     status: released
     url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/release-v0.4.0-2026-11-18.json
     items:
-      - On PyPI as evalkit-harness 0.4.0, published from the tagged commit with CI green on Linux, macOS and Windows
+      - On PyPI as evalkit-harness 0.4.0, published from the tagged commit with
+        CI green on Linux, macOS and Windows
       - A monitoring and improvement ledger (from Field PM Pack), a paraphrase
         contamination probe (from Gemma Grounded Health), a calibration
         integrity sheet (from the AI Teaching Assistant), an agent security kit
         (from Assay Pipeline) and a stricter value check
-      - "Release canary: 3 of 7 downstream projects pass every test; 4 have known, explained drift (2,224 of their tests passing)"
+      - "Release canary: 3 of 7 downstream projects pass every test; 4 have
+        known, explained drift (2,224 of their tests passing)"
   - when: 18 Nov 2026
     title: v0.4.1
     status: released
     url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/release-v0.4.1-2026-11-18.json
     items:
-      - "A cross-project eval index: one table of every project's headline, each value checked against its source file at a recorded commit, and the command that rebuilds it byte for byte"
-      - Two fixes, one of them to the drift monitor, reported by Respectful Offers
-      - "Release canary on fresh copies of the seven projects: 3 pass every test, 4 have known, explained drift"
+      - "A cross-project eval index: one table of every project's headline, each
+        value checked against its source file at a recorded commit, and the
+        command that rebuilds it byte for byte"
+      - Two fixes, one of them to the drift monitor, reported by Respectful
+        Offers
+      - "Release canary on fresh copies of the seven projects: 3 pass every
+        test, 4 have known, explained drift"
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
@@ -286,9 +293,9 @@ story:
     - metric: Build harness, 14 to 17 Nov
       before: 26 nodes
       after: 43 nodes
-      change: Capabilities grew from 144 to 209 (all 209 green, each with named tests as
-        proof), and 42 lessons were each turned into a rule a gate or test now
-        enforces.
+      change: Capabilities grew from 144 to 209 (all 209 green, each with named tests
+        as proof), and 42 lessons were each turned into a rule a gate or test
+        now enforces.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
   monitoring:
     - metric: Spend per run
@@ -329,6 +336,9 @@ story:
       now: Every gate ships a self-test that feeds it bad input and must fail, naming
         the defect.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
+  next:
+    - Calibrate the two judges against held-out hand labels, so the PubMedQA
+      headline can be published as calibrated instead of provisional
 source:
   repo: biplob819/evalkit
   synced: 2026-11-16

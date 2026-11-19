@@ -70,6 +70,13 @@ images:
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/cli.png
     alt: "Command line: init, pack check, an example report and a dry run"
     kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/categories.svg
+    alt: Baseline accuracy by question category (aggregation, time, geography, top
+      N, year on year, ambiguous) for Claude (MCP), GPT (MCP) and Cortex
+      Analyst, with 95% intervals. On ambiguous questions Claude scores 2.1% and
+      Cortex 6.2%, against 81.2% for GPT
+    caption: Baseline accuracy by question category
+    kind: result
 headline:
   value: 97% vs 85%
   label: "of plain-English analytics questions answered correctly: a GPT-6.1 Sol
@@ -210,6 +217,48 @@ story:
       now: I never change code that a live run is using; patches go in between runs,
         or the run uses a fixed copy.
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/lessons.md
+  monitoring:
+    - metric: Accuracy on a 12-question smoke run, per backend
+      kind: quality
+      target: At least 0.5 accuracy for every backend
+      current: "First live smoke: Claude 8/12, GPT 11/12, Cortex 8/12"
+      how: A hand-run GitHub Actions workflow asks 12 fixed questions once on each
+        backend and fails if EvalKit's gate finds any backend below its floor.
+        The weekly schedule is written but stays off until the recurring spend
+        is approved.
+    - metric: Model spend per smoke run
+      kind: cost
+      target: $2 cap per run
+      current: $0.28 on the first live smoke
+      how: The run stops at the cap; its spend line goes into the ledger and the job
+        summary.
+    - metric: Regression between two runs
+      kind: quality
+      how: EvalKit pairs two runs on their shared questions and flags a regression
+        after a Holm correction.
+    - metric: Write and injection probes
+      kind: guardrail
+      current: No write probe got a write through on any backend; 810/810 probe
+        verdicts agree with EvalKit's cross-check
+      how: 20 probes run with every configuration (10 write attempts, 10 planted
+        injections), scored by the project's own rules and cross-checked with
+        EvalKit's attack scorer.
+    - metric: Cost per correct answer, per configuration
+      kind: cost
+      current: "Baseline: Claude $0.016, GPT $0.0048, Cortex $0.24"
+      how: Written to the results summary on every run, from recorded tokens and
+        metered warehouse credits.
+    - metric: Tool calls beyond the minimum, per agent
+      kind: cost
+      how: Each answer's tool calls are compared with the question's minimum and
+        reported per configuration on every run.
+  next:
+    - "Run history, a trend page and drift flags: accuracy with intervals, cost
+      per correct answer and p95 latency across runs, with any run outside its
+      band flagged"
+    - Move the scoring's answer-shape rules into EvalKit, with re-scoring every
+      stored run changing 0 verdicts
+    - Confidence intervals on the ask-back rates
 source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16

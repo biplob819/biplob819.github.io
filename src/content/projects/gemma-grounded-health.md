@@ -133,9 +133,90 @@ story:
       now: "Audit the unit the model will copy: each cited sentence has to earn its
         place."
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
+  improvements:
+    - metric: Label accuracy, 1,000 expert-labelled questions
+      before: "0.501"
+      after: "0.728"
+      change: Fine-tuning v1 on free Kaggle hardware. Grounding got worse at the same
+        time (claims supported 0.863 to 0.519), which is why v2 exists.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
+    - metric: 4-bit laptop file agreeing with full precision, 16 test prompts
+      before: 8 of 16
+      after: 15 of 16
+      change: Served with the reasoning budget set to 0, which closes the 'thinking'
+        channel the fine-tuned model had started opening under the JSON format.
+        Not a quantisation problem.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+  monitoring:
+    - metric: Correct and fully grounded (Opus judge)
+      kind: north-star
+      target: Above the base model, separated, pre-registered
+      current: "0.388 for v1 (base 0.418): a tie, base ahead"
+      how: EvalKit main run on 1,000 PubMedQA questions, two judges, Holm-corrected
+        comparison
+    - metric: Claims supported by the cited sentences (Opus judge)
+      kind: quality
+      target: A v2 bar set on dev data before v2 is measured
+      current: 0.519 for v1 (base 0.863)
+      how: Every claim judged only against the sentences the answer cites
+    - metric: Label accuracy
+      kind: quality
+      target: Reported with intervals
+      current: 0.728 for v1 (base 0.501), separated
+      how: Yes / no / maybe against the expert label, paired bootstrap
+    - metric: Valid JSON answers on dev
+      kind: guardrail
+      target: At least 0.98 to select a checkpoint
+      current: "1.000"
+      how: Checked on dev prompts before a checkpoint is chosen
+    - metric: Laptop file agreement with full precision (dev labels)
+      kind: guardrail
+      target: At least 0.95
+      current: "0.956"
+      how: The 4-bit file against the full-precision model on 500 dev prompts
+    - metric: Memorisation check (paraphrase probe)
+      kind: guardrail
+      current: "No contamination signal: fine-tuned 0.79 on original wording, 0.84
+        paraphrased"
+      how: Accuracy on 100 questions in original against reworded form, paired
+        bootstrap
+    - metric: Spend per main run
+      kind: cost
+      target: Hard cap $70, estimate first
+      current: $53.68 (estimate $63.65)
+      how: Every API dollar goes into a spend ledger and every Kaggle GPU hour into a
+        GPU ledger
+  next:
+    - Rebuild the training answers so they never cite an aim, objective or
+      method sentence, and re-check them sentence by sentence
+    - Retrain once on Kaggle, choosing the checkpoint on dev data with a new
+      grounding bar
+    - "A second pre-registered run on the same 1,000 questions: v2 against the
+      base, v1, Claude Haiku 5.5 and GPT-6 Luna"
+    - Judge calibration and a behaviour table per model before results are final
+    - Release the model and its 4-bit laptop file on Hugging Face with a model
+      card
+    - A side-by-side demo, behind a passcode
+    - A tagged open-source v1.0.0 release with reproduce-from-scratch docs
 source:
   repo: biplob819/gemma-grounded-health
   synced: 2026-11-16
+methodology:
+  - Every model, local or frontier, gets the same EvalKit PubMedQA prompt and
+    the same JSON answer format
+  - Each claim is judged only against the sentences the answer cites, by two
+    judges from different model families (Claude Opus 5.5 and GPT-6.1 Sol)
+  - Bootstrap 95% intervals, paired bootstrap between models, and a Holm
+    correction; a gap counts only when its corrected interval excludes zero
+  - The comparisons were hashed and committed before the main run, and the
+    result stood when the fine-tune lost
+  - Training data checked for leakage against the 1,000 test questions and split
+    by PubMed ID; the checkpoint is chosen on dev data only
+  - The 4-bit laptop file is checked against the full-precision model on 500 dev
+    prompts
+  - A paraphrase probe on 100 questions checks whether the model memorised the
+    benchmark
+  - 20 answers are read by hand at each stage
 ---
 
 ## Write-up

@@ -52,6 +52,14 @@ images:
       independent audit and off-policy checks, aggregated into the report,
       PR/FAQ, demo and EvalKit release gates. Every outcome is simulated"
     kind: dataflow
+  - src: https://raw.githubusercontent.com/biplob819/respectful-offers/main/docs/img/headline.svg
+    alt: Chart of discount spent per extra member kept, in NTD with 95% intervals,
+      for the bandit, the rule-following baseline and the status quo under the
+      conservative, central and optimistic simulator variants. Lower is better;
+      the bandit spends the least in every variant. Offer responses are
+      simulated on real KKBox members
+    caption: Discount per extra member kept, by simulator variant (simulated)
+    kind: result
 headline:
   value: 97 NTD
   label: of discount per extra member kept by the respectful bandit, against 211
@@ -163,14 +171,19 @@ story:
   monitoring:
     - metric: Feature drift and churn-model calibration, month on month
       kind: guardrail
-      target: every feature PSI below EvalKit's tolerance; Brier and ECE within tolerance
-      current: "Feb → Mar 2017: no feature drifted (every PSI below 0.01); calibration worsened out of time (Brier +0.015, ECE +0.024), so it warns and a challenger is the response"
-      how: offers monitor drift runs EvalKit 0.4's drift monitor on real KKBox features and scores (results/kkbox/monitor)
+      target: every feature PSI below EvalKit's tolerance; Brier and ECE within
+        tolerance
+      current: "Feb → Mar 2017: no feature drifted (every PSI below 0.01); calibration
+        worsened out of time (Brier +0.015, ECE +0.024), so it warns and a
+        challenger is the response"
+      how: offers monitor drift runs EvalKit 0.4's drift monitor on real KKBox
+        features and scores (results/kkbox/monitor)
     - metric: Challenger retrain test
       kind: quality
       target: promote only if the claim improves in every simulator variant
       current: "18 Nov: not promoted; improved in 1 of 3 variants"
-      how: offers challenge reruns a retrained model against the published run on the same members (results/kkbox/challenge)
+      how: offers challenge reruns a retrained model against the published run on the
+        same members (results/kkbox/challenge)
     - metric: Respect violations
       kind: guardrail
       target: "0"

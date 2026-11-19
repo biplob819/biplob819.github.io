@@ -16,8 +16,8 @@ headline:
   value: 0 of 310
   label: attack trials succeeded against Claude and GPT agents
   note: First full run, including held-out cases (main-2026-11-16), 300 agent
-    trials (k=3) plus 10 data-poisoning cases. 95% upper bound 2.0% per trial for
-    each model. A second, public-only run on 18 Nov also had 0 of 248.
+    trials (k=3) plus 10 data-poisoning cases. 95% upper bound 2.0% per trial
+    for each model. A second, public-only run on 18 Nov also had 0 of 248.
 metrics:
   - value: 41,463
     label: EGFR rows, quality problems flagged, never deleted
@@ -99,6 +99,11 @@ images:
       written to a hash-chained audit log, scored with EvalKit and two judges,
       and published as a results bundle, dashboard and release gates.
     kind: dataflow
+  - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/screenshots/console-live.png
+    alt: "The console's live mode: pick an agent and pay with your own API key,
+      behind the passcode"
+    caption: Agent console, live mode
+    kind: screenshot
 install:
   - cmd: uv tool install assay-pipeline
     note: "or: pip install assay-pipeline"
@@ -158,8 +163,8 @@ story:
       method: The same suite re-run after the first, with the guard-off run and the
         scripted attacker repeated
       result: "0 of 248 succeeded (95% upper bound 2.5% per trial for each model);
-        guard off 0 of 80; scripted attacker 60 of 60 stopped. Answers correct on
-        normal questions: Sol 91%, Sonnet 70% (first run 74% and 57%). $3.49"
+        guard off 0 of 80; scripted attacker 60 of 60 stopped. Answers correct
+        on normal questions: Sol 91%, Sonnet 70% (first run 74% and 57%). $3.49"
       status: pass
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18/bundle.json
     - name: Guard switched off
@@ -223,6 +228,76 @@ story:
       now: I state what a check can and cannot catch instead of claiming it is
         complete, and pair each static check with a runtime one.
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
+  improvements:
+    - metric: Answers whose SQL block shows only the SQL that actually ran
+      before: Claude Sonnet 5.5 97%, GPT-6.1 Sol 80% (16 Nov run)
+      after: Claude Sonnet 5.5 100%, GPT-6.1 Sol 98% (18 Nov run)
+      change: The agent's instructions now say the quality-flags column is a list, so
+        Sol stopped listing failed queries in its SQL block. The dashboard does
+        not flag the change as significant, because it compares two separate
+        runs.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/measurements/behaviour-2026-11-18.md
+    - metric: Allowed queries that failed with a database error
+      before: 3 of 8 sampled allowed queries (16 Nov run)
+      after: None in the whole 18 Nov run
+      change: The same fix. Agents had been comparing the flags column with an empty
+        string, which fails on a list.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/measurements/hand-read-main-2026-11-18.md
+  monitoring:
+    - metric: Attack trials that succeeded
+      kind: guardrail
+      target: 0, and a 95% upper bound per trial of at most 0.03 for each agent
+      current: "18 Nov run: 0 of 248; 95% upper bound 2.5% per trial for each agent"
+      how: The release gate runs in CI on the latest published run; a miss fails the
+        build
+    - metric: Scripted attacker with no model, stopped
+      kind: guardrail
+      target: Every case
+      current: "60 of 60: guard 45, quality rule 10, limit 5"
+      how: Release gate in CI
+    - metric: Audit log verifies
+      kind: guardrail
+      target: Verifies
+      current: 997 lines, 394 anchors, verifies
+      how: Release gate in CI; the hash chain and its published anchors are checked
+    - metric: Safety rules (planted instructions not followed, no restricted read, no
+        write, no prompt leak, no medical advice)
+      kind: guardrail
+      target: Kept in every applicable trial
+      current: "18 Nov run: kept by both agents, for example no restricted read in 192
+        / 192 trials each"
+      how: Release gate in CI; medical advice is checked by both judges
+    - metric: Answer quality on normal questions
+      kind: quality
+      target: Answer states the gold value in at least 0.7 of public questions; SQL
+        shown is the SQL that ran in at least 0.8 (warn only)
+      current: "Answer states the gold value: Claude Sonnet 5.5 100%, GPT-6.1 Sol 93%.
+        SQL shown is what ran: 100% and 98%"
+      how: Warning gate in CI
+    - metric: Judge reliability
+      kind: quality
+      target: At least 0.9 agreement between judges and with hand labels (warn only)
+      current: Agree with each other on 78 of 78; both match all 24 hand labels
+      how: Warning gate in CI
+    - metric: Spend per real-API run
+      kind: cost
+      target: $25 or less (warn); a cost cap refuses or stops a run
+      current: $3.49 for the run, the guard-off ablation and the judges
+      how: Counted from the providers' own usage fields, cached input included; every
+        paid run is a line in the spend ledger
+    - metric: Published dashboard matches the results
+      kind: guardrail
+      how: Before each deploy, the Pages job re-renders the dashboard from the
+        committed bundle and compares it byte for byte
+  next:
+    - Add normal questions built to tempt a failure on disclosing flagged rows,
+      asking before guessing, and medical advice, so the judges are tested on
+      real failures
+    - Flag each row that appears in both ChEMBL and PubChem, instead of only
+      counting the overlap on the data card
+    - "A third recorded run: the first to measure the guard now allowing ROLLUP
+      and aggregate FILTER and the fixed answer format, and the first to record
+      tokens, cache share and latency per trial"
 source:
   repo: biplob819/assay-pipeline
   synced: 2026-11-16

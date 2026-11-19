@@ -158,36 +158,96 @@ story:
         off until integrity labels clear it.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
   learnings:
-    - lesson: A call wrapper counted 3 attempts while the model SDK underneath
-        made 9 requests with its own retries and a 600 s timeout, and test fakes
-        could not show it.
-      now: The library's own retries are off, each attempt gets the time left,
-        and retry counts are tested against the real client.
+    - lesson: A call wrapper counted 3 attempts while the model SDK underneath made 9
+        requests with its own retries and a 600 s timeout, and test fakes could
+        not show it.
+      now: The library's own retries are off, each attempt gets the time left, and
+        retry counts are tested against the real client.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
-    - lesson: "Record keys built from a timestamp plus a row count were reused
-        once old data was purged, and \"365 days\" was a day short across a leap
+    - lesson: "Record keys built from a timestamp plus a row count were reused once
+        old data was purged, and \"365 days\" was a day short across a leap
         year."
-      now: Keys come from a counter that only goes up, and legal retention
-        periods use calendar arithmetic, rounding towards keeping data the full
-        period.
+      now: Keys come from a counter that only goes up, and legal retention periods use
+        calendar arithmetic, rounding towards keeping data the full period.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
     - lesson: A guard that reports where it found a secret can leak the secret.
-      now: Findings about private terms never echo the term, and withhold the
-        file path when the path itself holds it.
+      now: Findings about private terms never echo the term, and withhold the file
+        path when the path itself holds it.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
-    - lesson: A text guard hardened pass after pass started flagging ordinary
-        prose.
-      now: I write the threat model down before hardening a guard, fix what it
-        covers, and record the rest as out of scope.
+    - lesson: A text guard hardened pass after pass started flagging ordinary prose.
+      now: I write the threat model down before hardening a guard, fix what it covers,
+        and record the rest as out of scope.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
-    - lesson: CI failed on every push for many steps while every local check
-        passed.
-      now: "Local checks are not CI: I read the CI result after every push
-        before starting the next step."
+    - lesson: CI failed on every push for many steps while every local check passed.
+      now: "Local checks are not CI: I read the CI result after every push before
+        starting the next step."
       url: https://github.com/biplob819/course-assistant/blob/main/docs/lessons.md
+  monitoring:
+    - metric: Release gate (zero tolerance on integrity, injection, leaks and identity)
+      kind: guardrail
+      target: Every gate passes on the held-out set before a change goes live
+      current: "Fails on the last held-out run: integrity 56/56, injection 44/44, leak
+        49/49 pass; identity 3 of 5 (first full run, before the single-judge
+        switch)"
+      how: Runs in CI on every change to the course materials or answer rules, and
+        weekly, so a failure with no change on our side shows the model provider
+        drifted
+    - metric: Grounded answer rate
+      kind: quality
+      target: At least 0.90, lower bound at least 0.85
+      current: 0.813 on the last held-out run (first full run, before the single-judge
+        switch)
+      how: Release gate metric, scored once per held-out set
+    - metric: Answer time, p95
+      kind: guardrail
+      target: 11 s or less
+      current: 10.0 s on the last held-out run (first full run, before the
+        single-judge switch)
+      how: Release gate metric; the teaching team's Ops view also shows it
+    - metric: Runtime support check agreement with the judges
+      kind: quality
+      target: Kappa 0.6 or above; below 0.6 opens a lesson
+      current: kappa 0.66 [-0.01, 1.00] over 148 sentences
+      how: Reported on each evaluation run; a CI test fails if it drops by more than
+        0.05 against a recorded run
+    - metric: Monthly spend
+      kind: cost
+      target: $150 cap, alarm at $135
+      current: Modelled pilot month $58.41 (1,000 questions plus 6 full runs), within
+        the cap
+      how: Every model call goes to a spend ledger checked by the cost guard; an
+        evaluation run prints its estimate first and stops at its cost cap
+    - metric: Questions, status mix, share sent to the teaching team, spend to date
+      kind: adoption
+      how: Ops tile on the teaching team's page; traces hold ids, statuses, timings
+        and costs, never question text
+    - metric: Deletion requests completed
+      kind: guardrail
+      target: No deletion request open longer than 7 days
+      how: The purge job fails if a request stays incomplete for more than 7 days
+  next:
+    - Another improvement round on grounding, locators and identity, tuned on
+      the public half only, then one score on a fresh held-out set written by a
+      separate author the builder never saw
+    - Two judges from different vendors again, with a fresh calibration, once
+      the second vendor's account is funded
+    - A command to start a new course and one to check a setup
+    - "A pilot with one real cohort: its own course materials, teaching-team
+      cases in the golden set, a teaching-team relabel of the calibration
+      sample, and single sign-on"
+    - "During the pilot: weekly gate runs, the deletion purge job running, an
+      incident drill, and a pilot report to the programme owners"
 source:
   repo: biplob819/course-assistant
   synced: 2026-11-16
+datasets:
+  - name: Sample course (three sessions of slides, pre-reads and agendas)
+    url: https://github.com/biplob819/course-assistant/tree/main/sample_course
+    note: Written for this project, no real programme material; CC BY 4.0
+  - name: Golden set, public tuning half (214 cases)
+    url: https://github.com/biplob819/course-assistant/blob/main/golden/public/cases.jsonl
+    note: The held-out half is private; only its ids and hashes are published. CC BY
+      4.0
 ---
 
 ## Write-up
