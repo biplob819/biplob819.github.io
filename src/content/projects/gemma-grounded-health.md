@@ -111,11 +111,15 @@ story:
       status: pass
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/parity_report.json
     - name: v2 with a dev grounding bar
-      data: Same 1,000 questions, separately pre-registered
+      data: 200 dev questions (the 1,000 test questions are next)
       method: Citations chosen from result sentences only; bars fixed on dev before
-        measuring
-      result: "Pending: v2 is being built"
-      status: pending
+        measuring; GPT-6.1 Sol judging
+      result: "Dev check, not the test set: citation precision 0.768 (v1 0.404),
+        aim-citation rate 0.067 (v1 0.590). Two dev bars narrowly missed:
+        headline 0.350 vs v1 0.355 (Opus: 0.440–0.445 vs 0.465) and label
+        accuracy 0.795 vs a 0.80 bar. Test results pending."
+      status: provisional
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/README.md
   learnings:
     - lesson: '"Valid citation" was not "supporting citation": every automatic dev
         check passed because it only asked whether the cited sentence existed.'
