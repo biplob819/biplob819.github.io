@@ -60,6 +60,8 @@ methodology:
   - A release gate with zero tolerance for integrity, injection, leaks and
     identity
 proof:
+  - label: Latest held-out report
+    url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout3-report.md
   - label: First full run report
     url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
   - label: Golden set rules
@@ -85,43 +87,44 @@ story:
     academic integrity.
   evals:
     - name: Grounded answer rate
-      data: 215 fresh held-out cases, scored once
+      data: A fresh held-out set of 215 cases, scored once, one GPT Sol judge
       method: Each answer sentence must be supported by a cited slide; target 0.90
-      result: "0.813 after the quality round (first run 0.693 on the first held-out
-        half): still below target"
+      result: "Fails, just below target: 0.893 (67 of 75). Earlier held-out sets
+        scored 0.813 and 0.693, with a different judge and answer model"
       status: fail
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+      url: https://github.com/biplob819/course-assistant#measured-results
     - name: Locator correct
-      data: 215 fresh held-out cases
+      data: A fresh held-out set of 215 cases, scored once, one GPT Sol judge
       method: The citation points to the right slide or page; target 0.95
-      result: 0.874 (first run 0.800)
-      status: fail
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
-    - name: Academic integrity
-      data: Held-out graded-work probes
-      method: "Zero tolerance: hints only, never a solution"
-      result: "Pass: 1.000 after the cached hint was switched off (first run 52 of 56)"
+      result: "Pass: 0.973 (previous held-out set 0.874, first run 0.800)"
       status: pass
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+      url: https://github.com/biplob819/course-assistant#measured-results
+    - name: Academic integrity
+      data: Graded-work probes in the fresh held-out set
+      method: "Zero tolerance: hints only, never a solution"
+      result: "Pass: 56 of 56, with the cached hint still off (first run 52 of 56)"
+      status: pass
+      url: https://github.com/biplob819/course-assistant#measured-results
     - name: Identity
       data: 5 held-out identity probes
       method: Zero tolerance
-      result: "3 of 5: fails on the fresh held-out set"
+      result: "3 of 5: fails on a second fresh held-out set in a row"
       status: fail
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+      url: https://github.com/biplob819/course-assistant#measured-results
     - name: Citation validity, handover, injection, leaks
-      data: Fresh held-out set
+      data: Fresh held-out set of 215 cases
       method: Citations open the cited slide; out-of-scope goes to the team; zero
         tolerance on injection and leaks
-      result: All pass (1.000)
+      result: "All pass: citation validity 1.000, handover 1.000, injection 44 of 44,
+        leaks 49 of 49"
       status: pass
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+      url: https://github.com/biplob819/course-assistant#measured-results
     - name: Latency and cost
       data: 215 held-out cases
       method: p95 target 11 s
-      result: p95 10.0 s; $0.0075 a question
+      result: p95 9.2 s; $0.0058 a question; the run cost $3.12
       status: pass
-      url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+      url: https://github.com/biplob819/course-assistant#measured-results
     - name: Judge calibration
       data: 336 groundedness claims and 100 integrity conversations labelled blind, a
         sample relabelled blind in fresh requests
@@ -151,6 +154,21 @@ story:
       after: "0.874"
       change: Same quality round; scored once on the fresh held-out set.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
+    - metric: Grounded answer rate, held-out (second round)
+      before: "0.813"
+      after: "0.893"
+      change: New answer rules rule out uncited "Yes." openers and "the materials do
+        not say" remarks, which had failed the support check; tuned on the
+        public half (0.959 there), then scored once on another fresh held-out
+        set. The judge and answer model also changed, so the comparison is
+        indicative only.
+      url: https://github.com/biplob819/course-assistant#measured-results
+    - metric: Locator correct, held-out (second round)
+      before: "0.874"
+      after: "0.973"
+      change: "Same round and the same caveat: different judge and answer model
+        between the two runs."
+      url: https://github.com/biplob819/course-assistant#measured-results
     - metric: Integrity, held-out
       before: 52 of 56
       after: 100%
@@ -186,23 +204,22 @@ story:
     - metric: Release gate (zero tolerance on integrity, injection, leaks and identity)
       kind: guardrail
       target: Every gate passes on the held-out set before a change goes live
-      current: "Fails on the last held-out run: integrity 56/56, injection 44/44, leak
-        49/49 pass; identity 3 of 5 (first full run, before the single-judge
-        switch)"
+      current: "Fails on the latest held-out run (one GPT Sol judge): grounding 0.893
+        and identity 3 of 5 fail; integrity 56/56, injection 44/44 and leak
+        49/49 pass"
       how: Runs in CI on every change to the course materials or answer rules, and
         weekly, so a failure with no change on our side shows the model provider
         drifted
     - metric: Grounded answer rate
       kind: quality
       target: At least 0.90, lower bound at least 0.85
-      current: 0.813 on the last held-out run (first full run, before the single-judge
-        switch)
+      current: 0.893 on the latest held-out run (one GPT Sol judge); 0.959 on the
+        public half it was tuned on
       how: Release gate metric, scored once per held-out set
     - metric: Answer time, p95
       kind: guardrail
       target: 11 s or less
-      current: 10.0 s on the last held-out run (first full run, before the
-        single-judge switch)
+      current: 9.2 s on the latest held-out run (one GPT Sol judge)
       how: Release gate metric; the teaching team's Ops view also shows it
     - metric: Runtime support check agreement with the judges
       kind: quality
@@ -213,8 +230,8 @@ story:
     - metric: Monthly spend
       kind: cost
       target: $150 cap, alarm at $135
-      current: Modelled pilot month $58.41 (1,000 questions plus 6 full runs), within
-        the cap
+      current: Modelled pilot month $24.56 at the current setting (1,000 questions
+        plus 6 full runs), within the cap
       how: Every model call goes to a spend ledger checked by the cost guard; an
         evaluation run prints its estimate first and stops at its cost cap
     - metric: Questions, status mix, share sent to the teaching team, spend to date
@@ -254,7 +271,7 @@ datasets:
 
 A teaching assistant for a course: learners ask questions and get answers that cite the slide or page they come from. It hands personal and admin questions to the teaching team, and gives hints, never solutions, on graded work. The hard part was proving it behaves, not building the chat. Every release goes through a gate built on EvalKit. The gate scores 429 golden cases, split into a public half for tuning and a private held-out half scored once, using judges from two vendors. It enforces zero tolerance on integrity, leaks, injection and identity, and checks latency and cost.
 
-The first held-out run failed: grounded 0.693 against a 0.90 target. A tuning round on the public half alone raised grounding to 0.919 there. On a fresh held-out set it reached 0.813, with locator accuracy 0.874 and two identity failures. The gate still exits 1, and the README publishes that verdict. Integrity went from 0.929 to 56 of 56. Latency is 10.0 s at p95, and it costs $0.0075 a question ([report](https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md)).
+The first held-out run failed: grounded 0.693 against a 0.90 target. Two tuning rounds followed, each on the public half alone and each scored once on a fresh held-out set. The latest reached grounding 0.893 (0.959 on the public half it was tuned on) and locator accuracy 0.973, with two identity failures, so the gate still exits 1 and the README publishes that verdict. Integrity went from 0.929 to 56 of 56. Latency is 9.2 s at p95, and it costs $0.0058 a question. Live runs now use one judge, so EvalKit publishes no headline from them ([report](https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout3-report.md)).
 
 ## My role
 
