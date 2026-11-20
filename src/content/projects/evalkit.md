@@ -361,6 +361,8 @@ story:
 source:
   repo: biplob819/evalkit
   synced: 2026-11-16
+license: MIT
+harness: true
 ---
 
 ## Write-up

@@ -30,6 +30,26 @@ images:
       the parity and contamination checks"
     caption: ten screens from committed results (v1), 25 seconds, loops
     kind: walkthrough
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/headline_v2.svg
+    alt: "Base, v1 and v2 on 1,000 PubMedQA questions: correct-and-grounded 0.404,
+      0.331, 0.329; cited sentences that support a claim 0.747, 0.362, 0.736;
+      answers citing an unsupporting aim sentence 0.138, 0.560, 0.084, each with
+      a 95% interval"
+    caption: v2 fixed the citations, not the headline (GPT-6.1 Sol judge)
+    kind: result
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/screenshots/v1_vs_v2_citation.png
+    alt: v1 and v2 give the same answer to a hypertension question, but v1 cites
+      sentence 2, the study's aim, which the judge marks as not supporting the
+      claim, while v2 cites sentence 11, the result, which it marks as
+      supporting
+    caption: The same answer, cited from the aim (v1) and from the result (v2)
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/screenshots/evalkit_report_main_v2.png
+    alt: "EvalKit report for the v2 main run: headline with 95% intervals and a
+      per-model table of headline, groundedness, citation precision,
+      aim-citation rate and accuracy"
+    caption: EvalKit report for the v2 run
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/architecture.svg
     alt: "Gemma Grounded Health: architecture"
     kind: architecture
@@ -42,9 +62,10 @@ headline:
     PubMedQA questions, against its base model
   note: "But \"correct and fully grounded\" fell from 41.8% to 38.8% (Claude Opus
     5.5 judge; not separated): the fine-tune learned to cite the study's aim
-    instead of its results. Cause traced to the training data; v2 is trained and
-    checked on dev data only; its test run is next. Run r-f0f3b432a413. Research
-    only, not medical advice."
+    instead of its results. Cause traced to the training data; v2, retrained so
+    each citation must support the answer, fixed the citations but not the
+    headline: 0.329 against the base model's 0.404 (GPT-6.1 Sol judge, run
+    r-715fc213a8a5). Run r-f0f3b432a413. Research only, not medical advice."
 metrics:
   - value: 52% vs 86%
     label: "of claims supported by the cited sentences: fine-tuned vs base (Opus
@@ -111,16 +132,17 @@ story:
       result: "0.956"
       status: pass
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/parity_report.json
-    - name: v2 with a dev grounding bar
-      data: 200 dev questions (the 1,000 test questions are next)
-      method: Citations chosen from result sentences only; bars fixed on dev before
-        measuring; GPT-6.1 Sol judging
-      result: "Dev check, not the test set: citation precision 0.768 (v1 0.404),
-        aim-citation rate 0.067 (v1 0.590). Two dev bars narrowly missed:
-        headline 0.350 vs v1 0.355 (Opus: 0.440–0.445 vs 0.465) and label
-        accuracy 0.795 vs a 0.80 bar. Test results pending."
+    - name: v2 on the 1,000 test questions
+      data: 1,000 expert-labelled PubMedQA questions, a plan hashed before the run
+      method: GPT-6 Luna extracts claims and GPT-6.1 Sol judges them (one judge, while
+        the Anthropic credit is out); paired bootstrap, Holm over six tests
+      result: Citations fixed, headline not. Citation precision 0.736 (v1 0.362, base
+        0.747) and aim-citation rate 0.084 (v1 0.560, base 0.138); correct and
+        fully grounded 0.329 (v1 0.331, a tie; base 0.404, base better). The
+        judge is checked against a Claude Opus 5.5 labeller (kappa 0.60 [0.47,
+        0.71]), not yet a person
       status: provisional
-      url: https://github.com/biplob819/gemma-grounded-health/blob/main/README.md
+      url: https://github.com/biplob819/gemma-grounded-health#v2-result-the-citations-are-fixed-the-headline-is-not
   learnings:
     - lesson: '"Valid citation" was not "supporting citation": every automatic dev
         check passed because it only asked whether the cited sentence existed.'
@@ -170,6 +192,17 @@ story:
         channel the fine-tuned model had started opening under the JSON format.
         Not a quantisation problem.
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - metric: Citation precision, 1,000 test questions (GPT-6.1 Sol)
+      before: "0.362"
+      after: "0.736"
+      change: v2 retrained on targets whose citations must each support the answer; v1
+        against v2 is separated (+0.374).
+      url: https://github.com/biplob819/gemma-grounded-health#v2-result-the-citations-are-fixed-the-headline-is-not
+    - metric: Answers citing an unsupporting aim sentence
+      before: "0.560"
+      after: "0.084"
+      change: Same retrain; separated (−0.476), and below the base model's 0.138.
+      url: https://github.com/biplob819/gemma-grounded-health#v2-result-the-citations-are-fixed-the-headline-is-not
   monitoring:
     - metric: Correct and fully grounded (Opus judge)
       kind: north-star
@@ -199,8 +232,8 @@ story:
       how: The 4-bit file against the full-precision model on 500 dev prompts
     - metric: Memorisation check (paraphrase probe)
       kind: guardrail
-      current: "No contamination signal: fine-tuned 0.79 on original wording, 0.84
-        paraphrased"
+      current: "No contamination signal: v1 0.79 on original wording, 0.84
+        paraphrased; v2 0.76 on both (drop 0.00 [−0.03, +0.03])"
       how: Accuracy on 100 questions in original against reworded form, paired
         bootstrap
     - metric: Spend per main run
@@ -210,8 +243,6 @@ story:
       how: Every API dollar goes into a spend ledger and every Kaggle GPU hour into a
         GPU ledger
   next:
-    - "A second pre-registered run on the same 1,000 questions: v2 against the
-      base, v1, Claude Haiku 5.5 and GPT-6 Luna"
     - Judge calibration and a behaviour table per model before results are final
     - Release the model and its 4-bit laptop file on Hugging Face with a model
       card
@@ -236,13 +267,15 @@ methodology:
   - A paraphrase probe on 100 questions checks whether the model memorised the
     benchmark
   - 20 answers are read by hand at each stage
+license: Apache-2.0
+harness: true
 ---
 
 ## Write-up
 
 Gemma Grounded Health is a small open model (Gemma 4 E2B, 3.3 GB at 4-bit) fine-tuned to answer a research question only from the numbered sentences of a given abstract, with a yes / no / maybe label, a short answer and the sentences it relied on. It runs offline on a laptop. Research only, not medical advice.
 
-The first fine-tune raised label accuracy on all 1,000 expert-labelled PubMedQA questions from 0.501 to 0.728, but it did not beat its own base model on the metric that matters, "correct and fully grounded" (0.388 against 0.418, Claude Opus 5.5 judging), because its citations often pointed at the study's aim instead of its results. The project measured that failure, traced it to the training data, and is building a v2 chosen on dev data only. Results for v2 are pending; v1's stay published.
+The first fine-tune raised label accuracy on all 1,000 expert-labelled PubMedQA questions from 0.501 to 0.728, but it did not beat its own base model on the metric that matters, "correct and fully grounded" (0.388 against 0.418, Claude Opus 5.5 judging), because its citations often pointed at the study's aim instead of its results. The project measured that failure, traced it to the training data, and retrained a v2 chosen on dev data only. On the same 1,000 questions v2 fixed the citations (cited sentences that support a claim, 0.362 to 0.736) but not the headline (0.329, a tie with v1 and below the base model's 0.404), under one judge, GPT-6.1 Sol.
 
 ## My role
 

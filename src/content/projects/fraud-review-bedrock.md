@@ -300,6 +300,8 @@ install:
   - cmd: pip install fraud-review-bedrock
     note: Runs the fraud command outside a clone; the demo and data still come from
       a clone of the repository
+license: MIT
+harness: true
 ---
 
 ## Write-up

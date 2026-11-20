@@ -63,7 +63,10 @@ const facts = [
   <article class="wrap page">
     <nav class="crumb label" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/projects/">Builds</a> / <span>{d.title}</span></nav>
     <header>
-      <span class:list={['status', d.status]}>{STATUS_LABEL[d.status]}</span>
+      <div class="chips">
+        <span class:list={['status', d.status]}>{STATUS_LABEL[d.status]}</span>
+        {d.license && d.links.repo && <a class="oss" href={`${d.links.repo}/blob/main/LICENSE`} rel="noopener">Open source · {d.license}</a>}
+      </div>
       <h1 class="cond">{d.title}</h1>
       <p class="tagline">{d.tagline}</p>
     </header>
@@ -179,6 +182,7 @@ const facts = [
             ))}
             {diagrams.length === 0 && <p class="muted-note">Diagrams are being exported from the design docs. Until then, the tech spec below has the full architecture.</p>}
             {d.stack.length > 0 && <div class="stackrow"><span class="label">Tech stack</span><div class="stack">{d.stack.map((x) => <span>{x}</span>)}</div></div>}
+            {d.harness && <p class="built-with">Built with my <a href="/projects/build-harness/">Build Harness</a>: dependency-gated build steps, gates and an independent verifier.</p>}
             <p class="doc-links">
               {d.links.techspec && <a href={d.links.techspec} rel="noopener">Tech spec ↗</a>}
               {d.links.architecture && <a href={d.links.architecture} rel="noopener">Architecture doc ↗</a>}
@@ -197,6 +201,7 @@ const facts = [
         )}
 
         {stackAlone && <div class="stackrow"><span class="label">Tech stack</span><div class="stack">{d.stack.map((x) => <span>{x}</span>)}</div></div>}
+        {stackAlone && d.harness && <p class="built-with">Built with my <a href="/projects/build-harness/">Build Harness</a>: dependency-gated build steps, gates and an independent verifier.</p>}
         <Content />
         {shots.length > 0 && (
           <div class="shots">{shots.map((im) => <figure class="panel"><a href={im.src} rel="noopener"><img src={im.src} alt={im.alt} loading="lazy" /></a>{im.caption && <figcaption class="label">{im.caption}</figcaption>}</figure>)}</div>
@@ -367,6 +372,10 @@ const facts = [
   .tl-s.built { background: var(--ink); color: var(--bg); }
   .tl-t { margin: 4px 0 0; font-weight: 600; color: var(--ink) !important; }
   .tl-i ul { margin: 6px 0 0; padding-left: 18px; font-size: 15px; display: grid; gap: 4px; }
+  .chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .oss { font: 500 11.5px/1 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--good); text-decoration: none; border: 1px solid currentColor; border-radius: 999px; padding: 4px 8px; }
+  .oss:hover { text-decoration: underline; }
+  .built-with { margin: 10px 0 0; font-size: 14.5px; color: var(--muted); }
   .stackrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 18px 0 6px; }
   .stackrow .label { margin: 0; }
   .muted-note { color: var(--muted) !important; font-size: 15px; }

@@ -280,6 +280,8 @@ install:
     note: Adds the provider SDKs for paid runs
   - cmd: uvx citewatch report --example
     note: An example report with no keys and no spend, without installing
+license: MIT
+harness: true
 ---
 
 ## Write-up

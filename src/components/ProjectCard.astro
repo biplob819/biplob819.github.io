@@ -13,7 +13,7 @@ const counts = [
 <a class="card" href={`/projects/${project.id}/`}>
   <div class="head">
     <span class="label">{KIND_LABEL[d.kind]}</span>
-    <span class:list={['status', d.status]}>{STATUS_LABEL[d.status]}</span>
+    <span class="right">{d.license && <span class="oss">Open source · {d.license}</span>}<span class:list={['status', d.status]}>{STATUS_LABEL[d.status]}</span></span>
   </div>
   {d.headline ? (
     <div class="metric">
@@ -36,6 +36,8 @@ const counts = [
   .card { display: flex; flex-direction: column; gap: 12px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); text-decoration: none; transition: transform .15s, border-color .15s; min-width: 0; }
   .card:hover { transform: translateY(-2px); border-color: var(--accent); }
   .head { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+  .right { display: inline-flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+  .oss { font: 500 11px/1 var(--f-mono); letter-spacing: .04em; text-transform: uppercase; color: var(--good); border: 1px solid currentColor; border-radius: 999px; padding: 3px 7px; }
   .metric { display: flex; flex-direction: column; gap: 6px; padding-top: 6px; }
   .big { font-size: clamp(42px, 5vw, 56px); }
   .ghost { color: var(--line); }

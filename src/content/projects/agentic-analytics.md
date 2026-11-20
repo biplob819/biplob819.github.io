@@ -288,6 +288,8 @@ install:
     note: "validates the bundled UK pack: schemas, lints, quotas"
   - cmd: uv run agentic-analytics report --example
     note: renders a dashboard from a bundled synthetic run, no keys needed
+license: MIT
+harness: true
 ---
 
 ## Write-up

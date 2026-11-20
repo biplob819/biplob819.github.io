@@ -72,6 +72,10 @@ const projects = defineCollection({
     // Commands from the README that install and run it (open-source builds).
     // Button text for links.demo when the default "Live demo" would mislead (for example a passkey-protected demo).
     demoLabel: z.string().optional(),
+    // Licence of the public repo (SPDX id, e.g. MIT); shown as an open-source chip linking the repo's LICENSE.
+    license: z.string().optional(),
+    // True when the project was built with the Build Harness; shows a credit line linking its page.
+    harness: z.boolean().default(false),
     install: z.array(z.object({ cmd: z.string(), note: z.string().optional() })).default([]),
     // The real, public datasets it runs on.
     datasets: z.array(z.object({ name: z.string(), url, note: z.string().optional() })).default([]),

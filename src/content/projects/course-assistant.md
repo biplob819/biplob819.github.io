@@ -291,6 +291,8 @@ install:
   - cmd: make eval-offline
     note: the release gate's offline checks
 demoLabel: Passkey-protected demo
+license: MIT
+harness: true
 ---
 
 ## Write-up
@@ -301,7 +303,7 @@ The first held-out run failed: grounded 0.693 against a 0.90 target. Three tunin
 
 ## My role
 
-I wrote the product requirements and owned every ruling that shaped the system: multi-turn conversations, a passcode on every page, the monthly spend cap, the order in which held-out data may be used, and the restated latency target. I approved each paid evaluation run, chose a model panel to label the calibration sets, and own the live deploy, which is still pending.
+I wrote the product requirements and owned every ruling that shaped the system: multi-turn conversations, a passcode on every page, the monthly spend cap, the order in which held-out data may be used, and the restated latency target. I approved each paid evaluation run, chose a model panel to label the calibration sets, and own the live deploy, a passkey-protected demo.
 
 Claude Code built the code, tests, evaluation runs and documents under EvalKit's node harness. Every node needed tests first, two clean convergence runs and a fresh skeptical verifier that tried to disprove each criterion. Nodes went green only when nothing was left to disprove. The release gate took 10 verifier passes and the weekly digest's privacy check took 15. Every scope limit is written down as a decision ([decisions](https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md)).
 

@@ -31,7 +31,7 @@ const CALLS = ['built', 'cut', 'later'];
 const MONITOR_KINDS = ['north-star', 'adoption', 'quality', 'guardrail', 'cost'];
 const EVAL_STATUS = ['pass', 'final', 'provisional', 'fail', 'pending'];
 // Frontmatter fields copied from a manifest, in this order. Keep in step with src/content.config.ts.
-const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost', 'timeline', 'demoLabel', 'install', 'datasets', 'story'];
+const FIELDS = ['title', 'tagline', 'kind', 'status', 'role', 'year', 'featured', 'order', 'tags', 'headline', 'metrics', 'links', 'cover', 'stack', 'methodology', 'images', 'proof', 'cost', 'timeline', 'demoLabel', 'license', 'harness', 'install', 'datasets', 'story'];
 // Page body headings. The pain, priorities, monitoring and next steps live in `story`, so the body is the deep dive.
 const SECTIONS = ['What I built', 'Decisions and trade-offs', 'What failed', 'Cost and how to reproduce'];
 

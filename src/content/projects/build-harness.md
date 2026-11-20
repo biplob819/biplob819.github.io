@@ -21,6 +21,7 @@ metrics:
     label: lessons, each with a control
   - value: "33"
     label: pre-push gates on Kova
+license: Apache-2.0
 links:
   repo: https://github.com/biplob819/build-harness
 stack: [Claude Code plugin, hooks, subagents, skills, Python 3.11+, git hooks]
