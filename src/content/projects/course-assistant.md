@@ -3,7 +3,7 @@ title: AI Teaching Assistant
 tagline: A course assistant that answers only from approved session materials,
   cites every slide and hands everything else to the teaching team.
 kind: case-study
-status: building
+status: shipped
 role: Product and build
 year: "2026"
 order: 37
