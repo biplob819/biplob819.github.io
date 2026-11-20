@@ -260,7 +260,7 @@ story:
       quality each extra dollar buys.
   bet: If a team can evaluate its own task on four models with one command, with a
     grounded headline metric, confidence intervals and judges checked against
-    hand labels, it will choose models on evidence instead of leaderboards.
+    held-out reference labels, it will choose models on evidence instead of leaderboards.
   evals:
     - name: Grounded answers
       data: 200 PubMedQA questions, 4 models (2 Claude, 2 OpenAI)
