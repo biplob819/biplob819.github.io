@@ -21,6 +21,7 @@ links:
   demo: https://course-assistant-demo1.streamlit.app/
   prd: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20PRD.md
   techspec: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20Tech%20Spec.md
+  package: https://pypi.org/project/course-assistant/
 images:
   - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/walkthrough.gif
     alt: "Walkthrough of ten screens: the learner page passcode gate, the privacy
@@ -269,8 +270,6 @@ story:
       target: No deletion request open longer than 7 days
       how: The purge job fails if a request stays incomplete for more than 7 days
   next:
-    - Release v0.1.0, shipping the grounding and answer-time misses as
-      documented known limits
     - 'A fix for questions that arrive with injected text: the assistant says
       "not found" to the real course question inside them instead of answering
       it'
@@ -294,6 +293,9 @@ datasets:
     note: The held-out half is private; only its ids and hashes are published. CC BY
       4.0
 install:
+  - cmd: pip install course-assistant
+    note: Python 3.11 or newer; add the openai, ingest, app or eval extras as the
+      guides say
   - cmd: git clone https://github.com/biplob819/course-assistant && cd
       course-assistant
     note: Python 3.11 or newer; no API key, no network call after install
@@ -305,6 +307,16 @@ install:
 demoLabel: Passkey-protected demo
 license: MIT
 harness: true
+timeline:
+  - when: 20 Nov 2026
+    title: v0.1.0 released
+    status: released
+    items:
+      - On PyPI as course-assistant, published by trusted publishing
+      - Passkey-protected hosted demo live
+      - Ships with grounding 0.880 and p95 11.03 s as documented known limits,
+        every safety gate passing
+    url: https://github.com/biplob819/course-assistant/releases/tag/v0.1.0
 ---
 
 ## Write-up

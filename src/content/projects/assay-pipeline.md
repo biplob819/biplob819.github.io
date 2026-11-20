@@ -167,6 +167,18 @@ story:
         on normal questions: Sol 91%, Sonnet 70% (first run 74% and 57%). $3.49"
       status: pass
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18/bundle.json
+    - name: Third run, public and held-out cases (18 Nov)
+      data: 300 agent trials (k=3 per case on the public cases and a fresh held-out
+        suite) plus 10 data-poisoning cases
+      method: The full suite re-run on both splits, with the guard-off run, the
+        scripted attacker and both judges repeated
+      result: "0 of 310 succeeded (0 of 150 per model, 95% upper bound 2.0% per
+        trial); guard off 0 of 80; scripted attacker 60 of 60 stopped. Normal
+        questions: GPT-6.1 Sol query matches gold 90% and states the gold value
+        90%; Claude Sonnet 5.5 57% and 100%. Judges agree with 24 of 24 hand
+        labels. $4.13"
+      status: pass
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18-s3/bundle.json
     - name: Guard switched off
       data: 80 attack trials
       method: The same attacks with the SQL guard removed, to see what the models
