@@ -13,10 +13,12 @@ tags:
   - MCP
   - benchmarks
 links:
+  demo: https://agenticanalytics12.streamlit.app/
   repo: https://github.com/biplob819/agentic-analytics
   report: https://biplob819.github.io/agentic-analytics/
   prd: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20PRD.md
   techspec: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20Tech%20Spec.md
+  package: https://pypi.org/project/agentic-analytics/
 stack:
   - ClickHouse MCP
   - Snowflake Cortex Analyst
@@ -269,6 +271,13 @@ story:
       kind: cost
       how: Each answer's tool calls are compared with the question's minimum and
         reported per configuration on every run.
+    - metric: Hosted demo answer time, p95
+      kind: guardrail
+      target: 30 s or less with no timed-out or errored panel
+      current: 14.1 s over 20 live questions on the deployed page, 0 timed-out and 0
+        errored panels; the run cost $4.25
+      how: A timed run asks 20 questions through the deployed page in its
+        passcode-gated live mode, under the owner measurement budget
   next:
     - "Run history, a trend page and drift flags: accuracy with intervals, cost
       per correct answer and p95 latency across runs, with any run outside its
@@ -280,16 +289,27 @@ source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16
 install:
-  - cmd: git clone https://github.com/biplob819/agentic-analytics && cd
-      agentic-analytics
-    note: Python 3.11 or newer; from a clone until v0.1.0 is on PyPI
-  - cmd: uv sync
-  - cmd: uv run agentic-analytics pack check
+  - cmd: pip install agentic-analytics
+    note: Python 3.11 or newer; the command is agentic-analytics, alias aa
+  - cmd: agentic-analytics pack check
     note: "validates the bundled UK pack: schemas, lints, quotas"
-  - cmd: uv run agentic-analytics report --example
+  - cmd: agentic-analytics report --example
     note: renders a dashboard from a bundled synthetic run, no keys needed
 license: MIT
 harness: true
+demoLabel: Hosted demo
+timeline:
+  - when: 20 Nov 2026
+    title: v0.1.0 released
+    status: released
+    items:
+      - On PyPI as agentic-analytics, published by trusted publishing with an
+        install check on Linux, macOS and Windows
+      - "Hosted demo live on Streamlit Community Cloud: saved answers by
+        default, live answers behind a passcode"
+      - Live mode answered 20 timed questions on the deployed page with a p95 of
+        14.1 s and no errored panel
+    url: https://github.com/biplob819/agentic-analytics/releases/tag/v0.1.0
 ---
 
 ## Write-up
@@ -300,7 +320,7 @@ On the baseline, GPT-6.1 Sol answered 97% correctly (92% under strict, pre-regis
 
 ## My role
 
-I wrote the product requirements and owned every ruling that shaped the benchmark: the dataset and the as-of date, the Snowflake region (kept in Thailand, with a latency caveat), a sign-off on all 140 questions and probes, the scoring rulings after the baseline hand check, and each paid run's budget. I set up the ClickHouse Cloud and Snowflake accounts, approved every push, and own the demo deploy, which is not live yet.
+I wrote the product requirements and owned every ruling that shaped the benchmark: the dataset and the as-of date, the Snowflake region (kept in Thailand, with a latency caveat), a sign-off on all 140 questions and probes, the scoring rulings after the baseline hand check, and each paid run's budget. I set up the ClickHouse Cloud and Snowflake accounts, approved every push, and own the demo deploy, now live with saved answers and a passcode-gated live mode.
 
 Claude Code built the code, tests, runs and documents under EvalKit's node harness: tests first, clean convergence runs, and a fresh skeptical verifier per node that tried to disprove each criterion with planted defects. Verifiers found real defects before the paid runs (a self-check that would have penalised correct empty answers, logs that hid every cache key). Every scope limit is written down as a decision ([decisions](https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md)).
 
