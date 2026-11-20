@@ -60,7 +60,8 @@ images:
     kind: result
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/uplift.svg
     alt: Uplift from each single fix (descriptions, examples, self-check) for each
-      agent, with the Holm-corrected (a stricter bar when several comparisons are tested at once) verdict
+      agent, with the Holm-corrected (a stricter bar when several comparisons
+      are tested at once) verdict
     caption: Uplift from each fix, Holm-corrected
     kind: result
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/dashboard.png
@@ -116,8 +117,8 @@ methodology:
     no LLM judge
   - Three trials per question; fixes frozen by hash before the baseline and
     measured one at a time
-  - Holm correction (a stricter bar when several comparisons are tested at once) across fixes; the strict score is shown beside the headline
-    score everywhere
+  - Holm correction (a stricter bar when several comparisons are tested at once)
+    across fixes; the strict score is shown beside the headline score everywhere
 proof:
   - label: Data card
     url: https://github.com/biplob819/agentic-analytics/blob/main/DATA_CARD.md
@@ -279,6 +280,67 @@ story:
       how: A timed run asks 20 questions through the deployed page in its
         passcode-gated live mode, under the owner measurement budget
   next: []
+  priorities:
+    - item: A 100-question UK house-price benchmark with gold SQL checked on both
+        engines
+      call: built
+      why: Every question's gold result must agree on ClickHouse and Snowflake before
+        any run, so the comparison is fair.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: Claude and GPT agents over ClickHouse's MCP server against Snowflake
+        Cortex Analyst
+      call: built
+      why: The same agent loop runs on both models, scored against gold SQL with no
+        LLM judge.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: Three fixes, each measured alone against one frozen baseline
+      call: built
+      why: Fix content was frozen and hashed before the first baseline run, so fixes
+        cannot overfit its failures.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: A results dashboard on GitHub Pages built from the published record
+      call: built
+      why: The public page has every figure, rebuilt from the committed published-run
+        record.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/pages-deploy-2026-11-18.json
+    - item: A hosted demo with saved answers and a passcode-gated live mode
+      call: built
+      why: Live answers measured a p95 of 14.1 seconds over 20 timed questions.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/demo-p95-2026-11-20-page.json
+    - item: A command-line tool on PyPI, with run history and drift flags
+      call: built
+      why: Released by trusted publishing and install-tested on Linux, macOS and
+        Windows.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/release-v0.1.1.json
+    - item: Live answers by default on the public demo
+      call: cut
+      why: Saved answers are the default so the demo costs nothing at rest; live
+        compute is switched on per request.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: Per-answer records and traces on the public dashboard
+      call: cut
+      why: Nothing large or per-answer lands in the repository; the full dashboard
+        comes from a local run.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: '"Area" as a synonym for district in the semantic layer'
+      call: cut
+      why: It would pre-empt an ambiguous benchmark question that should be answered
+        by town.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: Carrying a stopped run's history into its resumed run
+      call: cut
+      why: It could count answers twice, so a stopped run records nothing instead.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: Cortex Agents as a third approach
+      call: later
+      why: The PRD names it as the next step after the agent and Cortex Analyst
+        comparison.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
+    - item: A weekly scheduled monitoring run
+      call: later
+      why: Recurring spend needs the owner's approval; the 12-question smoke runs by
+        hand until then.
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
 source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16
