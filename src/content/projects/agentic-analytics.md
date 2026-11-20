@@ -279,6 +279,15 @@ story:
 source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16
+install:
+  - cmd: git clone https://github.com/biplob819/agentic-analytics && cd
+      agentic-analytics
+    note: Python 3.11 or newer; from a clone until v0.1.0 is on PyPI
+  - cmd: uv sync
+  - cmd: uv run agentic-analytics pack check
+    note: "validates the bundled UK pack: schemas, lints, quotas"
+  - cmd: uv run agentic-analytics report --example
+    note: renders a dashboard from a bundled synthetic run, no keys needed
 ---
 
 ## Write-up
