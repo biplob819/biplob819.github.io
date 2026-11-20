@@ -23,6 +23,7 @@ metrics:
     label: catalogued source connectors proven live end to end so far
 links:
   site: https://insightsflow.live/
+  deck: https://claude.ai/artifact/AhCw1H3WLx4a2mjozUjFuU
   demo: https://insights-flow-prototype.vercel.app/
 cover: /images/insightsflow.jpg
 stack: [ClickHouse, open-source connector engine, open-source BI engine (headless), NestJS, Next.js, PostgreSQL]

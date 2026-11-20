@@ -21,6 +21,7 @@ metrics:
     label: product and engineering decisions logged
 links:
   site: https://kovahr.com/
+  deck: https://claude.ai/artifact/9ZLyjHR6A7LYTwBSHPhk6j
 cover: /images/kova.jpg
 stack: [Next.js, PostgreSQL with row-level security, Redis, Claude API, embedded payroll partner API, Inngest, Cloudflare R2]
 images:

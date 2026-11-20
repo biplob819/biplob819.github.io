@@ -31,6 +31,8 @@ const projects = defineCollection({
         report: url.optional(),
         package: url.optional(),
         video: url.optional(),
+        // A public strategy deck (market, GTM, roadmap) for the platforms.
+        deck: url.optional(),
         prd: url.optional(),
         // Long-form design docs: system architecture, data flow, methodology write-up or notebook.
         techspec: url.optional(),
