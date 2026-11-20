@@ -302,6 +302,12 @@ story:
       kind: guardrail
       how: Before each deploy, the Pages job re-renders the dashboard from the
         committed bundle and compares it byte for byte
+    - metric: Answer time and cost per case (third run)
+      kind: cost
+      target: Recorded per trial from the providers' own usage numbers
+      current: "Claude Sonnet 5.5: p95 14,955 ms (p50 4,743 ms), $0.007924 a case, cache-hit share 0.60868. GPT-6.1 Sol: p95 23,919 ms (p50 6,120 ms), $0.004889 a case"
+      how: Every trial records tokens, cache hits and latency; the run bundle carries
+        the efficiency block
   next:
     - Add normal questions built to tempt a failure on disclosing flagged rows,
       asking before guessing, and medical advice, so the judges are tested on

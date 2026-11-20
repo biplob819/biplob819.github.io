@@ -6,11 +6,11 @@ export const CV_DOC_ID = '1i7LYGpB_8UCOrdSHJMWcfm_YO8hm5RlPnD0lUqvrHPs'; // the 
 export const site = {
   name: 'Biplob Chakraborty',
   url: 'https://biplob819.github.io',
-  roles: ['Product Manager', 'Builder', 'India International, Modern Pentathlon'],
+  roles: ['Lead Product Manager, Data and AI/ML', 'Builder', 'India International, Modern Pentathlon'],
   // One sentence of identity, one of proof. Numbers come from the CV.
   lede: 'Product manager who ships. Pentathlete for India.',
   proof: [
-    "I'm Lead Product Manager, Data (Agentic Analytics and ML) at Mindbody. I shipped its first agentic product and led ML products that contributed to $103M+ in incremental ARR.",
+    "I'm Lead PM, Data and AI/ML (Agentic Analytics) at Mindbody. I shipped its first agentic product and led ML products that contributed to $103M+ in incremental ARR.",
     "I'm also building Kova (kovahr.com) and Insightsflow (insightsflow.live) end to end, and I'm a PhD scholar in AI at IIT Kharagpur.",
     'I represent India in modern pentathlon.',
   ],
@@ -39,7 +39,7 @@ export const site = {
 // Products shipped inside a day job: no public repo, so they live here, tagged BUILT like the CV.
 export const atWork = {
   company: 'Mindbody',
-  title: 'Lead Product Manager, Data (Agentic Analytics and ML)',
+  title: 'Lead PM, Data and AI/ML (Agentic Analytics)',
   period: '2023 to now',
   // Source: LinkedIn profile export, 16 Nov 2026 (private/linkedin-profile.md).
   items: [
