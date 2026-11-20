@@ -15,9 +15,9 @@ tags:
 headline:
   value: 0 of 310
   label: attack trials succeeded against Claude and GPT agents
-  note: First full run, including held-out cases (16 Nov), 300 agent
-    trials (k=3) plus 10 data-poisoning cases. 95% upper bound 2.0% per trial
-    for each model. A second, public-only run on 18 Nov also had 0 of 248.
+  note: First full run, including held-out cases (16 Nov), 300 agent trials (k=3)
+    plus 10 data-poisoning cases. 95% upper bound 2.0% per trial for each model.
+    A second, public-only run on 18 Nov also had 0 of 248.
 metrics:
   - value: 41,463
     label: EGFR rows, quality problems flagged, never deleted
@@ -305,7 +305,9 @@ story:
     - metric: Answer time and cost per case (third run)
       kind: cost
       target: Recorded per trial from the providers' own usage numbers
-      current: "Claude Sonnet 5.5: p95 14,955 ms (p50 4,743 ms), $0.007924 a case, cache-hit share 0.60868. GPT-6.1 Sol: p95 23,919 ms (p50 6,120 ms), $0.004889 a case"
+      current: "Claude Sonnet 5.5: p95 14,955 ms (p50 4,743 ms), $0.007924 a case,
+        cache-hit share 0.60868. GPT-6.1 Sol: p95 23,919 ms (p50 6,120 ms),
+        $0.004889 a case"
       how: Every trial records tokens, cache hits and latency; the run bundle carries
         the efficiency block
   next:
@@ -314,6 +316,66 @@ story:
       real failures
     - Flag each row that appears in both ChEMBL and PubChem, instead of only
       counting the overlap on the data card
+  priorities:
+    - item: ChEMBL and PubChem activity records in one schema, with provenance on
+        every row
+      call: built
+      why: Every value can be traced back to the source record it came from.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20PRD.md
+    - item: Quality rules that flag problem rows instead of deleting them
+      call: built
+      why: Flagged rows stay visible, so a reviewer can see what each rule caught.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: Versioned snapshots that rebuild to identical hashes
+      call: built
+      why: A model can name exactly the data it was trained on.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: A default-deny SQL guard that lets the agent read approved views only
+      call: built
+      why: Anything the guard does not recognise is refused rather than run.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: A tamper-evident audit log of every question, query and answer
+      call: built
+      why: Published anchors let anyone check a copy of the log against the run.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: A 60-case attack suite with a held-out split and a model-free attacker
+      call: built
+      why: It shows which layer stopped each attack, not just that it was stopped.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: A public security dashboard and a live console on visitors' own keys
+      call: built
+      why: A reviewer can read the results and try the guard without any setup.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: Collapsing duplicate measurements into a single median row
+      call: cut
+      why: Medians live in a separate view, so no source row is ever lost.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: Returning full query results of up to 1,000 rows to the model
+      call: cut
+      why: A small cap limits how much data one attack can pull into the model.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: Server-side refusal fallbacks for the agents
+      call: cut
+      why: A refusal should count as the model stopping the attack, not be retried
+        elsewhere.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: Hosted model keys and a daily budget on the public console
+      call: cut
+      why: Visitors use their own key, so the console costs nothing to run.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md
+    - item: Training a model on the snapshot with compound and scaffold splits
+      call: later
+      why: Training is out of scope for v1; the roadmap sets out how to do it without
+        leakage.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/data-roadmap.md
+    - item: Resolving the unknown-relation rows by reading a sample of assays
+      call: later
+      why: A scientist has to decide which of those values are exact.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/data-roadmap.md
+    - item: Cross-assay and literature checks to catch subtly poisoned values
+      call: later
+      why: Today's quality rules catch obvious errors, not plausible-looking fakes.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/data-roadmap.md
 source:
   repo: biplob819/assay-pipeline
   synced: 2026-11-16

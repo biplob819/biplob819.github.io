@@ -81,6 +81,7 @@ function validate(data, where) {
   for (const e of st.evals ?? []) if (!e.name || !e.data || !e.method || !e.result || (e.status && !EVAL_STATUS.includes(e.status))) errs.push(`every story.evals item needs name, data, method and result; status is one of ${EVAL_STATUS.join(', ')}`);
   for (const i of st.improvements ?? []) if (!i.metric || !i.before || !i.after || !i.change) errs.push('every story.improvements item needs metric, before, after and change');
   for (const l of st.learnings ?? []) if (!l.lesson || !l.now) errs.push('every story.learnings item needs lesson and now');
+  for (const p of st.priorities ?? []) if (!p.item || !CALLS.includes(p.call)) errs.push(`every story.priorities item needs item, and call is one of ${CALLS.join(', ')}`);
   for (const ds of data.datasets ?? []) if (!ds.name || !/^https?:\/\//.test(ds.url ?? '')) errs.push('every dataset needs a name and a URL');
   for (const c of data.install ?? []) if (!c.cmd) errs.push('every install step needs cmd');
   if (data.tagline && data.tagline.length > 200) errs.push('tagline is over 200 characters; keep it to one line');

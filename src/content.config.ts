@@ -96,6 +96,10 @@ const projects = defineCollection({
           })
           .optional(),
         bet: z.string().optional(),
+        // Scope calls behind the bet: what v1 built, what was deliberately cut, what waits for later.
+        priorities: z
+          .array(z.object({ item: z.string(), call: z.enum(['built', 'cut', 'later']), why: z.string().optional(), url: url.optional() }))
+          .optional(),
         monitoring: z
           .array(z.object({
             metric: z.string(),

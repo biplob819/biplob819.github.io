@@ -19,6 +19,7 @@ const LINK_LABEL: Record<string, string> = { site: 'Website', demo: 'Live demo',
 const LINK_ORDER = ['demo', 'site', 'repo', 'video', 'report', 'prd', 'prdOnePage', 'techspec', 'howBuilt', 'architecture', 'dataflow', 'methodology', 'package'];
 const links = LINK_ORDER.filter((k) => (d.links as Record<string, string | undefined>)[k]).map((k) => [k, (d.links as Record<string, string>)[k]]) as [string, string][];
 const st = d.story ?? {};
+const SCOPE_LABEL = { built: 'Built', cut: 'Cut', later: 'Later' } as const;
 const KIND_TAG = { 'north-star': 'North star', adoption: 'Adoption', quality: 'Quality', guardrail: 'Guardrail', cost: 'Cost' } as const;
 const STATUS_TAG = { pass: 'Pass', final: 'Final', provisional: 'Provisional', fail: 'Fail', pending: 'Not run yet' } as const;
 const showTarget = st.monitoring?.some((m) => m.target);
@@ -34,6 +35,7 @@ const pypi = d.links.package;
 // Page order: hiring-manager essentials first, then the deep dive.
 const toc = [
   st.pain && { slug: 'pain', text: 'User pain and hypothesis' },
+  st.priorities?.length && { slug: 'scope', text: 'Scope: built, cut, later' },
   st.evals?.length && { slug: 'evals', text: 'Evals and performance' },
   st.improvements?.length && { slug: 'improvements', text: 'How it improved' },
   d.timeline.length > 0 && { slug: 'grew', text: 'How it grew' },
@@ -128,6 +130,29 @@ const facts = [
               </blockquote>
             ))}
             {st.bet && <p class="bet"><span class="label">Hypothesis</span>{st.bet}</p>}
+          </section>
+        )}
+
+        {st.priorities?.length && (
+          <section class="story" aria-labelledby="scope">
+            <details class="scope">
+              <summary>
+                <h2 id="scope">Scope: built, cut and later</h2>
+                <span class="scope-counts">{(['built', 'cut', 'later'] as const).map((c) => <span class:list={['sc', c]}>{st.priorities!.filter((p) => p.call === c).length} {SCOPE_LABEL[c].toLowerCase()}</span>)}</span>
+                <span class="scope-hint label">Show the calls</span>
+              </summary>
+              <p class="lead">The product calls behind the bet: what the first version shipped, what I deliberately left out and why, and what waits for later.</p>
+              <div class="scope-cols">
+                {(['built', 'cut', 'later'] as const).map((c) => (
+                  <div class:list={['scol', c]}>
+                    <p class="label">{SCOPE_LABEL[c]}</p>
+                    <ul>{st.priorities!.filter((p) => p.call === c).map((p) => (
+                      <li><strong>{p.url ? <a href={p.url} rel="noopener">{p.item} ↗</a> : p.item}</strong>{p.why && <span>{p.why}</span>}</li>
+                    ))}</ul>
+                  </div>
+                ))}
+              </div>
+            </details>
           </section>
         )}
 
@@ -338,6 +363,21 @@ const facts = [
   summary { cursor: pointer; }
   .method { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; }
   .rail p { margin: 0; }
+  .scope { border: 1px solid var(--line); border-radius: var(--r); padding: 4px 18px; }
+  .scope summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; padding: 12px 0; }
+  .scope summary::-webkit-details-marker { display: none; }
+  .scope summary h2 { margin: 0; }
+  .scope-counts { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+  .sc { font: 500 11.5px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .04em; padding: 4px 8px; border-radius: 999px; border: 1px solid currentColor; }
+  .sc.built { color: var(--good); } .sc.cut { color: var(--muted); } .sc.later { color: var(--accent); }
+  .scope-hint { margin-left: auto; }
+  .scope[open] .scope-hint { display: none; }
+  .scope-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding: 4px 0 16px; }
+  .scol ul { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 12px; }
+  .scol li { display: flex; flex-direction: column; gap: 3px; font-size: 14.5px; }
+  .scol li span { color: var(--muted); font-size: 13.5px; }
+  .scol.cut li strong { text-decoration: line-through; text-decoration-color: var(--muted); text-decoration-thickness: 1px; }
+  @media (max-width: 760px) { .scope-cols { grid-template-columns: 1fr; } }
   .toc-m { display: none; }
   @media (max-width: 900px) { .toc-m { display: block; border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; margin: 0 0 8px; } .toc-m summary { cursor: pointer; } .toc-m nav { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; } .toc-m a { color: var(--muted); text-decoration: none; } .body { grid-template-columns: 1fr; } .rail { position: static; order: -1; } .rail nav.block { display: none; } }
   .prose { max-width: 70ch; font-size: 17px; min-width: 0; }
