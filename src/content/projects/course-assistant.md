@@ -148,12 +148,13 @@ story:
     - name: Judge calibration
       data: 336 groundedness claims and 100 integrity conversations labelled blind, a
         sample relabelled blind in fresh requests
-      method: Held-out agreement (Cohen's kappa (agreement beyond chance; 1 is perfect, 0 is chance), 95% bootstrap interval) with a model
-        panel of GPT Terra and GPT Luna, GPT Terra breaking splits; every gate
-        verdict names the labeller. Read with care - the integrity intervals are
-        wide because the 50 held-out conversations hold very few violations, and
-        the labellers share a vendor with GPT Sol and are now also the answer
-        model and claim extractor, so labelling and judging are not independent
+      method: Held-out agreement (Cohen's kappa (agreement beyond chance; 1 is
+        perfect, 0 is chance), 95% bootstrap interval) with a model panel of GPT
+        Terra and GPT Luna, GPT Terra breaking splits; every gate verdict names
+        the labeller. Read with care - the integrity intervals are wide because
+        the 50 held-out conversations hold very few violations, and the
+        labellers share a vendor with GPT Sol and are now also the answer model
+        and claim extractor, so labelling and judging are not independent
       result: "Certified 18 Nov 2026. GPT Sol (current judge): groundedness 0.88
         [0.75, 0.97] on 155 claims, integrity 0.79 [0.00, 1.00] on 50
         conversations. Claude Opus 5.5 (first run): 0.68 [0.51, 0.84] and 0.00
@@ -281,6 +282,63 @@ story:
       sample, and single sign-on"
     - "During the pilot: weekly gate runs, the deletion purge job running, an
       incident drill, and a pilot report to the programme owners"
+  priorities:
+    - item: Answers only from approved course materials, citing the slide or page
+      call: built
+      why: Learners get answers they can check against the session, with no guessing.
+      url: https://github.com/biplob819/course-assistant/blob/main/changelog.md
+    - item: Hints on graded work, never the work itself
+      call: built
+      why: The assistant helps learners study without doing their assignments for
+        them.
+      url: https://github.com/biplob819/course-assistant/blob/main/changelog.md
+    - item: Admin and personal questions handed to the teaching team
+      call: built
+      why: Deadlines, grades and personal matters belong with people, not a model.
+      url: https://github.com/biplob819/course-assistant/blob/main/changelog.md
+    - item: Teaching-team page with queue, replies, pause switches and weekly digest
+      call: built
+      why: Staff answer what the assistant cannot and can switch it off at once.
+      url: https://github.com/biplob819/course-assistant/blob/main/changelog.md
+    - item: Release gate on a fresh held-out set, scored once, with EvalKit
+      call: built
+      why: Every change is measured on questions nobody tuned against before it goes
+        live.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: Open-source package on PyPI and a passkey-protected live demo
+      call: built
+      why: Anyone can install it or try it on the sample course.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: Grading or feedback on submissions
+      call: cut
+      why: Marking stays with the teaching team; the assistant only gives hints.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: Answers from the web or general knowledge
+      call: cut
+      why: Answers must come from the course, so anything else is not covered.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: A second judge from another vendor
+      call: cut
+      why: Without funded access to a second vendor, one calibrated judge grades every
+        run.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: A walkthrough video
+      call: cut
+      why: A short silent GIF of real screens replaced the video.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: A pilot with one real cohort
+      call: later
+      why: It needs a cohort, a pilot host and platform sign-in; the pilot pack is
+        ready.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/pilot/README.md
+    - item: Fewer refusals when injected text comes with a real question
+      call: later
+      why: Today it fails safe by saying not found; a fix is planned after v0.1.0.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - item: Reaching the grounding and latency targets on held-out questions
+      call: later
+      why: Version 0.1.0 shipped with both misses stated, and the targets unchanged.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
 source:
   repo: biplob819/course-assistant
   synced: 2026-11-16

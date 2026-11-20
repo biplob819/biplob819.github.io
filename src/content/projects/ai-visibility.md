@@ -92,7 +92,8 @@ headline:
 metrics:
   - value: 83% vs 10%
     label: "of answers citing nhs.uk: GPT-6.1 Sol vs Claude Sonnet 5.5 (run 1,
-      separated after Holm correction, a stricter bar when several comparisons are tested at once)"
+      separated after Holm correction, a stricter bar when several comparisons
+      are tested at once)"
   - value: 10%
     label: overlap between the two models' cited sources per question (Jaccard, 95%
       CI 7.4% to 13%)
@@ -265,6 +266,75 @@ story:
     - A second study in another country or with more models, to test whether the
       nhs.uk gap is specific to UK health
     - Run the demo's Claude path on a live question (checked only offline so far)
+  priorities:
+    - item: 100 pre-registered questions asked of two models with web search, run
+        twice
+      call: built
+      why: Two full runs show how much the cited sources vary between asks.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Citation share, freshness lag, stale-answer rate and model overlap
+      call: built
+      why: These answer the four Must stories for publishers and AI labs.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Page dates, with the source of every date recorded
+      call: built
+      why: Readers can see how each cited page's age was worked out.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/dates.md
+    - item: Findings dashboard on GitHub Pages
+      call: built
+      why: It is rebuilt from the committed results on every push that changes them.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Domain lookup demo, with live questions behind passkeys
+      call: built
+      why: Reviewers can try the data without reading the post, and live mode stays
+        protected.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: citewatch on PyPI, to run your own study with your own keys
+      call: built
+      why: The method is more useful than one dataset.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: One-page spec for a paid freshness and provenance signal
+      call: built
+      why: It turns the finding into a product idea a buyer can judge.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/signal-spec.pdf
+    - item: A posted project video
+      call: cut
+      why: A silent walkthrough GIF of the key screens replaced it.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Support judging inside the published package
+      call: cut
+      why: PyPI refuses a dependency on a git URL, so it stays in the repository for
+        now.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Reordering date sources after the held-out date check
+      call: cut
+      why: Each source rested on too few checked pages to tell the sources apart.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: The owner labelling every sampled page's dates by hand
+      call: cut
+      why: A fresh-context agent read the pages and the owner reviewed and approved
+        its dates.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Crawling at scale and Google's AI search features
+      call: cut
+      why: They were non-goals, so the study stays on two models and polite fetching.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: Support judging as an optional extra on a newer EvalKit
+      call: later
+      why: It ships once that EvalKit reproduces the study's support verdicts.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: A larger held-out date check before changing which date source wins
+      call: later
+      why: More checked pages per source are needed to compare the sources fairly.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+    - item: A second study in another country or with more models
+      call: later
+      why: It would test whether the nhs.uk gap is specific to UK health.
+      url: https://github.com/biplob819/ai-visibility/blob/main/README.md
+    - item: A live question on the demo's Claude path
+      call: later
+      why: Claude's live path has so far been checked only against offline fakes.
+      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
 source:
   repo: biplob819/ai-visibility
   synced: 2026-11-19

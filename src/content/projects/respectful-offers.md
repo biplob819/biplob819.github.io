@@ -75,11 +75,14 @@ images:
     kind: result
 headline:
   value: 97 NTD
-  label: (New Taiwan dollars) of discount per extra member kept by the respectful bandit, against 211
-    NTD for the rule-following baseline and 289 NTD for the status quo
-  note: 200,000 real KKBox (a Taiwanese music-streaming service) members; offer responses are simulated by a
-    pre-registered simulator (central variant shown). The pre-registered claim
-    holds in all three simulator variants after a Holm correction (a stricter bar when several comparisons are tested at once).
+  label: (New Taiwan dollars) of discount per extra member kept by the respectful
+    bandit, against 211 NTD for the rule-following baseline and 289 NTD for the
+    status quo
+  note: 200,000 real KKBox (a Taiwanese music-streaming service) members; offer
+    responses are simulated by a pre-registered simulator (central variant
+    shown). The pre-registered claim holds in all three simulator variants after
+    a Holm correction (a stricter bar when several comparisons are tested at
+    once).
 metrics:
   - value: 200,000
     label: real KKBox members evaluated, offer responses simulated
@@ -259,6 +262,81 @@ story:
       the rule-following baseline, against a 0.10 warning line) becomes a
       constraint
     - A small live pilot with a holdout to replace the simulated offer responses
+  priorities:
+    - item: A churn-risk model trained on real KKBox subscription behaviour
+      call: built
+      why: Real member features, scores and churn labels make the risk side of every
+        result real, not simulated.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: A bandit that learns which of four offers to make each member
+      call: built
+      why: It keeps more members per unit of discount than discounting everyone at
+        risk.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: Respect rules applied outside the learning and recounted by an independent
+        auditor
+      call: built
+      why: A policy should never be able to learn its way around a member's no.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: Every policy compared on 200,000 real members under three simulator
+        assumptions
+      call: built
+      why: Offer responses are simulated, so three pre-registered variants bracket how
+        wrong the assumptions could be.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: An open-source package on PyPI that runs on your own subscription data
+      call: built
+      why: Others can rerun the method on their own members, not just read about it.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: A passkey-protected live demo of the policy simulator
+      call: built
+      why: Reviewers can move the budget and see the trade-offs without the page being
+        open to everyone.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: Monthly drift checks and challenger tests with a promotion rule stated in
+        advance
+      call: built
+      why: A live policy needs a way to notice it is slipping and to replace it only
+        on evidence.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: Sending real offers to members and running the policy in production
+      call: cut
+      why: The project is offline research on public data, so nothing is sent to
+        anyone.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: A content recommender behind the content nudge
+      call: cut
+      why: The nudge stays a placeholder so the work stays on offers and respect
+        rules.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: Off-policy estimates as the headline result
+      call: cut
+      why: On simulated logs they can only recover the simulator's own settings, so
+        they became a check instead.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: A narrated demo video
+      call: cut
+      why: A silent looping walkthrough GIF replaced the video on every portfolio
+        project.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/decisions.md
+    - item: A second monitored period so cost and fairness checks have a baseline
+      call: later
+      why: Until then those two checks are reported as not checked, never as passed.
+      url: https://github.com/biplob819/respectful-offers/blob/main/README.md
+    - item: Refit the churn model's calibration before the next challenger
+      call: later
+      why: March calibration moved beyond tolerance, so a new random seed alone is not
+        enough.
+      url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/monitor/drift.json
+    - item: Decide whether the age-band offer-rate gap should become a hard rule
+      call: later
+      why: The gap is above its warning line today and only warns.
+      url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/gate.json
+    - item: A small live pilot with a holdout to replace simulated responses
+      call: later
+      why: Only real responses can replace the simulator, and the decision logs are
+        already in the shape it needs.
+      url: https://github.com/biplob819/respectful-offers/blob/main/README.md
 source:
   repo: biplob819/respectful-offers
   synced: 2026-11-16
