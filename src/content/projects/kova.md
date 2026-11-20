@@ -25,6 +25,14 @@ links:
   site: https://kovahr.com/
 cover: /images/kova.jpg
 stack: [Next.js, PostgreSQL with row-level security, Redis, Claude API, embedded payroll partner API, Inngest, Cloudflare R2]
+images:
+  - src: /diagrams/kova-architecture.svg
+    alt: "Kova architecture: web, mobile and marketing clients call one app layer that checks auth, tenant, role and plan on every request; modules share an approvals engine over PostgreSQL with row-level security; payroll, payments and analytics sit behind provider interfaces."
+    kind: architecture
+  - src: /diagrams/kova-build-waves.svg
+    alt: "Kova build order in seven waves: platform and core spine built; time off, time and attendance, documents and e-signature built; self-service in progress; hiring, payroll, benefits, performance and cross-module work planned; AI platform deliberately last."
+    caption: build order in waves; a module starts only when everything it depends on is green
+    kind: architecture
 timeline:
   - when: Planned
     title: Production launch, then the next waves
