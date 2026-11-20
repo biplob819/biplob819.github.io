@@ -318,11 +318,11 @@ I set the goals and the hard rules. Those were zero fraud leakage, a spend cap w
 
 ## Key decisions
 
-**The model recommends; code decides (D-5, D-6).** The policy is written as numbered clauses, each with a machine-checked condition. A "clear" from either model is only a proposal, which the router accepts when a cited clearing clause holds and no never-auto-clear clause does. *Trade-off:* the policy has to be expressible as conditions on a few allow-listed fields, so nuance the model sees but the rules cannot express never clears an alert on its own.
+**The model recommends; code decides.** The policy is written as numbered clauses, each with a machine-checked condition. A "clear" from either model is only a proposal, which the router accepts when a cited clearing clause holds and no never-auto-clear clause does. *Trade-off:* the policy has to be expressible as conditions on a few allow-listed fields, so nuance the model sees but the rules cannot express never clears an alert on its own.
 
-**A failed evaluation stays in the record, and the fix is tested on fresh alerts (D-39, D-40).** When the first frozen eval leaked two frauds, both small purchases at 11 p.m., the fix (never auto-clear at night) was chosen on the dev set. It was then proven on a second, disjoint sample drawn in advance, never on the eval that exposed the problem. *Trade-off:* auto-clear fell from 36.8% to 8.8% (simulated data), and a fresh sample costs another paid run. Without both, the zero-leakage claim would not be honest.
+**A failed evaluation stays in the record, and the fix is tested on fresh alerts.** When the first frozen eval leaked two frauds, both small purchases at 11 p.m., the fix (never auto-clear at night) was chosen on the dev set. It was then proven on a second, disjoint sample drawn in advance, never on the eval that exposed the problem. *Trade-off:* auto-clear fell from 36.8% to 8.8% (simulated data), and a fresh sample costs another paid run. Without both, the zero-leakage claim would not be honest.
 
-**Claude API instead of Amazon Bedrock for the published runs (D-35).** The AWS project stayed on the free plan with Claude not authorised, which blocked every node that calls a model. The request shape is identical on both providers, so the switch is one config line and Bedrock remains a supported path. *Trade-off:* the published results do not exercise Bedrock, which the architecture diagram marks as "supported, not run".
+**Claude API instead of Amazon Bedrock for the published runs.** The AWS project stayed on the free plan with Claude not authorised, which blocked every node that calls a model. The request shape is identical on both providers, so the switch is one config line and Bedrock remains a supported path. *Trade-off:* the published results do not exercise Bedrock, which the architecture diagram marks as "supported, not run".
 
 ## What the checks on the reasons found
 

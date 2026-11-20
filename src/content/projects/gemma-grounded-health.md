@@ -64,8 +64,7 @@ headline:
     5.5 judge; not separated): the fine-tune learned to cite the study's aim
     instead of its results. Cause traced to the training data; v2, retrained so
     each citation must support the answer, fixed the citations but not the
-    headline: 0.329 against the base model's 0.404 (GPT-6.1 Sol judge, run
-    r-715fc213a8a5). Run r-f0f3b432a413. Research only, not medical advice."
+    headline: 0.329 against the base model's 0.404 (GPT-6.1 Sol judge). Research only, not medical advice."
 metrics:
   - value: 52% vs 86%
     label: "of claims supported by the cited sentences: fine-tuned vs base (Opus
@@ -114,7 +113,7 @@ story:
     - name: Correct and fully grounded
       data: Same 1,000 questions, four models
       method: Right label and every claim supported by the cited sentences; two judges
-        from different families; Holm correction
+        from different families; Holm correction (a stricter bar when several comparisons are tested at once)
       result: "Opus judge: Luna 0.431, base 0.418, fine-tuned 0.388, Haiku 0.345. The
         fine-tune did not beat its base (tie)"
       status: fail
@@ -208,7 +207,7 @@ story:
       kind: north-star
       target: Above the base model, separated, pre-registered
       current: "0.388 for v1 (base 0.418): a tie, base ahead"
-      how: EvalKit main run on 1,000 PubMedQA questions, two judges, Holm-corrected
+      how: EvalKit main run on 1,000 PubMedQA questions, two judges, Holm-corrected (a stricter bar when several comparisons are tested at once)
         comparison
     - metric: Claims supported by the cited sentences (Opus judge)
       kind: quality
@@ -283,8 +282,8 @@ I set the goals, wrote the PRD and made every product call recorded as an owner 
 
 ## Key decisions
 
-- **Train and test on the benchmark's own prompt and format (D-2, D-6).** Training prompts are rendered by EvalKit's own PubMedQA template, and every model, local or frontier, answers under the same JSON schema, so the benchmark measures grounding rather than format. Answers are scored on "correct and fully grounded" with two judges from different model families. *Trade-off:* a strict metric that made v1 look worse than label accuracy alone would have ($53.68 for the full v1 run, mostly judging).
-- **Pre-register the comparisons and live with them (§7.4).** The three comparisons were hashed and committed 31 seconds before the main run started; when v1 lost on the headline, the result stood. *Trade-off:* no freedom to pick a flattering metric afterwards.
-- **Fix it on dev data, label it honestly (OWNER D-43).** v2 is selected with a dev-set grounding check, never the test questions, and is labelled as built after v1's test results were seen. *Trade-off:* a second Kaggle training run and more paid judging, instead of shipping v1 with a caveat.
+- **Train and test on the benchmark's own prompt and format.** Training prompts are rendered by EvalKit's own PubMedQA template, and every model, local or frontier, answers under the same JSON schema, so the benchmark measures grounding rather than format. Answers are scored on "correct and fully grounded" with two judges from different model families. *Trade-off:* a strict metric that made v1 look worse than label accuracy alone would have ($53.68 for the full v1 run, mostly judging).
+- **Pre-register the comparisons and live with them.** The three comparisons were hashed and committed 31 seconds before the main run started; when v1 lost on the headline, the result stood. *Trade-off:* no freedom to pick a flattering metric afterwards.
+- **Fix it on dev data, label it honestly.** v2 is selected with a dev-set grounding check, never the test questions, and is labelled as built after v1's test results were seen. *Trade-off:* a second Kaggle training run and more paid judging, instead of shipping v1 with a caveat.
 
 The step-by-step failure analysis, the metrics table, the v2 plan and how to reproduce it are in the [full case study](https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md).

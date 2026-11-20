@@ -9,9 +9,9 @@ featured: true
 order: 1
 tags: [HR tech, B2B SaaS, payroll, multi-tenant, Claude API]
 headline:
-  value: 5,600+
+  value: 5,769
   label: commits since March 2026, built with my Build Harness
-  note: Build figures from the repo on 16 Nov 2026. Customer and revenue numbers are added as they become public.
+  note: Commits counted on the main branch on 20 Nov 2026. Customer and revenue numbers are added as they become public.
 metrics:
   - value: "10"
     label: HR modules, from hiring to payroll

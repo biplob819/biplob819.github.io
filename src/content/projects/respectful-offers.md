@@ -75,11 +75,11 @@ images:
     kind: result
 headline:
   value: 97 NTD
-  label: of discount per extra member kept by the respectful bandit, against 211
+  label: (New Taiwan dollars) of discount per extra member kept by the respectful bandit, against 211
     NTD for the rule-following baseline and 289 NTD for the status quo
-  note: 200,000 real KKBox members; offer responses are simulated by a
+  note: 200,000 real KKBox (a Taiwanese music-streaming service) members; offer responses are simulated by a
     pre-registered simulator (central variant shown). The pre-registered claim
-    holds in all three simulator variants after a Holm correction. Run real-v2.
+    holds in all three simulator variants after a Holm correction (a stricter bar when several comparisons are tested at once).
 metrics:
   - value: 200,000
     label: real KKBox members evaluated, offer responses simulated

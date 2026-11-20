@@ -92,7 +92,7 @@ headline:
 metrics:
   - value: 83% vs 10%
     label: "of answers citing nhs.uk: GPT-6.1 Sol vs Claude Sonnet 5.5 (run 1,
-      separated after Holm correction)"
+      separated after Holm correction, a stricter bar when several comparisons are tested at once)"
   - value: 10%
     label: overlap between the two models' cited sources per question (Jaccard, 95%
       CI 7.4% to 13%)
@@ -249,7 +249,7 @@ story:
       after: 48 of 49, for each judge
       change: Kept page text breaks lines at block elements, so the judges'
         exact-quote check works; 58 pages refetched and every citation judged
-        again (OWNER D-61)
+        again
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/improvements.md
     - metric: Shortest gap between requests to one site when a run resumes
       before: 0.4 s

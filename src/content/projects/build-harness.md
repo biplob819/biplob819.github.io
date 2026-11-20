@@ -9,9 +9,9 @@ featured: true
 order: 10
 tags: [harness engineering, Claude Code, agents, quality gates]
 headline:
-  value: 6,548
+  value: 13,040
   label: commits across the 10 repos it built, Kova and Insightsflow included
-  note: Measured with the repo's own scripts/evidence.py on 16 Nov 2026. Insightsflow is built with a teammate, so its commits are the team's.
+  note: Counted on each repo's main branch on 20 Nov 2026 (Kova 5,769; Insightsflow 6,300, built with a teammate, so those are the team's; the eight AI builds 971).
 metrics:
   - value: "1,755"
     label: capability rows tracked, 748 green with proofs
@@ -44,7 +44,7 @@ Coding agents repeat mistakes. A rule written in a prompt is forgotten twenty tu
 
 ## What it is
 
-The harness behind Kova's 5,600+ commits, Insightsflow, and every AI build on this site, extracted into a reusable kit:
+The harness behind Kova's 5,769 commits, Insightsflow, and every AI build on this site, extracted into a reusable kit:
 
 - **Guides (before the agent acts).** A constitution file, a short list of standing principles re-injected on every turn by a hook, and spec-driven skills: specify, plan, tasks, implement, analyze, converge.
 - **Computational sensors (after).** Lint, type-check and unit tests on every commit and push, plus a manifest of pre-push gates, each written after a real escape.

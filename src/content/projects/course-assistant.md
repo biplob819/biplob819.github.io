@@ -148,7 +148,7 @@ story:
     - name: Judge calibration
       data: 336 groundedness claims and 100 integrity conversations labelled blind, a
         sample relabelled blind in fresh requests
-      method: Held-out agreement (Cohen's kappa, 95% bootstrap interval) with a model
+      method: Held-out agreement (Cohen's kappa (agreement beyond chance; 1 is perfect, 0 is chance), 95% bootstrap interval) with a model
         panel of GPT Terra and GPT Luna, GPT Terra breaking splits; every gate
         verdict names the labeller. Read with care - the integrity intervals are
         wide because the 50 held-out conversations hold very few violations, and
@@ -350,8 +350,8 @@ Claude Code built the code, tests, evaluation runs and documents under EvalKit's
 
 ## Key decisions
 
-**Score the held-out set once, and only after tuning (D-62, D-67, D-71).** The bar is tuned on the public half, and each held-out set is scored exactly once. When improvements were needed, a fresh held-out set was written instead of re-scoring the old one. *Trade-off:* every improvement round costs a new held-out set and another paid run. In exchange, the published held-out number is one nobody tuned against.
+**Score the held-out set once, and only after tuning.** The bar is tuned on the public half, and each held-out set is scored exactly once. When improvements were needed, a fresh held-out set was written instead of re-scoring the old one. *Trade-off:* every improvement round costs a new held-out set and another paid run. In exchange, the published held-out number is one nobody tuned against.
 
-**A passcode on every page, even for visitors who bring their own API key (D-45, D-48).** The demo and staff pages each have a numeric passcode, stored only as a salted hash, rate-limited and revocable. Learner and staff codes can never match. *Trade-off:* friction for casual visitors to the open-source demo. In exchange, nobody can drain the spend cap or reach the staff queue anonymously.
+**A passcode on every page, even for visitors who bring their own API key.** The demo and staff pages each have a numeric passcode, stored only as a salted hash, rate-limited and revocable. Learner and staff codes can never match. *Trade-off:* friction for casual visitors to the open-source demo. In exchange, nobody can drain the spend cap or reach the staff queue anonymously.
 
-**Keep the stronger answer model and restate the latency target to 11 s (D-61, D-65).** No setting met the original 8 s p95. The faster model answered 30 of 74 course questions where the stronger one answered 51. *Trade-off:* answers take about two seconds longer at p95. In exchange, the answers are more often grounded and less often "not covered".
+**Keep the stronger answer model and restate the latency target to 11 s.** No setting met the original 8 s p95. The faster model answered 30 of 74 course questions where the stronger one answered 51. *Trade-off:* answers take about two seconds longer at p95. In exchange, the answers are more often grounded and less often "not covered".

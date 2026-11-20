@@ -13,7 +13,7 @@ headline:
   label: dashboard capabilities at parity with the reference BI tool, verified side by side
   note: From the platform's module index, 21 Aug 2026. Foundation modules (tenancy, auth, data layer, query gateway, audit) are converged; connectors and modeling are being built.
 metrics:
-  - value: "6,300+"
+  - value: "6,300"
     label: commits by the team since July 2026
   - value: "5 of 5"
     label: foundation modules converged

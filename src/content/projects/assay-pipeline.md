@@ -15,7 +15,7 @@ tags:
 headline:
   value: 0 of 310
   label: attack trials succeeded against Claude and GPT agents
-  note: First full run, including held-out cases (main-2026-11-16), 300 agent
+  note: First full run, including held-out cases (16 Nov), 300 agent
     trials (k=3) plus 10 data-poisoning cases. 95% upper bound 2.0% per trial
     for each model. A second, public-only run on 18 Nov also had 0 of 248.
 metrics:

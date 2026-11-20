@@ -60,7 +60,7 @@ images:
     kind: result
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/uplift.svg
     alt: Uplift from each single fix (descriptions, examples, self-check) for each
-      agent, with the Holm-corrected verdict
+      agent, with the Holm-corrected (a stricter bar when several comparisons are tested at once) verdict
     caption: Uplift from each fix, Holm-corrected
     kind: result
   - src: https://raw.githubusercontent.com/biplob819/agentic-analytics/main/docs/assets/dashboard.png
@@ -116,7 +116,7 @@ methodology:
     no LLM judge
   - Three trials per question; fixes frozen by hash before the baseline and
     measured one at a time
-  - Holm correction across fixes; the strict score is shown beside the headline
+  - Holm correction (a stricter bar when several comparisons are tested at once) across fixes; the strict score is shown beside the headline
     score everywhere
 proof:
   - label: Data card
@@ -331,8 +331,8 @@ Claude Code built the code, tests, runs and documents under EvalKit's node harne
 
 ## Key decisions
 
-**Score the numbers, not the shape, and keep the strict score beside it (OWNER D-81, D-89).** The hand check found right answers marked wrong for their shape: Cortex returned percentages as fractions on all 20 percent questions, and GPT pivoted tenure counts into one row. The headline now accepts four narrow equivalences for every backend; the strict, pre-registered score is shown beside it everywhere. *Trade-off:* the scoring changed after the first results were seen. In exchange, the headline answers the question a reader asks (did it get the numbers right?), and the unchanged strict score shows exactly what moved.
+**Score the numbers, not the shape, and keep the strict score beside it.** The hand check found right answers marked wrong for their shape: Cortex returned percentages as fractions on all 20 percent questions, and GPT pivoted tenure counts into one row. The headline now accepts four narrow equivalences for every backend; the strict, pre-registered score is shown beside it everywhere. *Trade-off:* the scoring changed after the first results were seen. In exchange, the headline answers the question a reader asks (did it get the numbers right?), and the unchanged strict score shows exactly what moved.
 
-**Gold must agree on both engines before any run (Q2.2).** Every gold query runs on ClickHouse and Snowflake, must match within tolerance, and is checked for ties at a top-N cut and for determinism; two questions were reworded when their answers tied. *Trade-off:* every question costs two gold queries and some rewording. In exchange, a backend is never scored against an answer that depends on which warehouse computed it.
+**Gold must agree on both engines before any run.** Every gold query runs on ClickHouse and Snowflake, must match within tolerance, and is checked for ties at a top-N cut and for determinism; two questions were reworded when their answers tied. *Trade-off:* every question costs two gold queries and some rewording. In exchange, a backend is never scored against an answer that depends on which warehouse computed it.
 
-**Freeze the fixes before the baseline and measure each alone (D-13, D-14).** The three fixes were hashed before any baseline run and each was run on its own against the same baseline, with a Holm correction across them. *Trade-off:* no tuning between runs, and three runs instead of one. In exchange, the gains are honest, including the unwelcome ones: descriptions cost GPT 5.0 points, and examples made Claude easier to steer with an injected instruction.
+**Freeze the fixes before the baseline and measure each alone.** The three fixes were hashed before any baseline run and each was run on its own against the same baseline, with a Holm correction across them. *Trade-off:* no tuning between runs, and three runs instead of one. In exchange, the gains are honest, including the unwelcome ones: descriptions cost GPT 5.0 points, and examples made Claude easier to steer with an injected instruction.
