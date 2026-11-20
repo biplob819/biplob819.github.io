@@ -124,9 +124,9 @@ export const teaching = {
 
 export const now = [
   'Co-Instructor on Building AI Products, Systems & Services at IIT Kharagpur with upGrad: 187 students in the first cohort.',
-  'Shipping Kova, an AI-native HR platform for US small businesses.',
+  'Building Kova, an HR platform for growing companies (pre-launch).',
   'Getting Insightsflow, embedded analytics for SaaS teams, ready to launch.',
-  'Finishing eight public AI builds, each scored with EvalKit.',
+  'Eight public AI builds, each scored with EvalKit; the last one, Gemma, is releasing its model.',
   'Released the Build Harness as open source: the Claude Code harness behind Kova, Insightsflow and every project here.',
   'PhD research at IIT Kharagpur, and training.',
 ];

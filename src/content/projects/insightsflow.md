@@ -53,7 +53,7 @@ timeline:
     title: Foundation, connectors and dashboards
     status: built
     items:
-      - First commit on 19 Jul; tenancy, auth with SSO and SCIM, data layer, query gateway and audit converged
+      - First commit on 19 Jul; tenancy, sign-in with single sign-on, data layer, query gateway and audit done
       - Live queries on customers' own warehouses designed, then withdrawn on 11 Aug
       - Dashboards at 66 of 66 parity on 21 Aug
 story:
@@ -92,7 +92,7 @@ story:
       before: 619,770 bytes
       after: 337,103 bytes
       change: 45.6% smaller, so embedded dashboards load faster for end users.
-    - metric: Roles list at 647 roles, p50
+    - metric: Roles list at 647 roles, typical (median) load
       before: 417.7 ms
       after: 9.96 ms
       change: Fixed a slow admin screen for large tenants.
@@ -104,9 +104,9 @@ story:
       before: 107 database queries
       after: "12"
       change: Removed repeated per-item queries.
-    - metric: Publishing a public snapshot, p50
-      before: 2.880 s
-      after: 1.1835 s
+    - metric: Publishing a public snapshot, typical (median)
+      before: 2.88 s
+      after: 1.18 s
       change: Faster, but still over the 400 ms budget, so it stays open.
   learnings:
     - lesson: Two tests counted as done had never actually run; running them found 4 product defects.
@@ -118,15 +118,15 @@ story:
     - lesson: A limit that is fetched reads like a limit that is enforced. Two query limits were computed on every query, but only one reached the engine.
       now: Check who reads a value, not just who produces it; a value nobody reads is decoration.
   monitoring:
-    - metric: First embedded chart, p75
+    - metric: First embedded chart, for 3 in 4 loads
       kind: guardrail
       target: Under 2.5 s
       how: Performance budget measured on every release
-    - metric: API response time, p95
+    - metric: API response time, for 19 in 20 requests
       kind: guardrail
       target: Under 400 ms
       how: Performance budget measured on every release
-    - metric: Warehouse query time, p95
+    - metric: Analytics database query time, for 19 in 20 queries
       kind: guardrail
       target: Under 3 s
       how: Performance budget measured on every release
@@ -138,12 +138,9 @@ story:
     - Bring-your-own AI and the tenant-branded MCP server
     - The embedding SDK with signed, short-lived per-user tokens
     - Reports, billing and usage metering, and the tenant admin console
-    - The first design partners
+    - Signing the first design partners (recruiting now)
 ---
 
-## The problem
-
-Every SaaS product eventually needs customer-facing reporting. Building it in-house takes an engineering team months and keeps costing them after launch; bolting on a general BI tool looks foreign inside the product and is priced for internal analysts, not thousands of end users.
 
 ## What I'm building
 
@@ -153,13 +150,13 @@ Insightsflow is a multi-tenant analytics layer that SaaS companies embed in thei
 
 ## How it works
 
-Source apps flow through an open-source connector engine, which the platform orchestrates, into ClickHouse with one database per tenant. An open-source BI engine runs unmodified as a headless query and semantic engine behind our own control plane, web app and embed SDK, so the experience and the AI are ours without forking the engines underneath. Postgres holds the control plane: tenancy, auth, connectors, layouts and billing.
+Source apps flow through an open-source connector engine, which the platform orchestrates, into ClickHouse with one database per tenant. An open-source BI engine runs unmodified as a headless query and semantic engine behind our own control plane, web app and embed SDK, so the experience and the AI are ours without forking the engines underneath. A Postgres database holds the platform's own records: tenants, users, connectors, layouts and billing.
 
 ## Where it is
 
 | Milestone | Modules | Status |
 | --- | --- | --- |
-| M1 Foundation | Tenancy, auth and roles (OIDC, SAML, SCIM), data layer, query gateway, audit | Converged |
+| M1 Foundation | Tenancy, sign-in with company single sign-on and user provisioning, data layer, query gateway, audit | Done |
 | M2 Data | Connectors (6 of 597 proven live end to end), modeling | Built, connectors being proven |
 | M3 Analysis | Query builder (6 of 6), dashboards (91 of 91 at parity) | Built |
 | M4 Distribution | AI chat and our own MCP server (18 of 22 AI steps green), embedding SDK, reports | AI built; SDK designed |
@@ -167,7 +164,7 @@ Source apps flow through an open-source connector engine, which the platform orc
 
 ## Go-to-market
 
-- **Design partners first**: 50% off any plan for 12 months in exchange for a 30-minute call each month.
+- **Recruiting design partners now**: the current offer is 50% off any plan for 12 months in exchange for a 30-minute call each month.
 - **AI as a paid add-on**: a tenant-branded MCP server, so a customer can resell AI answers on its own data under its own brand.
 - **Channels**: a blog and a community for early users, ahead of a public launch.
 

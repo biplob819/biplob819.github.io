@@ -135,7 +135,7 @@ const facts = [
 
         {st.priorities?.length && (
           <section class="story" aria-labelledby="scope">
-            <details class="scope">
+            <details class="scope" open>
               <summary>
                 <h2 id="scope">Scope: built, cut and later</h2>
                 <span class="scope-counts">{(['built', 'cut', 'later'] as const).map((c) => <span class:list={['sc', c]}>{st.priorities!.filter((p) => p.call === c).length} {SCOPE_LABEL[c].toLowerCase()}</span>)}</span>
@@ -236,17 +236,17 @@ const facts = [
         {st.monitoring?.length && (
           <section class="story" aria-labelledby="monitoring">
             <h2 id="monitoring">Metrics and monitoring</h2>
-            <table class="monitor">
-              <thead><tr><th>Metric</th>{showTarget && <th>Target</th>}{showNow && <th>Now</th>}<th>How it is watched</th></tr></thead>
-              <tbody>{st.monitoring.map((m) => (
-                <tr>
-                  <td><span class:list={['kind', m.kind]}>{KIND_TAG[m.kind]}</span><strong>{m.metric}</strong></td>
-                  {showTarget && <td>{m.target ?? '—'}</td>}
-                  {showNow && <td class="num-cell">{m.current ?? '—'}</td>}
-                  <td>{m.how}</td>
-                </tr>
-              ))}</tbody>
-            </table>
+            <div class="mon-grid">
+              {st.monitoring.map((m) => (
+                <article class:list={['mcard', m.kind]}>
+                  <p class="mtop"><span class:list={['kind', m.kind]}>{KIND_TAG[m.kind]}</span></p>
+                  <h3 class="mname">{m.metric}</h3>
+                  {m.current && <p class="mnow"><span class="label">Now</span><span class="mval">{m.current}</span></p>}
+                  {m.target && <p class="mtarget"><span class="label">Target</span><span>{m.target}</span></p>}
+                  <p class="mhow"><span class="label">How it is watched</span><span>{m.how}</span></p>
+                </article>
+              ))}
+            </div>
           </section>
         )}
 
@@ -363,6 +363,17 @@ const facts = [
   summary { cursor: pointer; }
   .method { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; }
   .rail p { margin: 0; }
+  .mon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 14px; }
+  .mcard { border: 1px solid var(--line); border-radius: var(--r); padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); min-width: 0; }
+  .mcard.north-star { border-color: var(--accent); }
+  .mtop { margin: 0; line-height: 1; }
+  .mcard .kind { margin: 0 !important; display: inline-block; }
+  .mname { margin: 0; font: 600 16px/1.35 var(--f-body); }
+  .mnow, .mtarget, .mhow { margin: 0; display: flex; flex-direction: column; gap: 3px; font-size: 14px; overflow-wrap: anywhere; }
+  .mnow .mval { font-size: 15.5px; font-weight: 600; color: var(--ink); }
+  .mtarget span:last-child { color: var(--ink-2, var(--ink)); }
+  .mhow span:last-child { color: var(--muted); font-size: 13.5px; }
+  .mcard .label { margin: 0; font-size: 11px; }
   .scope { border: 1px solid var(--line); border-radius: var(--r); padding: 4px 18px; }
   .scope summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; padding: 12px 0; }
   .scope summary::-webkit-details-marker { display: none; }
