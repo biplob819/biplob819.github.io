@@ -50,10 +50,40 @@ const INSTALL: Record<string, string> = {
         </div>
       ))}
     </div>
-    <ol class="timeline">
-      {atWork.earlier.map((e) => <li><span class="label">{e.period}</span><span><strong>{e.company}</strong> · {e.title}{e.note && <span class="muted"> · {e.note}</span>}</span></li>)}
-      {education.map((e) => <li><span class="label">{e.period}</span><span><strong>{e.place}</strong> · {e.name}</span></li>)}
-    </ol>
+    <div class="career">
+      <div class="cgroup">
+        <h3 class="label">Experience</h3>
+        <ol class="clist">
+          {atWork.experience.map((e) => (
+            <li class="citem">
+              {e.logo ? <img class="clogo" src={e.logo} alt={`${e.company} logo`} width="40" height="40" loading="lazy" /> : <span class="clogo mono" aria-hidden="true">{e.company.slice(0, 2)}</span>}
+              <div class="cbody">
+                <p class="corg">{e.company}</p>
+                <ul class:list={['roles', { promo: e.roles.length > 1 }]}>
+                  {e.roles.map((r, i) => (
+                    <li><span class="rtitle">{r.title}{i === 0 && e.roles.length > 1 && <span class="pchip">Promoted</span>}</span><span class="label">{r.period}</span>{r.note && <span class="muted rnote">{r.note}</span>}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="cgroup">
+        <h3 class="label">Education</h3>
+        <ol class="clist">
+          {education.map((e) => (
+            <li class="citem">
+              {e.logo ? <img class="clogo" src={e.logo} alt={`${e.place} logo`} width="40" height="40" loading="lazy" /> : <span class="clogo mono" aria-hidden="true">{e.place.slice(0, 2)}</span>}
+              <div class="cbody">
+                <p class="corg">{e.place}</p>
+                <ul class="roles"><li><span class="rtitle">{e.name}</span><span class="label">{e.period}</span></li></ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
   </section>
 
   <section class="block wrap" id="platforms">
@@ -211,6 +241,22 @@ const INSTALL: Record<string, string> = {
   .rrow p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
   .rl { text-transform: none; letter-spacing: 0; font-size: 12.5px; }
   @media (max-width: 760px) { .rrow { grid-template-columns: 1fr; gap: 6px; } }
+  .career { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px 48px; margin: 40px 0 0; }
+  @media (max-width: 860px) { .career { grid-template-columns: 1fr; } }
+  .cgroup h3 { margin: 0 0 12px; }
+  .clist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .citem { display: grid; grid-template-columns: 40px 1fr; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .clogo { width: 40px; height: 40px; object-fit: contain; border-radius: 9px; background: #fff; border: 1px solid var(--line); padding: 5px; box-sizing: border-box; }
+  .clogo.mono { display: grid; place-items: center; font: 600 13px/1 var(--f-mono); text-transform: uppercase; color: var(--muted); background: var(--bg); }
+  .corg { margin: 0 0 6px; font-weight: 600; font-size: 16px; }
+  .roles { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .roles li { display: flex; flex-direction: column; gap: 2px; font-size: 15px; }
+  .roles.promo { border-left: 2px solid var(--line); padding-left: 12px; }
+  .roles.promo li:first-child { position: relative; }
+  .roles.promo li::before { content: ''; position: absolute; }
+  .rtitle { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .pchip { font: 500 10.5px/1 var(--f-mono); text-transform: uppercase; letter-spacing: .05em; color: var(--good); border: 1px solid currentColor; border-radius: 999px; padding: 3px 7px; }
+  .rnote { font-size: 13.5px; }
   .timeline { list-style: none; margin: 36px 0 0; padding: 0; }
   .timeline li { display: grid; grid-template-columns: 170px 1fr; gap: 20px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
   @media (max-width: 560px) { .timeline li { grid-template-columns: 1fr; gap: 2px; } }

@@ -23,7 +23,7 @@ export const GET: APIRoute = async () => {
     '',
     `## At work: ${atWork.title}, ${atWork.company} (${atWork.period})`,
     ...atWork.items.map((i) => `- ${i.name}: ${i.text} ${i.metric} ${i.metricLabel}.`),
-    ...atWork.earlier.map((e) => `- Earlier: ${e.title}, ${e.company} (${e.period})`),
+    ...atWork.experience.flatMap((e) => e.roles.map((r) => `- ${r.title}, ${e.company} (${r.period})`)),
     '',
     '## Education',
     ...education.map((e) => `- ${e.name}, ${e.place} (${e.period})`),

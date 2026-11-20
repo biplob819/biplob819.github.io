@@ -40,7 +40,7 @@ export const site = {
 export const atWork = {
   company: 'Mindbody',
   title: 'Lead PM, Data and AI/ML (Agentic Analytics)',
-  period: 'Mar 2026 to now',
+  period: 'May 2023 to now',
   // Source: LinkedIn profile export, 16 Nov 2026 (private/linkedin-profile.md).
   items: [
     {
@@ -74,11 +74,15 @@ export const atWork = {
       metric: '80%', metricLabel: 'cross-organisation adoption',
     },
   ],
-  earlier: [
-    { company: 'Mindbody', title: 'Senior Product Manager, Data (Analytics and AI/ML)', period: 'May 2023 to Mar 2026' },
-    { company: 'PeopleStrong', title: 'Product Manager, Payroll (Global)', period: '2021 to 2023' },
-    { company: 'BrighterGoal', title: 'Product Manager, SMB creator and e-commerce', period: '2017 to 2021' },
-    { company: 'Shomart', title: 'Technical Co-founder', period: '2014 to 2017', note: '0 to 1 marketplace, ₹84K MRR' },
+  // Career, newest first. Logos are the organisations' own icons, saved in public/logos.
+  experience: [
+    { company: 'Mindbody', logo: '/logos/mindbody.svg', roles: [
+      { title: 'Lead Product Manager, Data and AI/ML (Agentic Analytics)', period: 'Mar 2026 to now' },
+      { title: 'Senior Product Manager, Data (Analytics and AI/ML)', period: 'May 2023 to Mar 2026' },
+    ] },
+    { company: 'PeopleStrong', logo: '/logos/peoplestrong.svg', roles: [{ title: 'Product Manager, Payroll (Global)', period: '2021 to 2023' }] },
+    { company: 'BrighterGoal', roles: [{ title: 'Product Manager, SMB creator and e-commerce', period: '2017 to 2021' }] },
+    { company: 'Shomart', roles: [{ title: 'Technical Co-founder', period: '2014 to 2017', note: '0 to 1 marketplace, ₹84K MRR' }] },
   ],
 };
 
@@ -94,9 +98,9 @@ export const sport = {
 };
 
 export const education = [
-  { name: 'PhD Scholar, AI & Cognitive Neuroscience', place: 'IIT Kharagpur', period: '2024 to 2028' },
-  { name: 'Professional Certificate, Project Management', place: 'IIM Rohtak', period: '2017 to 2018' },
-  { name: 'BE (Honours)', place: 'Girijananda Chowdhury Institute (Gauhati University)', period: '2016' },
+  { name: 'PhD Scholar, AI & Cognitive Neuroscience', place: 'IIT Kharagpur', period: '2024 to 2028', logo: '/logos/iit-kharagpur.svg' },
+  { name: 'Professional Certificate, Project Management', place: 'IIM Rohtak', period: '2017 to 2018', logo: '/logos/iim-rohtak.png' },
+  { name: 'BE (Honours), Girijananda Chowdhury Institute', place: 'Gauhati University', period: '2016', logo: '/logos/gauhati-university.png' },
 ];
 
 // Teaching. Student count from Biplob (17 Nov 2026); course facts from the public course page.
