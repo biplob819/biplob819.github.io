@@ -162,6 +162,16 @@ Source apps flow through an open-source connector engine, which the platform orc
 | M4 Distribution | AI chat and our own MCP server (18 of 22 AI steps green), embedding SDK, reports | AI built; SDK designed |
 | M5 Business | Billing and usage metering, tenant admin | Planned |
 
+## Security, access and localization
+
+- **Company single sign-on and automatic user setup, per workspace**: password sign-in, single sign-on through the company's identity provider (OIDC or SAML), and automatic creation and removal of users from that provider (SCIM). Passwords are hashed with a modern, deliberately slow method, and accounts lock after repeated failures.
+- **Roles with a fixed list of permissions**: 37 actions, roles that can inherit from parent roles, and 265 permission checks across 33 API controllers. New roles, users and embeds start with no access, and no one can grant an action they don't hold.
+- **Row and column rules applied on the server**: each viewer's row filters and allowed columns are added before the query runs, so a browser can't widen them, and a query the checker can't fully read is refused rather than run.
+- **Tenant isolation by construction**: the workspace always comes from the verified login, never from the request; each workspace's analytics data sits in its own schema and author-written SQL runs as that workspace's own database user. A suspended workspace's queries, syncs and public links stop on the next request.
+- **Short-lived sign-in tokens**: login tokens live for 120 seconds with key rotation, sessions are checked against the database so revoking one takes effect at once, and the analytics engine is never exposed to the browser.
+- **An audit log that can't be edited**: the database rejects any update or delete, retention defaults to 365 days, the retention job records its own deletions, and personal data is masked before it reaches logs.
+- **Not built yet**: per-viewer signed embed tokens and the embed SDK, 2-step login, and placement for tenants who want a dedicated database. The product is English-only today.
+
 ## Go-to-market
 
 - **Recruiting design partners now**: the current offer is 50% off any plan for 12 months in exchange for a 30-minute call each month.
