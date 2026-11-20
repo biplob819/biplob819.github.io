@@ -32,6 +32,18 @@ images:
       set, and the architecture"
     caption: ten real screens from recorded answers, 25 seconds, loops
     kind: walkthrough
+  - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/screenshots/learner-answer.png
+    alt: "Learner page: an answer from the course materials with its source open"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/screenshots/learner-hint.png
+    alt: "Learner page: a hint and the sessions to revisit"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/screenshots/team-pause-switches.png
+    alt: "Teaching-team page: pause switches per session"
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/screenshots/team-digest.png
+    alt: "Teaching-team page: the weekly digest"
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/architecture.svg
     alt: "Four layers: course ingest, the runtime (Streamlit pages, answer pipeline,
       privacy, escalation, digest, store, LLM client), the evaluation stack
