@@ -22,6 +22,11 @@ metrics:
   - value: "33"
     label: pre-push gates on Kova
 license: Apache-2.0
+images:
+  - src: https://raw.githubusercontent.com/biplob819/build-harness/main/docs/assets/walkthrough.gif
+    alt: "Walkthrough of nine terminal screens from a demo project: setup, a node refused until its dependency is green, a node starting, a converge that fails because a proof cites a skipped test, the same converge passing after the fix, the next node allowed, the gates' self-test, and the evidence table"
+    caption: nine real terminal screens from a demo project, loops
+    kind: walkthrough
 links:
   repo: https://github.com/biplob819/build-harness
 stack: [Claude Code plugin, hooks, subagents, skills, Python 3.11+, git hooks]
