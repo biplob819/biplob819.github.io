@@ -70,6 +70,8 @@ const projects = defineCollection({
       }))
       .default([]),
     // Commands from the README that install and run it (open-source builds).
+    // Button text for links.demo when the default "Live demo" would mislead (for example a passkey-protected demo).
+    demoLabel: z.string().optional(),
     install: z.array(z.object({ cmd: z.string(), note: z.string().optional() })).default([]),
     // The real, public datasets it runs on.
     datasets: z.array(z.object({ name: z.string(), url, note: z.string().optional() })).default([]),

@@ -91,7 +91,7 @@ const facts = [
 
     {links.length > 0 && (
       <nav class="links" aria-label="Project links">
-        {links.map(([k, v], n) => <a class:list={['btn', { primary: n === 0 }]} href={v} rel="noopener">{LINK_LABEL[k] ?? k} ↗</a>)}
+        {links.map(([k, v], n) => <a class:list={['btn', { primary: n === 0 }]} href={v} rel="noopener">{(k === 'demo' && d.demoLabel) || LINK_LABEL[k] || k} ↗</a>)}
       </nav>
     )}
 

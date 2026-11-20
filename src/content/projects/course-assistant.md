@@ -18,6 +18,7 @@ stack:
   - EvalKit
 links:
   repo: https://github.com/biplob819/course-assistant
+  demo: https://course-assistant-demo1.streamlit.app/
   prd: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20PRD.md
   techspec: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20Tech%20Spec.md
 images:
@@ -256,8 +257,8 @@ story:
       target: No deletion request open longer than 7 days
       how: The purge job fails if a request stays incomplete for more than 7 days
   next:
-    - Release v0.1.0 with a public demo, shipping the grounding and answer-time
-      misses as documented known limits
+    - Release v0.1.0, shipping the grounding and answer-time misses as
+      documented known limits
     - 'A fix for questions that arrive with injected text: the assistant says
       "not found" to the real course question inside them instead of answering
       it'
@@ -289,6 +290,7 @@ install:
     note: replays 40 recorded sample-course questions
   - cmd: make eval-offline
     note: the release gate's offline checks
+demoLabel: Passkey-protected demo
 ---
 
 ## Write-up
