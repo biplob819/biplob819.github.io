@@ -4,7 +4,7 @@ tagline: A small open Gemma model fine-tuned to answer health questions only
   from a given abstract and cite its sentences. Research only, not medical
   advice.
 kind: case-study
-status: building
+status: shipped
 role: Product and build
 year: "2026"
 order: 36
@@ -17,6 +17,8 @@ links:
   repo: https://github.com/biplob819/gemma-grounded-health
   prd: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20PRD.md
   techspec: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20Tech%20Spec.md
+  report: https://biplob819.github.io/evalkit/gemma/
+  methodology: https://github.com/biplob819/gemma-grounded-health/blob/main/configs/eval_plan_v2.yaml
 stack:
   - Gemma
   - Kaggle GPU
@@ -24,13 +26,20 @@ stack:
   - EvalKit
 images:
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/walkthrough.gif
-    alt: "Walkthrough of ten screens: the overview of base against fine-tuned
-      results, the data flow and architecture diagrams, the command-line tool
-      and its checks, the hand-audit page, results for four models with
-      intervals per judge, what failed and why, the laptop speed benchmark, and
-      the parity and contamination checks"
-    caption: ten screens from committed results (v1), 25 seconds, loops
+    alt: "Walkthrough of ten screens: v2's headline numbers against v1 and base,
+      the v2 results table with the pre-registered verdicts and the aim-rule
+      caveat, the v1 failure diagnosis (citations of the study's aim), the
+      Hugging Face model page, the local demo, the data flow diagram, the laptop
+      benchmark, the parity and paraphrase checks, the command-line health check
+      with the audit score, and the local hand-audit page"
+    caption: ten real screens, 25 seconds, loops; nothing live or paid
     kind: walkthrough
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/demo.gif
+    alt: "Recording of the local demo: sample questions answered by base and
+      fine-tuned v2 side by side with cited sentences highlighted, then a live
+      answer refused without the passcode"
+    caption: The local demo against the benchmarked 4-bit file, recorded on a laptop
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/headline_v2.svg
     alt: "Base, v1 and v2 on 1,000 PubMedQA questions: correct-and-grounded 0.404,
       0.331, 0.329; cited sentences that support a claim 0.747, 0.362, 0.736;
@@ -66,6 +75,11 @@ images:
     caption: The demo on a laptop, base against v2 on the benchmarked 4-bit file
       (six samples, 12 of 12 labels right; pasted abstracts behind a passcode)
     kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/screenshots/demo_passcode_gate.png
+    alt: The local demo's Your abstract tab refusing a live answer with a wrong
+      passcode
+    caption: Live answers need a passcode, even with your own API key
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/architecture.svg
     alt: "Gemma Grounded Health: architecture"
     kind: architecture
@@ -73,25 +87,26 @@ images:
     alt: "Gemma Grounded Health: data flow"
     kind: dataflow
 headline:
-  value: 50.1% → 72.8%
-  label: label accuracy of a fine-tuned Gemma 4 E2B on 1,000 expert-labelled
-    PubMedQA questions, against its base model
-  note: "But \"correct and fully grounded\" fell from 41.8% to 38.8% (Claude Opus
-    5.5 judge; not separated): the fine-tune learned to cite the study's aim
-    instead of its results. Cause traced to the training data; v2, retrained so
-    each citation must support the answer, fixed the citations but not the
-    headline: 0.329 against the base model's 0.404 (GPT-6.1 Sol judge). Research only, not medical advice."
+  value: 0.362 → 0.736
+  label: of cited sentences that support a claim, fine-tuned v1 → v2, on 1,000
+    expert-labelled PubMedQA questions (GPT-6.1 Sol judge)
+  note: "The fix v2 was built for: v1 had learned to cite the study's aim instead
+    of its results (answers citing an unsupporting aim sentence 0.560 → 0.084).
+    Correct and fully grounded tied (0.331 → 0.329), and the base model stays
+    ahead at 0.404. v1 had raised label accuracy from 0.501 to 0.728; v2 scores
+    0.678. Released as v1.0.0. Research only, not medical advice."
 metrics:
-  - value: 52% vs 86%
-    label: "of claims supported by the cited sentences: fine-tuned vs base (Opus
-      judge)"
+  - value: 0.560 → 0.084
+    label: "answers citing an unsupporting aim sentence, v1 → v2: the failure v2
+      fixed"
   - value: 3.3 GB
     label: model file at 4-bit; runs offline on a laptop
   - value: "4"
     label: "models on the same 1,000 questions: Gemma base and fine-tuned, Claude
       Haiku 5.5, GPT-6 Luna"
-  - value: $53.68
-    label: for the main run (4,000 answers, dual judging), against a $63.65 estimate
+  - value: $4.00
+    label: for v2's main run, with base and v1 answers from EvalKit's cache ($53.68
+      for v1's run of 4,000 answers with two judges)
 proof:
   - label: Data card
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/DATA_CARD.md
@@ -101,8 +116,14 @@ proof:
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
   - label: Spend ledger
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/spend-ledger.jsonl
-  - label: EvalKit report page for the v2 run
-    url: https://biplob819.github.io/evalkit/gemma/
+  - label: GitHub release v1.0.0 (notes, artifacts, hashes, known limits)
+    url: https://github.com/biplob819/gemma-grounded-health/releases/tag/v1.0.0
+  - label: 4-bit laptop file on Hugging Face (GGUF)
+    url: https://huggingface.co/biplob123/gemma-4-e2b-grounded-health-GGUF
+  - label: v2 main run summary (JSON)
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main_v2/summary.json
+  - label: Reproduce from scratch
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/reproduce.md
 datasets:
   - name: PubMedQA
     url: https://pubmedqa.github.io/
@@ -146,9 +167,11 @@ story:
     - name: Laptop file vs full precision
       data: Dev labels
       method: Agreement of the 4-bit file with the full-precision model; bar 0.95
-      result: "0.956"
-      status: pass
-      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/parity_report.json
+      result: "v1 0.956 (pass). v2 0.920, below the bar: the loss comes from 4-bit
+        quantisation (the 8-bit file scores 0.996); waived by the owner and
+        disclosed"
+      status: final
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/known-issues.md
     - name: v2 on the 1,000 test questions
       data: 1,000 expert-labelled PubMedQA questions, a plan hashed before the run
       method: GPT-6 Luna extracts claims and GPT-6.1 Sol judges them (one judge, while
@@ -157,8 +180,8 @@ story:
         0.747) and aim-citation rate 0.084 (v1 0.560, base 0.138); correct and
         fully grounded 0.329 (v1 0.331, a tie; base 0.404, base better). The
         judge is checked against a Claude Opus 5.5 labeller (kappa 0.60 [0.47,
-        0.71]), not yet a person
-      status: provisional
+        0.71]); the labels are a model's, by the owner's choice
+      status: final
       url: https://github.com/biplob819/gemma-grounded-health#v2-result-the-citations-are-fixed-the-headline-is-not
   learnings:
     - lesson: '"Valid citation" was not "supporting citation": every automatic dev
@@ -221,21 +244,22 @@ story:
       change: Same retrain; separated (−0.476), and below the base model's 0.138.
       url: https://github.com/biplob819/gemma-grounded-health#v2-result-the-citations-are-fixed-the-headline-is-not
   monitoring:
-    - metric: Correct and fully grounded (Opus judge)
+    - metric: Correct and fully grounded (GPT-6.1 Sol judge)
       kind: north-star
       target: Above the base model, separated, pre-registered
-      current: "0.388 for v1 (base 0.418): a tie, base ahead"
-      how: EvalKit main run on 1,000 PubMedQA questions, two judges, Holm-corrected (a stricter bar when several comparisons are tested at once)
-        comparison
-    - metric: Claims supported by the cited sentences (Opus judge)
+      current: 0.329 for v2 (v1 0.331, base 0.404)
+      how: EvalKit main run on 1,000 PubMedQA questions, paired bootstrap with a Holm
+        correction (a stricter bar when several comparisons are tested at once)
+    - metric: Cited sentences that support a claim (GPT-6.1 Sol judge)
       kind: quality
-      target: A v2 bar set on dev data before v2 is measured
-      current: 0.519 for v1 (base 0.863)
-      how: Every claim judged only against the sentences the answer cites
+      target: Reported with intervals
+      current: 0.736 for v2 (v1 0.362, base 0.747)
+      how: EvalKit citation check; v2 is not claimed to beat base on citations,
+        because the judge's aim rule penalises base's aim-restating claims
     - metric: Label accuracy
       kind: quality
       target: Reported with intervals
-      current: 0.728 for v1 (base 0.501), separated
+      current: 0.678 for v2 (v1 0.728, base 0.501)
       how: Yes / no / maybe against the expert label, paired bootstrap
     - metric: Valid JSON answers on dev
       kind: guardrail
@@ -245,7 +269,7 @@ story:
     - metric: Laptop file agreement with full precision (dev labels)
       kind: guardrail
       target: At least 0.95
-      current: "0.956"
+      current: "0.920 for v2, missed and disclosed (v1 0.956)"
       how: The 4-bit file against the full-precision model on 500 dev prompts
     - metric: Memorisation check (paraphrase probe)
       kind: guardrail
@@ -256,11 +280,66 @@ story:
     - metric: Spend per main run
       kind: cost
       target: Hard cap $70, estimate first
-      current: $53.68 (estimate $63.65)
+      current: $4.00 for v2, with base and v1 answers from EvalKit's cache ($53.68
+        for v1's run, estimate $63.65)
       how: Every API dollar goes into a spend ledger and every Kaggle GPU hour into a
         GPU ledger
+  priorities:
+    - item: "Retrained v2 so every cited sentence must support the answer"
+      call: built
+      why: "v1 cited the study's aim instead of its results, so v2 trained on stricter citation targets."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "Every model scored with EvalKit on all expert-labelled PubMedQA questions"
+      call: built
+      why: "Pre-registered plans, paired intervals and Holm correction keep each comparison honest."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/configs/eval_plan_v2.yaml
+    - item: "Merged weights and a laptop GGUF published on Hugging Face"
+      call: built
+      why: "The benchmarked 4-bit file runs offline in Ollama or llama.cpp."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/release_record_v2.json
+    - item: "Passcode-gated local demo comparing base and fine-tuned answers"
+      call: built
+      why: "Sample answers are open to everyone, while live answers need a passcode even with your own key."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "Model card and README numbers generated from one results bundle"
+      call: built
+      why: "Hand-copied numbers drift, so a test fails when any published number differs."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "Reproduce-from-scratch guide where each step is a tested command"
+      call: built
+      why: "Anyone can rebuild the release from a fresh clone and check each step."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/reproduce.md
+    - item: "Preference tuning (DPO) after the fine-tune"
+      call: cut
+      why: "The citation-target fix addressed the failure preference tuning would have targeted, saving a training run."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "Hosted GPU demo on a ZeroGPU Space"
+      call: cut
+      why: "The free local app serves the exact benchmarked file with no spend."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "The owner hand-labelling the judge calibration claims"
+      call: cut
+      why: "A model labelled them under a committed prompt, and every report says the labels are a model's."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "Claude Opus as a second judge on v2's results"
+      call: later
+      why: "The v2 benchmark ran on one judge because the Anthropic credit ran out."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "Clarify the aim rule in EvalKit's citation rubric"
+      call: later
+      why: "The judge marks aim sentences unsupporting even for claims that restate the aim, so an upstream issue records it."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
+    - item: "A hosted demo with a global rate limit"
+      call: later
+      why: "The local demo limits passcode attempts per session, which a public host would need to tighten."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/known-issues.md
+    - item: "Re-run the laptop benchmark on a quiet machine"
+      call: later
+      why: "v2's speed was measured on a busy laptop and its gap to v1 is unexplained."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/known-issues.md
   next:
-    - A tagged open-source v1.0.0 release with reproduce-from-scratch docs
+    - Claude Opus 5.5 as a second judge on v2, a laptop benchmark re-run on a quiet
+      machine, and the public write-up
 source:
   repo: biplob819/gemma-grounded-health
   synced: 2026-11-16
