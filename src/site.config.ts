@@ -8,7 +8,7 @@ export const site = {
   url: 'https://biplob819.github.io',
   roles: ['Lead Product Manager, Data and AI/ML', 'Builder', 'India International, Modern Pentathlon'],
   // One sentence of identity, one of proof. Numbers come from the CV.
-  lede: 'Product manager who ships. Pentathlete for India.',
+  lede: 'I lead AI products and race modern pentathlon for India.',
   proof: [
     "I'm Lead PM, Data and AI/ML (Agentic Analytics) at Mindbody. I shipped its first agentic product and led ML products that contributed to $103M+ in incremental ARR.",
     "I'm also building Kova (kovahr.com) and Insightsflow (insightsflow.live) end to end, and I'm a PhD scholar in AI at IIT Kharagpur.",
@@ -40,7 +40,7 @@ export const site = {
 export const atWork = {
   company: 'Mindbody',
   title: 'Lead PM, Data and AI/ML (Agentic Analytics)',
-  period: '2023 to now',
+  period: 'Mar 2026 to now',
   // Source: LinkedIn profile export, 16 Nov 2026 (private/linkedin-profile.md).
   items: [
     {
