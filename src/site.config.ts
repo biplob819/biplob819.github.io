@@ -60,7 +60,7 @@ export const atWork = {
     },
     {
       name: 'Internal Anthropic marketplace MCP',
-      text: 'An internal marketplace that organises MCP apps and plugins for teams across the company.',
+      text: 'An internal marketplace that organises skills and plugins for teams across the opcos within Playlist.',
       metric: '1,000+', metricLabel: 'apps available to internal teams',
     },
     {
