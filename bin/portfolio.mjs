@@ -138,8 +138,11 @@ async function loadProject(target) {
   const readme = readmeIntro(await rd('README.md'));
   let data; let body = null;
 
+  const parsed = manifestText ? (YAML.parse(manifestText) ?? {}) : null;
+  // A portfolio.yml with no title is a partial file (e.g. only `priorities:` for the Scope toggle), not a page manifest.
+  if (parsed && !parsed.title) throw new Error(`${target}: portfolio.yml has no title, so it is not a full page manifest (it may hold only priorities). Refusing to overwrite the page; import priorities separately.`);
   if (manifestText) {
-    const m = YAML.parse(manifestText) ?? {};
+    const m = parsed;
     data = Object.fromEntries(FIELDS.filter((k) => m[k] !== undefined).map((k) => [k, m[k]]));
     data.slug = m.slug;
     const cs = m.case_study ?? 'docs/case-study.md';
