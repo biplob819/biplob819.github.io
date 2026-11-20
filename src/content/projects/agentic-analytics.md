@@ -385,11 +385,6 @@ A benchmark of two ways to answer analytics questions in plain English over the 
 
 On the baseline, GPT-6.1 Sol answered 97% correctly (92% under strict, pre-registered scoring), Cortex Analyst 85% (62%) and Claude Sonnet 5.5 76% (76%). Almost every failure was a guess on an ambiguous question instead of asking back. Claude's other misses came from an approximate median function. One fix, five worked example queries, lifted Claude to 92% (+15.7 points), mostly by getting it to ask back on ambiguous questions. It also made Claude follow an injected instruction in every trial of one probe that it had resisted on the baseline. Results: [baseline](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/baseline-2026-11-17.json), [fixes](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json), [failure taxonomy](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/failure-taxonomy-2026-11-17.json).
 
-## My role
-
-I wrote the product requirements and owned every ruling that shaped the benchmark: the dataset and the as-of date, the Snowflake region (kept in Thailand, with a latency caveat), a sign-off on all 140 questions and probes, the scoring rulings after the baseline hand check, and each paid run's budget. I set up the ClickHouse Cloud and Snowflake accounts, approved every push, and own the demo deploy, now live with saved answers and a passcode-gated live mode.
-
-Claude Code built the code, tests, runs and documents under EvalKit's node harness: tests first, clean convergence runs, and a fresh skeptical verifier per node that tried to disprove each criterion with planted defects. Verifiers found real defects before the paid runs (a self-check that would have penalised correct empty answers, logs that hid every cache key). Every scope limit is written down as a decision ([decisions](https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md)).
 
 ## Key decisions
 

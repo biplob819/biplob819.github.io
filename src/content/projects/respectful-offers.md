@@ -348,9 +348,6 @@ harness: true
 
 Subscription services fight churn with discounts, and the usual rule pays members who would have stayed anyway and asks people again after they said no. I built Respectful Offers, an open-source retention policy with two rules written outside the learning: a declined offer stays declined, and members at risk see content before commerce. A calibrated churn model scores each member, a filter removes every forbidden action, and a Thompson sampling bandit chooses among a content nudge, a cheaper plan and a half-price month within a budget. On 200,000 real KKBox members, with offer responses simulated, it spent 97 NTD of discount per extra member kept, against 211 for a rule-following baseline and 289 for the status quo, which broke the rules 31,490 times. The pre-registered claim held under all three simulator variants. The trade: 27% fewer extra members kept than the baseline, on 33% of its discount.
 
-## My role
-
-Product and engineering, end to end: I framed the problem, wrote the PRD and the technical spec, and made every judgement call that belonged to a person: the licence reading for the Kaggle data, the simulator's values (frozen and hashed before the real run), the demo's passkey protection and which release gates fail or only warn. Claude Code built the code, tests and documents node by node under a gated harness: no capability counted as done until its named tests passed every convergence gate and a skeptical verifier, given only the criteria and the code, failed to disprove it.
 
 ## Key decisions
 

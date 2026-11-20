@@ -388,9 +388,6 @@ demoLabel: Live console (your own API key)
 
 Drug-discovery teams want language-model agents that answer questions over assay data, but an agent with database access can leak restricted results or be talked into changing data. Trusted Assay Pipeline builds the data and the controls together. It ingests 41,463 EGFR activity rows from ChEMBL and PubChem into a deterministic, hashed snapshot that flags quality problems instead of deleting rows. Claude or GPT then answers questions only through a SQL guard, a read-only isolated executor and a hash-chained audit log. An attack suite of 60 cases across six OWASP LLM categories measures what gets through and which layer stopped it. In the published run, 0 of 310 attack trials succeeded (0 of 150 per model, a 95% upper bound of 2.0% per trial). A scripted attacker with no model in the loop was stopped on all 60 cases. The run, the guard-off ablation and the judges cost $4.60. It ships as an MIT package on PyPI with a public dashboard.
 
-## My role
-
-I set the direction and made the product and risk rulings, which are recorded as OWNER decisions in the [decision log](https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md): for example the private held-out split, keeping portfolio material out of the repo, and the console's own-key mode. I set the spend limits for real-API runs, held the API keys and accounts, set up PyPI trusted publishing and tagged the releases. Claude Code wrote the specs, code, tests and docs under a node harness. Each node was built tests-first, had to pass 13 gates twice in a row, and was checked by a fresh-context verifier agent whose findings are logged in that node's run state. The live console is deployed; visitors run it with their own API key.
 
 ## Key decisions
 

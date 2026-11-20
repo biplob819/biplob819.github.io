@@ -276,9 +276,6 @@ Gemma Grounded Health is a small open model (Gemma 4 E2B, 3.3 GB at 4-bit) fine-
 
 The first fine-tune raised label accuracy on all 1,000 expert-labelled PubMedQA questions from 0.501 to 0.728, but it did not beat its own base model on the metric that matters, "correct and fully grounded" (0.388 against 0.418, Claude Opus 5.5 judging), because its citations often pointed at the study's aim instead of its results. The project measured that failure, traced it to the training data, and retrained a v2 chosen on dev data only. On the same 1,000 questions v2 fixed the citations (cited sentences that support a claim, 0.362 to 0.736) but not the headline (0.329, a tie with v1 and below the base model's 0.404), under one judge, GPT-6.1 Sol.
 
-## My role
-
-I set the goals, wrote the PRD and made every product call recorded as an owner decision: evaluate on all 1,000 questions, pre-approve the spend, build the v2 fix after v1 failed, extend EvalKit with a per-sentence citation check, and hand-audit the training data. Claude Code built the pipeline under a build harness (dependency-gated build steps, 13 automated gates, an independent reviewer for each step), ran the Kaggle training and the EvalKit runs, and wrote the code, tests and records; I reviewed results and approved each paid run.
 
 ## Key decisions
 

@@ -400,11 +400,6 @@ A teaching assistant for a course: learners ask questions and get answers that c
 
 The first held-out run failed: grounded 0.693 against a 0.90 target. Three tuning rounds followed, each on the public half alone and each scored once on a fresh held-out set. The latest reached grounding 0.880 (0.973 on the public half it was tuned on) and locator accuracy 0.964, and every zero-tolerance gate passed, identity included. The gate still fails: grounding is below target, and the p95 answer time was 11.027 s against 11 s, measured as one model provider recovered from an outage. Integrity went from 0.929 to 1.000. It costs $0.0061 a question. Live runs now use one judge, so EvalKit publishes no headline from them ([report](https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout4-report.md)).
 
-## My role
-
-I wrote the product requirements and owned every ruling that shaped the system: multi-turn conversations, a passcode on every page, the monthly spend cap, the order in which held-out data may be used, and the restated latency target. I approved each paid evaluation run, chose a model panel to label the calibration sets, and own the live deploy, a passkey-protected demo.
-
-Claude Code built the code, tests, evaluation runs and documents under EvalKit's node harness. Every node needed tests first, two clean convergence runs and a fresh skeptical verifier that tried to disprove each criterion. Nodes went green only when nothing was left to disprove. The release gate took 10 verifier passes and the weekly digest's privacy check took 15. Every scope limit is written down as a decision ([decisions](https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md)).
 
 ## Key decisions
 
