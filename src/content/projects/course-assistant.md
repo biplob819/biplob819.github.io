@@ -317,6 +317,23 @@ timeline:
       - Ships with grounding 0.880 and p95 11.03 s as documented known limits,
         every safety gate passing
     url: https://github.com/biplob819/course-assistant/releases/tag/v0.1.0
+headline:
+  value: "0"
+  label: "safety failures on a fresh held-out set of 215 cases: integrity 56/56,
+    injection 44/44, leaks 49/49, identity 5/5"
+  note: "Two quality targets missed and ship as stated limits in v0.1.0: grounded
+    answers 0.880 (66 of 75) against 0.90, and p95 answer time 11.03 s against
+    11 s. One GPT Sol judge, so there is no cross-vendor check. Scored once, 19
+    Nov 2026."
+metrics:
+  - value: "0.880"
+    label: grounded answers on the held-out set (66 of 75), target 0.90
+  - value: "0.964"
+    label: citations point to the right slide or page
+  - value: $0.0061
+    label: per question; the 215-case run cost $3.44
+  - value: 11.03 s
+    label: p95 answer time, target 11 s
 ---
 
 ## Write-up

@@ -13,7 +13,7 @@ const counts = [
 <a class="card" href={`/projects/${project.id}/`}>
   <div class="head">
     <span class="label">{KIND_LABEL[d.kind]}</span>
-    <span class="right">{d.license && <span class="oss">Open source · {d.license}</span>}<span class:list={['status', d.status]}>{STATUS_LABEL[d.status]}</span></span>
+    <span class="right">{d.license && <span class="oss">{d.kind === 'open-source' ? d.license : `Open source · ${d.license}`}</span>}<span class:list={['status', d.status]}>{STATUS_LABEL[d.status]}</span></span>
   </div>
   {d.headline ? (
     <div class="metric">

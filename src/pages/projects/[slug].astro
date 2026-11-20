@@ -39,7 +39,7 @@ const toc = [
   d.timeline.length > 0 && { slug: 'grew', text: 'How it grew' },
   hasHow && { slug: 'how-it-works', text: 'Architecture and data flow' },
   hasMethod && { slug: 'methodology', text: 'Methodology' },
-  ...headings.filter((h) => h.depth === 2 && !['how-it-works', 'methodology'].includes(h.slug)).map((h) => ({ slug: h.slug, text: h.text })),
+  ...headings.filter((h) => h.depth === 2 && !((h.slug === 'how-it-works' && hasHow) || (h.slug === 'methodology' && hasMethod))).map((h) => ({ slug: h.slug, text: h.text })),
   st.monitoring?.length && { slug: 'monitoring', text: 'Metrics and monitoring' },
   d.install.length > 0 && { slug: 'install', text: 'Install and run' },
   d.datasets.length > 0 && { slug: 'datasets', text: 'Datasets' },
@@ -48,7 +48,8 @@ const toc = [
   st.next?.length && { slug: 'next', text: "What's next" },
   { slug: 'feedback', text: 'Feedback' },
 ].filter(Boolean) as { slug: string; text: string }[];
-const all = await projects();
+const allByKind = await projects();
+const all = (['product', 'open-source', 'case-study', 'prototype'] as const).flatMap((k) => allByKind.filter((p) => p.data.kind === k));
 const i = all.findIndex((p) => p.id === project.id);
 const prev = all[(i - 1 + all.length) % all.length];
 const next = all[(i + 1) % all.length];
@@ -276,10 +277,12 @@ const facts = [
           <p>A shaky number, a better approach, or a bug in the demo. It goes straight to my inbox.</p>
           <div class="fb-actions">
             <button type="button" class="btn primary" data-feedback data-subject={`Feedback on ${d.title}`}>Send feedback ✉</button>
+            <button type="button" class="btn" data-feedback data-title="Get in touch" data-subject={`Hiring: from the ${d.title} page`}>Get in touch</button>
             {d.links.repo && <a class="btn" href={`${d.links.repo}/issues/new`} rel="noopener">Open an issue ↗</a>}
           </div>
         </section>
       </div>
+      {toc.length > 3 && <details class="toc-m"><summary class="label">On this page</summary><nav aria-label="On this page (mobile)">{toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}</nav></details>}
       <aside class="rail">
         {toc.length > 3 && (
           <nav class="block" aria-label="On this page"><p class="label">On this page</p>{toc.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}</nav>
@@ -335,7 +338,8 @@ const facts = [
   summary { cursor: pointer; }
   .method { margin: 8px 0 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; }
   .rail p { margin: 0; }
-  @media (max-width: 900px) { .body { grid-template-columns: 1fr; } .rail { position: static; order: -1; } .rail nav.block { display: none; } }
+  .toc-m { display: none; }
+  @media (max-width: 900px) { .toc-m { display: block; border: 1px solid var(--line); border-radius: var(--r); padding: 12px 14px; margin: 0 0 8px; } .toc-m summary { cursor: pointer; } .toc-m nav { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; } .toc-m a { color: var(--muted); text-decoration: none; } .body { grid-template-columns: 1fr; } .rail { position: static; order: -1; } .rail nav.block { display: none; } }
   .prose { max-width: 70ch; font-size: 17px; min-width: 0; }
   .prose :global(h2) { font: 800 clamp(30px, 3.6vw, 40px)/1 var(--f-display); font-stretch: 72%; text-transform: uppercase; margin: 48px 0 14px; scroll-margin-top: 84px; }
   .prose :global(h2:first-child) { margin-top: 0; }

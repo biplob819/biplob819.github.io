@@ -11,7 +11,7 @@ const groups = (['product', 'open-source', 'case-study', 'prototype'] as const)
 <Base title="Builds" description="Every platform, open-source tool and AI build, with its headline result and proof.">
   <div class="wrap page">
     <h1 class="cond">Everything I've built</h1>
-    <p class="intro">Platforms, open-source tools, scored AI builds and earlier prototypes. Every number links back to a published run.</p>
+    <p class="intro">Platforms, open-source tools and scored AI builds. Every number links back to a published run.</p>
     {groups.map((g) => (
       <section>
         <div class="sec-head"><h2 class="cond">{KIND_PLURAL[g.kind]}</h2><span class="label">{g.items.length}</span></div>

@@ -32,7 +32,7 @@ export const site = {
     { value: '11+', label: 'years in product' },
     { value: '$103M+', label: 'incremental ARR my ML products contributed to' },
     { value: '77%', label: 'of chats completed weekly on Mindbody\'s first agentic product' },
-    { value: '5,600+', label: 'commits on Kova, built with my own harness' },
+    { value: '$100k', label: 'Fivetran renewal saved by my multi-agent data dictionary' },
   ],
 };
 

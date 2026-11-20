@@ -19,7 +19,7 @@ const INSTALL: Record<string, string> = {
     <div class="chips">
       {site.roles.map((r, i) => <span class:list={['chip', { strong: i === site.roles.length - 1 }]}>{r}</span>)}
     </div>
-    <p class="status-line"><span class="dot" aria-hidden="true"></span>Shipping Kova · building Insightsflow · training for the 2027 Asian Championships</p>
+    <p class="status-line"><span class="dot" aria-hidden="true"></span>Lead PM, Data and AI/ML at Mindbody · shipping Kova · building Insightsflow · training for the 2027 Asian Championships</p>
     <h1 class="cond">Product manager who ships. <span class="muted-h">Pentathlete for India.</span></h1>
     <p class="lead">
       I'm Lead PM, Data and AI/ML (Agentic Analytics) at <strong>Mindbody</strong>. I shipped its first agentic product and led ML products that contributed to <strong>$103M+ in incremental ARR</strong>.
@@ -29,12 +29,31 @@ const INSTALL: Record<string, string> = {
       <a class="btn primary" href={site.links.cv} rel="noopener"><Icon name="download" />Download CV</a>
       <a class="btn" href={site.links.linkedin} rel="me noopener"><Icon name="linkedin" />LinkedIn</a>
       <a class="btn" href={site.links.github} rel="me noopener"><Icon name="github" />GitHub</a>
+      <button type="button" class="btn" data-feedback data-title="Get in touch" data-subject="Hiring: from the portfolio home page">Get in touch</button>
     </div>
     <dl class="board" aria-label="Results">
       {site.ledger.map((l) => (
         <div><dt class="num">{l.value}</dt><dd class="label">{l.label}</dd></div>
       ))}
     </dl>
+  </section>
+
+  <section class="block wrap" id="work">
+    <div class="sec-head"><h2 class="cond">At work</h2><span class="label">{atWork.company} · {atWork.period}</span></div>
+    <p class="intro">{atWork.title}. Products I built there, with the number each one moved.</p>
+    <div class="results" role="table" aria-label="Products built at Mindbody">
+      {atWork.items.map((it) => (
+        <div class="rrow" role="row">
+          <span class="num rv" role="cell">{it.metric}</span>
+          <div role="cell"><h3>{it.name}</h3><p>{it.text}</p></div>
+          <span class="label rl" role="cell">{it.metricLabel}</span>
+        </div>
+      ))}
+    </div>
+    <ol class="timeline">
+      {atWork.earlier.map((e) => <li><span class="label">{e.period}</span><span><strong>{e.company}</strong> · {e.title}{e.note && <span class="muted"> · {e.note}</span>}</span></li>)}
+      {education.map((e) => <li><span class="label">{e.period}</span><span><strong>{e.place}</strong> · {e.name}</span></li>)}
+    </ol>
   </section>
 
   <section class="block wrap" id="platforms">
@@ -68,7 +87,7 @@ const INSTALL: Record<string, string> = {
     <div class="sec-head"><h2 class="cond">AI builds, scored</h2><span class="label">{published} of {builds.length} results published</span></div>
     <p class="intro">Each build starts from a real team's problem, ships as a public repo, and is measured with EvalKit: quality, cost per answer and confidence intervals. The rest are being built in public and publish their numbers when the evaluation run lands.</p>
     <div class="cards">{builds.map((p) => <ProjectCard project={p} />)}</div>
-    <p class="more"><a class="tlink" href="/projects/">All builds, including earlier prototypes →</a></p>
+    <p class="more"><a class="tlink" href="/projects/">All builds →</a></p>
   </section>
 
   <section class="block wrap" id="open-source">
@@ -84,23 +103,6 @@ const INSTALL: Record<string, string> = {
     </div>
   </section>
 
-  <section class="block wrap" id="work">
-    <div class="sec-head"><h2 class="cond">At work</h2><span class="label">{atWork.company} · {atWork.period}</span></div>
-    <p class="intro">{atWork.title}. Products I built there, with the number each one moved.</p>
-    <div class="results" role="table" aria-label="Products built at Mindbody">
-      {atWork.items.map((it) => (
-        <div class="rrow" role="row">
-          <span class="num rv" role="cell">{it.metric}</span>
-          <div role="cell"><h3>{it.name}</h3><p>{it.text}</p></div>
-          <span class="label rl" role="cell">{it.metricLabel}</span>
-        </div>
-      ))}
-    </div>
-    <ol class="timeline">
-      {atWork.earlier.map((e) => <li><span class="label">{e.period}</span><span><strong>{e.company}</strong> · {e.title}{e.note && <span class="muted"> · {e.note}</span>}</span></li>)}
-      {education.map((e) => <li><span class="label">{e.period}</span><span><strong>{e.place}</strong> · {e.name}</span></li>)}
-    </ol>
-  </section>
 
   <section class="block wrap" id="teaching">
     <div class="sec-head"><h2 class="cond">Teaching</h2><span class="label">IIT Kharagpur · upGrad</span></div>
