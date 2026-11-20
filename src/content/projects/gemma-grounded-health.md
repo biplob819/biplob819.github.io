@@ -58,6 +58,14 @@ images:
     caption: v2 released on Hugging Face (tag v2.0.0), with a 4-bit laptop file for
       Ollama alongside
     kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/screenshots/demo_answer.png
+    alt: "The local demo answering a stroke question from its abstract: base
+      Gemma cites sentences 1 and 4, the study's aim and method, while
+      fine-tuned v2 cites sentence 5, the result; both run as the 4-bit laptop
+      file, with a research-only notice"
+    caption: The demo on a laptop, base against v2 on the benchmarked 4-bit file
+      (six samples, 12 of 12 labels right; pasted abstracts behind a passcode)
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/architecture.svg
     alt: "Gemma Grounded Health: architecture"
     kind: architecture
@@ -93,6 +101,8 @@ proof:
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
   - label: Spend ledger
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/spend-ledger.jsonl
+  - label: EvalKit report page for the v2 run
+    url: https://biplob819.github.io/evalkit/gemma/
 datasets:
   - name: PubMedQA
     url: https://pubmedqa.github.io/
@@ -250,8 +260,6 @@ story:
       how: Every API dollar goes into a spend ledger and every Kaggle GPU hour into a
         GPU ledger
   next:
-    - Judge calibration and a behaviour table per model before results are final
-    - A side-by-side demo, behind a passcode
     - A tagged open-source v1.0.0 release with reproduce-from-scratch docs
 source:
   repo: biplob819/gemma-grounded-health

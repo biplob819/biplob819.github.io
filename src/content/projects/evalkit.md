@@ -20,10 +20,12 @@ headline:
   note: "GPT-6.1 Sol, judged by Claude Opus 5.5 (95% CI 50.5% to 64.0%); 46.0%
     (39.0% to 53.0%) by the GPT-6.1 Sol judge; separated from every other model
     after a Holm correction (a stricter bar when several comparisons are tested
-    at once). Judges checked against held-out hand labels: GPT-6.1 Sol kappa
-    0.60 (0.47 to 0.71); Claude Opus 5.5 kappa 0.40 (0.26 to 0.51), below the
-    0.4 certify bar and lenient (it passed 52 of 79 claims the hand labels
-    marked unsupported), so its 57.5% likely overstates. Run of 14 Nov 2026."
+    at once). Judges checked against held-out reference labels made by a
+    model, Claude Opus 5.5, not a person: GPT-6.1 Sol kappa 0.60 (0.47 to
+    0.71); Claude Opus 5.5 kappa 0.40 (0.26 to 0.51), below the 0.4 certify bar
+    and lenient (it passed 52 of 79 claims the labels marked unsupported), so
+    its 57.5% likely overstates; it also made the labels, so its agreement is
+    not independent. Run of 14 Nov 2026."
 metrics:
   - value: "4"
     label: models compared, two from each family
@@ -113,7 +115,7 @@ images:
     kind: dataflow
 methodology:
   - Answers must cite sentences from the source abstract
-  - Two judges from different model families, checked against hand labels
+  - Two judges from different model families, checked against held-out reference labels
   - Bootstrap 95% confidence intervals and paired permutation tests
   - Holm correction across model comparisons
   - Self-preference measured, not assumed away
@@ -297,14 +299,16 @@ story:
       result: 26 of 26 passed
       status: pass
       url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/simuser-2026-11-14.json
-    - name: Judge calibration on hand labels
-      data: Held-out hand labels
+    - name: Judge calibration on held-out reference labels
+      data: Held-out reference labels made by a model, Claude Opus 5.5, from a
+        fixed prompt (not by a person)
       method: Cohen's kappa (agreement beyond chance; 1 is perfect, 0 is chance)
-        against held-out hand labels, with a 95% interval; certify bar 0.4 on
-        the lower bound
-      result: "GPT-6.1 Sol kappa 0.60 (0.47 to 0.71). Claude Opus 5.5 kappa 0.40 (0.26
-        to 0.51), below the bar and lenient: it passed 52 of 79 claims the hand
-        labels marked unsupported"
+        against those labels, with a 95% interval; certify bar 0.4 on the lower
+        bound
+      result: "GPT-6.1 Sol kappa 0.60 (0.47 to 0.71), a check across model families.
+        Claude Opus 5.5 kappa 0.40 (0.26 to 0.51), below the bar and lenient: it
+        passed 52 of 79 claims the labels marked unsupported. It made the labels,
+        so its agreement is not independent"
       status: final
       url: https://github.com/biplob819/evalkit#evalkit
   improvements:
@@ -320,10 +324,10 @@ story:
       change: Estimated from tokens measured in a pilot instead of placeholders. The
         run then cost $3.81.
       url: https://github.com/biplob819/evalkit/blob/main/changelog.md
-    - metric: Build harness, 14 to 17 Nov
+    - metric: Build harness, 14 to 21 Nov
       before: 26 nodes
-      after: 43 nodes
-      change: Capabilities grew from 144 to 209 (all 209 green, each with named tests
+      after: 44 nodes
+      change: Capabilities grew from 144 to 213 (all 213 green, each with named tests
         as proof), and 42 lessons were each turned into a rule a gate or test
         now enforces.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
@@ -379,7 +383,7 @@ story:
       why: A judge can favour its own family, and that only shows when both judge
         every answer.
       url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
-    - item: Judges checked against held-out hand labels, with a weak judge flagged
+    - item: Judges checked against held-out reference labels, with a weak judge flagged
       call: built
       why: Agreement measured on the labels used to tune the rubric would be training
         accuracy, so only the held-out half counts.
@@ -424,10 +428,10 @@ story:
       why: A capability with one user and no likely second stays in that project,
         keeping the shared library small.
       url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
-    - item: My own blind relabel of 20 answers to measure labeller consistency
+    - item: A blind relabel of 20 answers to measure how consistent the labeller is
       call: later
       why: The judges' agreement is published now, and the relabel adds how far the
-        hand labels agree with themselves.
+        labels agree with themselves.
       url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
     - item: Gemini models alongside Claude and OpenAI
       call: later
@@ -448,11 +452,11 @@ harness: true
 
 ## Write-up
 
-Teams pick a model from leaderboards built on someone else's task, then grade it with an LLM judge nobody has checked. I built EvalKit, an open-source Python harness that runs your own cases across Claude and OpenAI models and has judges from two model families check every claim in each answer against the sentences it cites. Its first benchmark put 200 PubMedQA questions to four models. GPT-6.1 Sol was the most grounded: correct and fully grounded on 57.5% of answers by the Claude Opus 5.5 judge and 46.0% by the GPT-6.1 Sol judge (which was rating its own answers), and separated from every other model after a Holm correction under both. Claude Sonnet 5.5 was the most accurate, 77.0% correct labels, yet correct and fully grounded on only 38.5% by the Claude judge. The benchmark cost $23.87, the whole project $31.56 in API calls. Both judges are calibrated against held-out hand labels: the Sol judge at κ=0.60, the Opus judge at κ=0.40, below the 0.4 certify bar on its lower bound and lenient (it passed 52 of 79 claims the hand labels marked unsupported), so its 57.5% likely overstates. EvalKit is on PyPI (v0.1.0 and v0.2.0), with a public report, a live demo, and seven projects that build on it.
+Teams pick a model from leaderboards built on someone else's task, then grade it with an LLM judge nobody has checked. I built EvalKit, an open-source Python harness that runs your own cases across Claude and OpenAI models and has judges from two model families check every claim in each answer against the sentences it cites. Its first benchmark put 200 PubMedQA questions to four models. GPT-6.1 Sol was the most grounded: correct and fully grounded on 57.5% of answers by the Claude Opus 5.5 judge and 46.0% by the GPT-6.1 Sol judge (which was rating its own answers), and separated from every other model after a Holm correction under both. Claude Sonnet 5.5 was the most accurate, 77.0% correct labels, yet correct and fully grounded on only 38.5% by the Claude judge. The benchmark cost $23.87, the whole project $31.56 in API calls. Both judges are calibrated against held-out reference labels that a model, Claude Opus 5.5, made from a fixed prompt: the Sol judge at κ=0.60, the Opus judge at κ=0.40, below the 0.4 certify bar on its lower bound and lenient (it passed 52 of 79 claims the labels marked unsupported), so its 57.5% likely overstates. The Opus judge is also the model that made the labels, so its agreement is not independent; the Sol judge's is a check across model families. EvalKit is on PyPI (v0.1.0 and v0.2.0), with a public report, a live demo, and seven projects that build on it.
 
 
 ## Key decisions
 
 1. **Two judges from different families check every claim.** Claude Opus 5.5 and GPT-6.1 Sol rule on every claim of the full run, on one claim set from a single fixed extractor, with model names redacted. Why: a judge can favour its own family, and that only shows when both judge every answer. Here both rated GPT answers better grounded than Claude answers (Opus 88.8% against 81.4%, Sol 80.9% against 72.0% mean groundedness), so the ranking is not one judge favouring its own. *Trade-off:* every claim is paid for twice, and the report carries two headline numbers that disagree instead of one clean figure.
-2. **Report judge agreement only on held-out hand labels.** Hand labels are split into a tuning half and a held-out half; agreement (Cohen's kappa, with an interval that resamples whole answers) comes from the held-out half only, and a run is stamped calibrated only when every judge has been scored that way for the task under the current rubric. Why: a kappa measured on the labels used to tune the rubric is training accuracy, not an error rate. *Trade-off:* the published benchmark stayed marked uncalibrated and provisional until the hand labels were done (19 Nov 2026); EvalKit would not call it anything else. The labels then showed one judge below the certify bar, and the headline says so.
+2. **Report judge agreement only on held-out labels.** Labels are split into a tuning half and a held-out half; agreement (Cohen's kappa, with an interval that resamples whole answers) comes from the held-out half only, and a run is stamped calibrated only when every judge has been scored that way for the task under the current rubric. Why: a kappa measured on the labels used to tune the rubric is training accuracy, not an error rate. *Trade-off:* the published benchmark stayed marked uncalibrated and provisional until the labels were done (19 Nov 2026); EvalKit would not call it anything else. The labels then showed one judge below the certify bar, and the headline says so. A model made them (Claude Opus 5.5), so the reports name it and flag the Opus judge as not independent.
 3. **EvalKit grows with the projects built on it, behind a canary.** Before a release, a canary runs each downstream project's own offline EvalKit tests against the current code; an internal name that two or more projects use joins the public API; and every change made for a project ships with that project's failing case as an EvalKit test. On the first baseline five projects passed all their tests (1,303), gemma-grounded-health showed one known drift that cannot affect it until it upgrades from its v0.1.0 pin, and respectful-offers imports nothing, so has none to run; the canary cost $0. Why: projects were rebuilding the same gates, comparisons and labelling checks, and without a canary a release could break them silently. *Trade-off:* a wider surface to maintain, with projects' requests queueing until a release ships them (v0.3.0 shipped the first batch on 17 November); a capability with one user and no likely second stays in its own project.
