@@ -19,10 +19,11 @@ headline:
     questions
   note: "GPT-6.1 Sol, judged by Claude Opus 5.5 (95% CI 50.5% to 64.0%); 46.0%
     (39.0% to 53.0%) by the GPT-6.1 Sol judge; separated from every other model
-    after a Holm correction (a stricter bar when several comparisons are tested at once). Judges checked against held-out hand labels:
-    GPT-6.1 Sol kappa 0.60 (0.47 to 0.71); Claude Opus 5.5 kappa 0.40 (0.26 to
-    0.51), below the 0.4 certify bar and lenient (it passed 52 of 79 claims the
-    hand labels marked unsupported), so its 57.5% likely overstates. Run of 14 Nov 2026."
+    after a Holm correction (a stricter bar when several comparisons are tested
+    at once). Judges checked against held-out hand labels: GPT-6.1 Sol kappa
+    0.60 (0.47 to 0.71); Claude Opus 5.5 kappa 0.40 (0.26 to 0.51), below the
+    0.4 certify bar and lenient (it passed 52 of 79 claims the hand labels
+    marked unsupported), so its 57.5% likely overstates. Run of 14 Nov 2026."
 metrics:
   - value: "4"
     label: models compared, two from each family
@@ -298,8 +299,9 @@ story:
       url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/simuser-2026-11-14.json
     - name: Judge calibration on hand labels
       data: Held-out hand labels
-      method: Cohen's kappa (agreement beyond chance; 1 is perfect, 0 is chance) against held-out hand labels, with a 95% interval; certify
-        bar 0.4 on the lower bound
+      method: Cohen's kappa (agreement beyond chance; 1 is perfect, 0 is chance)
+        against held-out hand labels, with a 95% interval; certify bar 0.4 on
+        the lower bound
       result: "GPT-6.1 Sol kappa 0.60 (0.47 to 0.71). Claude Opus 5.5 kappa 0.40 (0.26
         to 0.51), below the bar and lenient: it passed 52 of 79 claims the hand
         labels marked unsupported"
@@ -365,6 +367,78 @@ story:
         the defect.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
   next: []
+  priorities:
+    - item: One command compares models on answers that are correct and grounded in
+        the source
+      call: built
+      why: The headline counts an answer only when it is right and every claim is
+        backed by its cited sentences, with 95% intervals.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Two judges from different model families rule on every claim
+      call: built
+      why: A judge can favour its own family, and that only shows when both judge
+        every answer.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Judges checked against held-out hand labels, with a weak judge flagged
+      call: built
+      why: Agreement measured on the labels used to tune the rubric would be training
+        accuracy, so only the held-out half counts.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: A cost quote before any spend and a hard cap during the run
+      call: built
+      why: Open-source users must never get a surprise bill, so the cap is checked
+        before every call.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Release gates and run comparisons with confidence intervals
+      call: built
+      why: A model or prompt change that breaks the bar should fail the build, not
+        slip through on noise.
+      url: https://github.com/biplob819/evalkit/blob/main/README.md
+    - item: A public demo that replays saved answers and caps live spending
+      call: built
+      why: Anyone can judge the work without installing anything, and a shared link
+        cannot drain the budget or store questions.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Shared scorers on PyPI, tested against the projects that use them before
+        each release
+      call: built
+      why: Each project reuses one tested implementation, and a canary stops a release
+        that would break one of them.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Mapping each claim to its own citation
+      call: cut
+      why: The mapping was a guess that marked supported claims as unsupported, so
+        claims are now judged against every sentence the answer cited.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Reading numbers out of free prose in the value check
+      call: cut
+      why: Every attempt to read more prose let false claims pass, so the check
+        verifies only plain "field is value" statements.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Giving models the paper's own conclusion during the benchmark
+      call: cut
+      why: It would leak the answer, so it is dropped when the data loads.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Features that only one project needs
+      call: cut
+      why: A capability with one user and no likely second stays in that project,
+        keeping the shared library small.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: My own blind relabel of 20 answers to measure labeller consistency
+      call: later
+      why: The judges' agreement is published now, and the relabel adds how far the
+        hand labels agree with themselves.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: Gemini models alongside Claude and OpenAI
+      call: later
+      why: The adapter interface makes it a small, separate addition once the two
+        current families are settled.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    - item: A coverage score based on recall of key points
+      call: later
+      why: The current coverage score needs no extra reference, and key-point recall
+        can be added as a second version.
+      url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
 source:
   repo: biplob819/evalkit
   synced: 2026-11-16
