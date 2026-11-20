@@ -26,7 +26,7 @@ const TEMPLATES = join(SITE, 'templates');
 
 const KINDS = ['product', 'open-source', 'case-study', 'prototype'];
 const STATUSES = ['live', 'launching', 'shipped', 'building', 'design'];
-const LINK_KEYS = ['repo', 'site', 'deck', 'demo', 'report', 'package', 'video', 'prd', 'prdOnePage', 'techspec', 'howBuilt', 'architecture', 'dataflow', 'methodology'];
+const LINK_KEYS = ['repo', 'site', 'deck', 'model', 'demo', 'report', 'package', 'video', 'prd', 'prdOnePage', 'techspec', 'howBuilt', 'architecture', 'dataflow', 'methodology'];
 const CALLS = ['built', 'cut', 'later'];
 const MONITOR_KINDS = ['north-star', 'adoption', 'quality', 'guardrail', 'cost'];
 const EVAL_STATUS = ['pass', 'final', 'provisional', 'fail', 'pending'];

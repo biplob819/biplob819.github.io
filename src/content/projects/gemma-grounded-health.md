@@ -13,6 +13,7 @@ tags:
   - open models
   - grounding
 links:
+  model: https://huggingface.co/biplob123/gemma-4-e2b-grounded-health
   repo: https://github.com/biplob819/gemma-grounded-health
   prd: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20PRD.md
   techspec: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20Tech%20Spec.md
@@ -49,6 +50,13 @@ images:
       per-model table of headline, groundedness, citation precision,
       aim-citation rate and accuracy"
     caption: EvalKit report for the v2 run
+    kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/screenshots/hf_model_page.png
+    alt: "The v2 model's page on Hugging Face: Apache-2.0 licence, a research-only
+      notice, a summary of the fine-tune and its scores, the base model tree, the
+      PubMedQA training dataset and evaluation results linked to EvalKit runs"
+    caption: v2 released on Hugging Face (tag v2.0.0), with a 4-bit laptop file for
+      Ollama alongside
     kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/architecture.svg
     alt: "Gemma Grounded Health: architecture"
@@ -243,8 +251,6 @@ story:
         GPU ledger
   next:
     - Judge calibration and a behaviour table per model before results are final
-    - Release the model and its 4-bit laptop file on Hugging Face with a model
-      card
     - A side-by-side demo, behind a passcode
     - A tagged open-source v1.0.0 release with reproduce-from-scratch docs
 source:

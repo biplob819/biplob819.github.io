@@ -33,6 +33,8 @@ const projects = defineCollection({
         video: url.optional(),
         // A public strategy deck (market, GTM, roadmap) for the platforms.
         deck: url.optional(),
+        // A released model (e.g. on Hugging Face).
+        model: url.optional(),
         prd: url.optional(),
         // Long-form design docs: system architecture, data flow, methodology write-up or notebook.
         techspec: url.optional(),
