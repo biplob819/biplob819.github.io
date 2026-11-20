@@ -3,7 +3,7 @@ title: Insightsflow
 tagline: Embedded analytics for SaaS teams. Connect your data, then ship self-serve dashboards inside your own product.
 kind: product
 status: launching
-role: Product lead, building with my co-founder
+role: Building end to end
 year: "2026"
 featured: true
 order: 2
@@ -147,7 +147,7 @@ Every SaaS product eventually needs customer-facing reporting. Building it in-ho
 
 ## What I'm building
 
-I lead the product and build it end to end with my co-founder.
+I lead the product and build it end to end with a teammate.
 
 Insightsflow is a multi-tenant analytics layer that SaaS companies embed in their own product. Their customers get self-serve dashboards and reports, white-labelled, with an AI layer to ask questions in plain language. It's live at [insightsflow.live](https://insightsflow.live/) ahead of launch.
 
