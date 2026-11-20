@@ -252,6 +252,78 @@ story:
   next:
     - A hosted demo with passkey sign-in; the hosted demo today replays recorded
       cases on simulated data and calls no model
+  priorities:
+    - item: Code router that decides every auto-clear, not the model
+      call: built
+      why: A model's clear is only a proposal; the router accepts it when a cited
+        policy clause holds in code.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: Written policy as numbered, machine-checked clauses
+      call: built
+      why: Each clause has a condition on a few allowed fields, so a clear can be
+        checked against the alert.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: "Two-stage triage: fast screen, then careful review"
+      call: built
+      why: Haiku 5.5 screens each alert and Sonnet 5.5 reviews what it will not clear.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/case-study.md
+    - item: Hash-chained audit log of every decision
+      call: built
+      why: Every step is recorded so that edits to the log are detected.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/README.md
+    - item: Evaluation on a fresh set of 500 alerts
+      call: built
+      why: "After the first eval leaked 2 of 79 frauds, the fix was proven on a fresh
+        sample: 0 of 55 (simulated data)."
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: Analyst review screen and results dashboard
+      call: built
+      why: A replay demo shows reasons beside the evidence, and a dashboard shows the
+        results (simulated data).
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/demo/README.md
+    - item: Spend cap that holds across reruns
+      call: built
+      why: After a judging run overspent, the cap became a total across reruns and a
+        lock stops overlapping runs.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: Running the published results on Amazon Bedrock
+      call: cut
+      why: The AWS project could not enable Claude, so the published runs used the
+        Claude API; Bedrock stays supported but untested.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: The 90-second project video
+      call: cut
+      why: The owner dropped it; a looping walkthrough GIF and the write-up stand in
+        for it.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: Blocking a card or contacting customers
+      call: cut
+      why: The agent has no such tool; it recommends and people decide.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/case-study.md
+    - item: EvalKit's own value check for the agent's numbers
+      call: cut
+      why: It returned false claims as verified, so this project uses its own strict
+        check.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: Hosted demo with passkey sign-in
+      call: later
+      why: The replay demo is hosted, but the passkey version is not built.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/TECH_SPEC.md
+    - item: Second faithfulness judge and calibration against human labels
+      call: later
+      why: Only one judge gave verdicts, and it was never checked against human
+        labels.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/case-study.md
+    - item: A much larger labelled sample before quoting any saving
+      call: later
+      why: 0 leaks in 55 frauds cannot rule out a 5.3% rate, so the ROI model shows no
+        payback.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/case-study.md
+    - item: Real data in place of simulated data
+      call: later
+      why: Every published number is on simulated data; real data would replace all
+        illustrative inputs.
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
 source:
   repo: biplob819/fraud-review-bedrock
   synced: 2026-11-16
