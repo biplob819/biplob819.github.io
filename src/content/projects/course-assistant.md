@@ -277,9 +277,9 @@ story:
     - Two judges from different vendors again, with a fresh calibration, once
       the second vendor's account is funded
     - A command to start a new course and one to check a setup
-    - "A pilot with one real cohort: its own course materials, teaching-team
-      cases in the golden set, a teaching-team relabel of the calibration
-      sample, and single sign-on"
+    - "A pilot on a real course: first with the teaching team only, on real
+      materials and a private host, then learners signing in with personal
+      access codes (the programme has no single sign-on)"
     - "During the pilot: weekly gate runs, the deletion purge job running, an
       incident drill, and a pilot report to the programme owners"
   priorities:
