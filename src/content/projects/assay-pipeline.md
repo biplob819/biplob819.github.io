@@ -29,6 +29,7 @@ metrics:
   - value: $4.60
     label: for the full run, ablation and judges
 links:
+  demo: https://console12as.streamlit.app/
   repo: https://github.com/biplob819/assay-pipeline
   report: https://biplob819.github.io/assay-pipeline/
   prd: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20PRD.md
@@ -307,14 +308,12 @@ story:
       real failures
     - Flag each row that appears in both ChEMBL and PubChem, instead of only
       counting the overlap on the data card
-    - "A third recorded run: the first to measure the guard now allowing ROLLUP
-      and aggregate FILTER and the fixed answer format, and the first to record
-      tokens, cache share and latency per trial"
 source:
   repo: biplob819/assay-pipeline
   synced: 2026-11-16
 license: MIT
 harness: true
+demoLabel: Live console (your own API key)
 ---
 
 ## Write-up
@@ -323,7 +322,7 @@ Drug-discovery teams want language-model agents that answer questions over assay
 
 ## My role
 
-I set the direction and made the product and risk rulings, which are recorded as OWNER decisions in the [decision log](https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md): for example the private held-out split, keeping portfolio material out of the repo, and the console's own-key mode. I set the spend limits for real-API runs, held the API keys and accounts, set up PyPI trusted publishing and tagged the releases. Claude Code wrote the specs, code, tests and docs under a node harness. Each node was built tests-first, had to pass 13 gates twice in a row, and was checked by a fresh-context verifier agent whose findings are logged in that node's run state. The live console is built but not yet deployed.
+I set the direction and made the product and risk rulings, which are recorded as OWNER decisions in the [decision log](https://github.com/biplob819/assay-pipeline/blob/main/docs/decisions.md): for example the private held-out split, keeping portfolio material out of the repo, and the console's own-key mode. I set the spend limits for real-API runs, held the API keys and accounts, set up PyPI trusted publishing and tagged the releases. Claude Code wrote the specs, code, tests and docs under a node harness. Each node was built tests-first, had to pass 13 gates twice in a row, and was checked by a fresh-context verifier agent whose findings are logged in that node's run state. The live console is deployed; visitors run it with their own API key.
 
 ## Key decisions
 
