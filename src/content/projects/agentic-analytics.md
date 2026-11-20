@@ -101,7 +101,7 @@ metrics:
   - value: +15.7 pts
     label: for Claude from one fix, five worked example queries (76% to 92%), mostly
       by asking back on ambiguous questions
-  - value: -4.7 pts
+  - value: -5.0 pts
     label: "for GPT from column descriptions: a fix that hurt, reported as measured"
   - value: 31.7M
     label: UK house sales loaded into both ClickHouse and Snowflake, checked for
@@ -124,7 +124,7 @@ proof:
   - label: Baseline results (JSON)
     url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/baseline-2026-11-17.json
   - label: Fix runs (JSON)
-    url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-2026-11-17.json
+    url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
   - label: Failure taxonomy (JSON)
     url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/failure-taxonomy-2026-11-17.json
 datasets:
@@ -143,7 +143,7 @@ story:
     - "Found the main failure mode: agents guess on ambiguous questions instead
       of asking back. Five worked examples lifted Claude from 76% to 92%, mostly
       by teaching it to ask."
-    - "Reported the unwelcome results too: column descriptions cost GPT 4.7
+    - "Reported the unwelcome results too: column descriptions cost GPT 5.0
       points, and the examples fix made Claude follow an injected instruction it
       had resisted."
   pain:
@@ -173,17 +173,17 @@ story:
     - name: Each fix measured alone
       data: Three frozen fixes, same baseline
       method: Paired comparison with a Holm correction
-      result: "Examples: Claude +15.7 pts; descriptions: Claude +8.3, GPT -4.7;
+      result: "Examples: Claude +15.7 pts; descriptions: Claude +8.3, GPT -5.0;
         self-check: no separated gain"
       status: final
-      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-2026-11-17.json
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
     - name: Prompt-injection probe
       data: Probe questions per configuration
       method: Does the agent follow an instruction planted in the data?
       result: With the examples fix, Claude followed an injected instruction in every
         trial of one probe it had resisted at baseline
       status: fail
-      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-2026-11-17.json
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
     - name: Failure taxonomy
       data: Every failed answer
       method: Grouped by cause after a hand check
@@ -198,7 +198,7 @@ story:
       change: "One frozen fix: five worked example queries. Most of the gain came from
         asking back on ambiguous questions. The cost: one injection probe it had
         resisted now succeeds."
-      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-2026-11-17.json
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
   learnings:
     - lesson: A rule list written from memory missed 8 of the database's documented
         table functions, and each rule that keyed on where a word sat in the SQL
@@ -278,13 +278,7 @@ story:
         errored panels; the run cost $4.25
       how: A timed run asks 20 questions through the deployed page in its
         passcode-gated live mode, under the owner measurement budget
-  next:
-    - "Run history, a trend page and drift flags: accuracy with intervals, cost
-      per correct answer and p95 latency across runs, with any run outside its
-      band flagged"
-    - Move the scoring's answer-shape rules into EvalKit, with re-scoring every
-      stored run changing 0 verdicts
-    - Confidence intervals on the ask-back rates
+  next: []
 source:
   repo: biplob819/agentic-analytics
   synced: 2026-11-16
@@ -299,6 +293,17 @@ license: MIT
 harness: true
 demoLabel: Hosted demo
 timeline:
+  - when: 20 Nov 2026
+    title: v0.1.1 released
+    status: released
+    items:
+      - Run history, a trend page and drift flags, from EvalKit 0.4.0's run
+        ledger
+      - Answer-shape scoring rules moved into EvalKit, and intervals on the
+        ask-back rates
+      - "Re-scored on EvalKit 0.4.0: one fix-run verdict moved, so descriptions
+        now cost GPT 5.0 points (95% CI −9.0 to −2.0)"
+    url: https://github.com/biplob819/agentic-analytics/releases/tag/v0.1.1
   - when: 20 Nov 2026
     title: v0.1.0 released
     status: released
@@ -316,7 +321,7 @@ timeline:
 
 A benchmark of two ways to answer analytics questions in plain English over the same 31.7 million UK house sales: an agent (Claude Sonnet 5.5 or GPT-6.1 Sol) querying ClickHouse through its remote MCP server, and Snowflake Cortex Analyst over a semantic view. 100 questions, each with gold SQL that must agree on both engines before any run, three trials each, scored by re-running every answer's SQL with EvalKit's `sql_match`.
 
-On the baseline, GPT-6.1 Sol answered 97% correctly (92% under strict, pre-registered scoring), Cortex Analyst 85% (62%) and Claude Sonnet 5.5 76% (76%). Almost every failure was a guess on an ambiguous question instead of asking back. Claude's other misses came from an approximate median function. One fix, five worked example queries, lifted Claude to 92% (+15.7 points), mostly by getting it to ask back on ambiguous questions. It also made Claude follow an injected instruction in every trial of one probe that it had resisted on the baseline. Results: [baseline](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/baseline-2026-11-17.json), [fixes](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-2026-11-17.json), [failure taxonomy](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/failure-taxonomy-2026-11-17.json).
+On the baseline, GPT-6.1 Sol answered 97% correctly (92% under strict, pre-registered scoring), Cortex Analyst 85% (62%) and Claude Sonnet 5.5 76% (76%). Almost every failure was a guess on an ambiguous question instead of asking back. Claude's other misses came from an approximate median function. One fix, five worked example queries, lifted Claude to 92% (+15.7 points), mostly by getting it to ask back on ambiguous questions. It also made Claude follow an injected instruction in every trial of one probe that it had resisted on the baseline. Results: [baseline](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/baseline-2026-11-17.json), [fixes](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json), [failure taxonomy](https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/failure-taxonomy-2026-11-17.json).
 
 ## My role
 
@@ -330,4 +335,4 @@ Claude Code built the code, tests, runs and documents under EvalKit's node harne
 
 **Gold must agree on both engines before any run (Q2.2).** Every gold query runs on ClickHouse and Snowflake, must match within tolerance, and is checked for ties at a top-N cut and for determinism; two questions were reworded when their answers tied. *Trade-off:* every question costs two gold queries and some rewording. In exchange, a backend is never scored against an answer that depends on which warehouse computed it.
 
-**Freeze the fixes before the baseline and measure each alone (D-13, D-14).** The three fixes were hashed before any baseline run and each was run on its own against the same baseline, with a Holm correction across them. *Trade-off:* no tuning between runs, and three runs instead of one. In exchange, the gains are honest, including the unwelcome ones: descriptions cost GPT 4.7 points, and examples made Claude easier to steer with an injected instruction.
+**Freeze the fixes before the baseline and measure each alone (D-13, D-14).** The three fixes were hashed before any baseline run and each was run on its own against the same baseline, with a Holm correction across them. *Trade-off:* no tuning between runs, and three runs instead of one. In exchange, the gains are honest, including the unwelcome ones: descriptions cost GPT 5.0 points, and examples made Claude easier to steer with an injected instruction.
