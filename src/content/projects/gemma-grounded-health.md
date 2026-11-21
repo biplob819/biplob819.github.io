@@ -42,6 +42,12 @@ images:
       answer refused without the passcode"
     caption: The local demo against the benchmarked 4-bit file, recorded on a laptop
     kind: screenshot
+  - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/ollama_offline.gif
+    alt: "Terminal recording: inside a macOS sandbox that blocks the internet, the
+      published 4-bit v2 file, set to greedy decoding by a Modelfile, answers a
+      sample through ollama run with thinking off"
+    caption: Offline through Ollama, network blocked
+    kind: screenshot
   - src: https://raw.githubusercontent.com/biplob819/gemma-grounded-health/main/docs/assets/headline_v2.svg
     alt: "Base, v1 and v2 on 1,000 PubMedQA questions: correct-and-grounded 0.404,
       0.331, 0.329; cited sentences that support a claim 0.747, 0.362, 0.736;
