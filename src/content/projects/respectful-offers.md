@@ -19,6 +19,7 @@ links:
   demo: https://respectful-offers.streamlit.app
   report: https://biplob819.github.io/respectful-offers/
   package: https://pypi.org/project/respectful-offers/
+  howBuilt: https://github.com/biplob819/respectful-offers/blob/main/docs/how-i-built-it.md
 stack:
   - Python
   - contextual bandits
@@ -118,6 +119,10 @@ proof:
     url: https://github.com/biplob819/respectful-offers/blob/main/docs/prereg.md
   - label: "Decision review: real decisions read end to end"
     url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/decision-review.md
+  - label: "Drift check, February to March 2017 (JSON)"
+    url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/monitor/drift.json
+  - label: "Challenger test: not promoted"
+    url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/challenge/README.md
   - label: Release gates
     url: https://github.com/biplob819/respectful-offers/blob/main/configs/gates.yaml
 install:
@@ -177,13 +182,20 @@ story:
         never used
       result: AUC 0.84
       status: final
-      url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/churn/model_card.json
+      url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/churn/report.json
     - name: Cost per extra member kept
       data: Central simulator variant
       method: Discount spent divided by extra members kept against the no-offer holdout
       result: Bandit 97 NTD, baseline 211 NTD, status quo 289 NTD
       status: final
       url: https://biplob819.github.io/respectful-offers/
+    - name: Off-policy estimates against the exact answer
+      data: Simulated decision logs, four policies in three simulator variants
+      method: IPS, SNIPS and doubly robust estimates, each checked for whether its
+        interval covers the simulator's exact value
+      result: Every interval covers it, including 12 of 12 doubly robust
+      status: pass
+      url: https://github.com/biplob819/respectful-offers/blob/main/results/kkbox/summary.json
   monitoring:
     - metric: Feature drift and churn-model calibration, month on month
       kind: guardrail
@@ -224,6 +236,19 @@ story:
       now: Report both the efficiency claim and the absolute numbers, so a growth PM
         can choose the trade-off knowingly.
       url: https://github.com/biplob819/respectful-offers#readme
+    - lesson: A drift check passed every test, yet one feature that is 0 for 96% of
+        members could never show drift; it sat in a single bin, so its drift score
+        was 0 by construction.
+      now: Plant a fault in every input a check claims to cover, not one
+        representative input, and treat "empty" and "too small to publish" as
+        different states.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/lessons.md
+    - lesson: The demo agreed with the full run on synthetic data and disagreed on
+        real data, because real prices are a few plan prices, not a smooth spread.
+      now: Keep the full distribution of any feature that decides eligibility,
+        diagnose by swapping real values back one feature at a time, and never fix
+        a failed check by widening it.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/lessons.md
   improvements:
     - metric: Respect violations, status quo → bandit (central variant, 200,000
         members, outcomes simulated)
@@ -253,6 +278,12 @@ story:
       change: A binning fix, found when a planted shift was tested on every feature
         instead of one.
       url: https://github.com/biplob819/respectful-offers#what-changed-measured
+    - metric: Unit test gate wall time (16 cores)
+      before: 262 s serial
+      after: 134 s
+      change: Tests run in parallel with each test file kept on one worker, so an
+        expensive shared fixture is built once; the default split only reached 207 s.
+      url: https://github.com/biplob819/respectful-offers/blob/main/docs/lessons.md
   next:
     - A second monitored period, so cost per extra member kept and the age-band
       gap get a baseline and are checked
@@ -339,8 +370,27 @@ story:
       url: https://github.com/biplob819/respectful-offers/blob/main/README.md
 source:
   repo: biplob819/respectful-offers
-  synced: 2026-11-16
+  synced: 2026-11-21
 license: MIT
+demoLabel: Passkey-protected demo
+timeline:
+  - when: 19 Nov 2026
+    title: v0.2.0 released
+    status: released
+    items:
+      - "Monitoring and challengers: offers monitor and offers challenge on EvalKit 0.4.1"
+      - Release gates in CI run on EvalKit's own gate command
+      - "First drift check, February to March 2017: no feature drifted, calibration warns"
+      - "First challenger not promoted: it improved the claim in 1 of 3 simulator variants"
+    url: https://github.com/biplob819/respectful-offers/releases/tag/v0.2.0
+  - when: 17 Nov 2026
+    title: v0.1.0 released
+    status: released
+    items:
+      - On PyPI as respectful-offers, published by trusted publishing with a smoke test of the published package on every OS
+      - Pre-registered run on 200,000 real KKBox members published, audit clean
+      - Results report and one-page PR/FAQ on GitHub Pages
+    url: https://github.com/biplob819/respectful-offers/releases/tag/v0.1.0
 harness: true
 ---
 

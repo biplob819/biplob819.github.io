@@ -31,7 +31,7 @@ images:
       analyst review screen with reasons, clauses and score drivers, the
       hash-chained audit log, and dashboard panels for safety, value,
       explanation checks, faithfulness and the monitoring trend"
-    caption: nine real screens, 22.5 seconds, loops; simulated data
+    caption: nine real screens at 2.5 seconds each, loops; simulated data
     kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/fraud-review-bedrock/main/docs/assets/dataflow.svg
     alt: "Data flow: simulated card transactions are minimised and split, scored by
@@ -66,7 +66,7 @@ images:
     alt: "Results dashboard: safety, value, explanation checks, monitoring trend and
       run facts, every number labelled simulated"
     kind: screenshot
-    caption: Results dashboard (not deployed yet)
+    caption: Results dashboard, published on GitHub Pages (simulated data)
 headline:
   value: 0 of 55
   label: frauds auto-cleared on a fresh 500-alert evaluation the agent had never
@@ -82,7 +82,7 @@ metrics:
     label: model cost per 1,000 alerts
   - value: 100%
     label: of the sample's frauds reached a person (55 of 55)
-  - value: 48%
+  - value: 48.0%
     label: "of explanation claims supported by the alert data: provisional, one judge"
 proof:
   - label: Data card
@@ -101,6 +101,12 @@ proof:
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/discovery-summary.md
   - label: Reusable patterns for the next engagement
     url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/patterns.md
+  - label: Decision log
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/decisions.md
+  - label: Experiment log (keep-or-revert, JSONL)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/experiments.jsonl
+  - label: Spend ledger (what every real run cost)
+    url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/spend-ledger.jsonl
 datasets:
   - name: Fraud Dataset Benchmark (Amazon Science)
     url: https://github.com/amazon-science/fraud-dataset-benchmark
@@ -114,6 +120,11 @@ story:
     saves, and the documents a bank needs to say yes (PR/FAQ, ROI model,
     reference architecture). It clears obvious false alarms, explains every hold
     with policy clauses, and never blocks a card on its own."
+  impact:
+    - "0 of 55 frauds auto-cleared on a fresh set of 500 alerts the agent had never seen; exact 95% upper bound 5.3% (simulated data)"
+    - "8.8% of alerts auto-cleared (44 of 500), all 44 legitimate, down from 36.8% before the night rule (simulated data)"
+    - "The first frozen evaluation leaked 2 of 79 frauds and stays in the record"
+    - "About $6.24 of model spend per 1,000 alerts (simulated data)"
   pain:
     who: Fraud operations leads at mid-size banks, their analysts, and the model
       risk reviewers who sign off any automation.
@@ -158,21 +169,29 @@ story:
       status: pass
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
     - name: Explanation faithfulness
-      data: 4,159 claims from 458 explanations
+      data: 4,159 judged claims, of 5,551 extracted from 458 explanations
       method: Does each claim in the explanation follow from the alert data? Claude
         Opus 5.5 judge (single judge, partial coverage)
-      result: 48% of claims supported; 0 of 342 fully judged explanations fully
-        supported. Provisional
+      result: 48.0% of judged claims supported (1,996 of 4,159); 0 of 342 fully
+        judged explanations fully supported. Provisional
       status: provisional
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/faithfulness-cache-summary.json
     - name: Cost and latency
       data: Fresh 500-alert sample
       method: Billed model cost; p95 latency per stage
-      result: $6.24 per 1,000 alerts; p95 4.6 s for the Haiku screen, 6.9 s for the
-        Sonnet review
+      result: $6.24 per 1,000 alerts; p95 4,578 ms for the Haiku screen, 6,881 ms
+        for the Sonnet review
       status: final
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/summary-eval2.json
   improvements:
+    - metric: Frauds auto-cleared on the development set
+      before: 2 of 21
+      after: 0 of 21
+      change: "A risk ceiling: only alerts the baseline scored below 0.045 may be
+        auto-cleared. Auto-clear on the 100 development alerts fell from 34 to 31.
+        The first frozen evaluation still leaked 2 of 79 with this ceiling, which
+        led to the night rule. Simulated data."
+      url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/measurements/experiments.jsonl
     - metric: Frauds auto-cleared
       before: 2 of 79
       after: 0 of 55
@@ -188,10 +207,12 @@ story:
         drawn in advance. A frozen evaluation is never re-scored after a change,
         and the failed run stays in the log.
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
-    - lesson: A bad cost estimate (not a number, or negative) made the spend check
-        always pass, which switched the spend cap off.
-      now: Every money value is checked before use, and a bad value is an error, never
-        a pass.
+    - lesson: Paid model replies kept slipping past the spend record whenever they
+        could not be read (bad JSON, bad encoding, deep nesting, wrong types), one
+        new failure type per review.
+      now: Sending and reading a reply are separate steps. Any reply that is paid
+        for but cannot be read is priced at the worst case, and the spend cap is
+        settled on every path in one place.
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
     - lesson: The check that every metric is labelled as simulated missed phrasings
         like "percent" and "USD", and one label anywhere in a paragraph covered
@@ -204,9 +225,11 @@ story:
       now: "Publishing depends on the check's result directly: check, then commit,
         then push, each only if the last succeeded."
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
-    - lesson: Three release checks passed while the thing they checked was broken; one
-        only searched the workflow file for a command instead of running it.
-      now: A release check runs the documented command for real.
+    - lesson: Five pushes in a row failed CI after merging parallel work, because the
+        local check tested lint but not formatting, CI installed no optional extras,
+        and the content check read the staged copy of a file.
+      now: The local check matches CI exactly, files are staged before the content
+        check runs, and CI is read after every push instead of assumed green.
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/docs/lessons.md
   monitoring:
     - metric: Frauds auto-cleared (leakage)
@@ -252,6 +275,10 @@ story:
   next:
     - A hosted demo with passkey sign-in; the hosted demo today replays recorded
       cases on simulated data and calls no model
+    - A second faithfulness judge, and calibration of the judge against human labels
+    - A much larger labelled sample before quoting any saving; 0 leaks in 55 frauds
+      cannot rule out a 5.3% leak rate
+    - Real alert data in place of simulated data
   priorities:
     - item: Code router that decides every auto-clear, not the model
       call: built
@@ -326,7 +353,7 @@ story:
       url: https://github.com/biplob819/fraud-review-bedrock/blob/main/DATA_CARD.md
 source:
   repo: biplob819/fraud-review-bedrock
-  synced: 2026-11-16
+  synced: 2026-11-21
 timeline:
   - when: 19 Nov 2026
     title: v0.2.0 released

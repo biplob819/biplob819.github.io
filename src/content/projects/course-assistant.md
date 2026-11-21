@@ -22,6 +22,8 @@ links:
   prd: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20PRD.md
   techspec: https://github.com/biplob819/course-assistant/blob/main/AI%20Teaching%20Assistant%20Tech%20Spec.md
   package: https://pypi.org/project/course-assistant/
+  report: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout4-report.md
+  methodology: https://github.com/biplob819/course-assistant/blob/main/docs/trust/evaluation-methodology.md
 images:
   - src: https://raw.githubusercontent.com/biplob819/course-assistant/main/docs/assets/walkthrough.gif
     alt: "Walkthrough of ten screens: the learner page passcode gate, the privacy
@@ -75,6 +77,10 @@ methodology:
   - A release gate with zero tolerance for integrity, injection, leaks and
     identity
 proof:
+  - label: Held-out gate summary (JSON)
+    url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout4-gates.json
+  - label: Known limits
+    url: https://github.com/biplob819/course-assistant/blob/main/docs/trust/known-limits.md
   - label: Latest held-out report
     url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-heldout4-report.md
   - label: First full run report
@@ -89,6 +95,11 @@ story:
     else to the teaching team. It gives hints, never answers, on graded work,
     and is scored on a 455-case golden set before launch. The demo runs on a
     public sample course, with no learner data.
+  impact:
+    - "Released as v0.1.0 on PyPI, with a passkey-protected live demo on a public sample course"
+    - "Every safety gate passed on a fresh held-out set of 215 cases, scored once: integrity 56/56, injection 44/44, leaks 49/49, identity 5/5"
+    - "Two quality targets missed and shipped as stated limits: grounded answers 0.880 against 0.90, p95 answer time 11.03 s against 11 s"
+    - "$0.0061 a question; a modelled pilot month of $26.78 against a $150 cap"
   pain:
     who: Working professionals on an executive programme who study around their
       jobs, and the teaching team that supports them.
@@ -198,11 +209,29 @@ story:
       url: https://github.com/biplob819/course-assistant#measured-results
     - metric: Integrity, held-out
       before: 52 of 56
-      after: 100%
+      after: 56 of 56
       change: All four failures came from one cached hint; the hint cache was switched
         off until integrity labels clear it.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/measurements/e2.5-report.md
   learnings:
+    - lesson: The judge read correct handovers as a false claim to speak for the
+        institution, seven times on the public half, because the handover text
+        promised a reply on the teaching team's behalf.
+      now: Handover text says where a reply would appear without promising one, and
+        one rubric line separates passing a message on from promising an outcome.
+        Identity on held-out questions went from 3 of 5 to 5 of 5.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - lesson: The single judge gave the identical reply "clean" in one run and
+        "violation" in another.
+      now: Every zero-tolerance probe is asked three times in fresh requests, and any
+        violation fails the reply.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
+    - lesson: A provider outage voided a held-out run. 111 of 215 cases got no
+        answer, so every gate failed on missing answers, not on the system.
+      now: A held-out run starts only after a latency probe reads p95 at or under
+        10.5 s, and a void run is rerun in full with an empty cache rather than
+        resumed on the failed cases.
+      url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
     - lesson: A call wrapper counted 3 attempts while the model SDK underneath made 9
         requests with its own retries and a 600 s timeout, and test fakes could
         not show it.
@@ -252,7 +281,9 @@ story:
     - metric: Runtime support check agreement with the judges
       kind: quality
       target: Kappa 0.6 or above; below 0.6 opens a lesson
-      current: kappa 0.66 [-0.01, 1.00] over 148 sentences
+      current: "kappa 0.66 [-0.01, 1.00] over 148 sentences on an earlier held-out
+        set (17 Nov, two judges, before calibration; the first run read 0.15); no
+        reading is published yet at the shipped setting"
       how: Reported on each evaluation run; a CI test fails if it drops by more than
         0.05 against a recorded run
     - metric: Monthly spend
@@ -276,10 +307,10 @@ story:
       it'
     - Two judges from different vendors again, with a fresh calibration, once
       the second vendor's account is funded
-    - A command to start a new course and one to check a setup
     - "A pilot on a real course: first with the teaching team only, on real
-      materials and a private host, then learners signing in with personal
-      access codes (the programme has no single sign-on)"
+      materials and a private host, then learners once the programme approves,
+      signing in with personal access codes (now built, as the programme has no
+      single sign-on)"
     - "During the pilot: weekly gate runs, the deletion purge job running, an
       incident drill, and a pilot report to the programme owners"
   priorities:
@@ -328,8 +359,8 @@ story:
       url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
     - item: A pilot with one real cohort
       call: later
-      why: It needs a cohort, a pilot host and platform sign-in; the pilot pack is
-        ready.
+      why: It needs a pilot host and the programme's approval for learners; the
+        pilot pack, teardown and learner access codes are built.
       url: https://github.com/biplob819/course-assistant/blob/main/docs/pilot/README.md
     - item: Fewer refusals when injected text comes with a real question
       call: later
@@ -341,12 +372,12 @@ story:
       url: https://github.com/biplob819/course-assistant/blob/main/docs/decisions.md
 source:
   repo: biplob819/course-assistant
-  synced: 2026-11-16
+  synced: 2026-11-21
 datasets:
   - name: Sample course (three sessions of slides, pre-reads and agendas)
     url: https://github.com/biplob819/course-assistant/tree/main/sample_course
     note: Written for this project, no real programme material; CC BY 4.0
-  - name: Golden set, public tuning half (214 cases)
+  - name: Golden set, public tuning half (240 cases)
     url: https://github.com/biplob819/course-assistant/blob/main/golden/public/cases.jsonl
     note: The held-out half is private; only its ids and hashes are published. CC BY
       4.0
@@ -366,6 +397,15 @@ demoLabel: Passkey-protected demo
 license: MIT
 harness: true
 timeline:
+  - when: 20 Nov 2026
+    title: Pilot groundwork, after v0.1.0
+    status: built
+    items:
+      - "Pilot pack: costs, onboarding steps, weekly operations and teardown"
+      - Personal access codes for pilot learners, since the programme has no single sign-on, with a daily question cap and revocation
+      - Teardown that deletes the course's vector store, app data and traces and writes a proof
+      - The pilot starts with the teaching team only, on real materials kept outside the public repo
+    url: https://github.com/biplob819/course-assistant/blob/main/docs/pilot/README.md
   - when: 20 Nov 2026
     title: v0.1.0 released
     status: released

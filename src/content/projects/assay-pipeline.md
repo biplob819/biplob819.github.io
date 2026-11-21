@@ -17,7 +17,8 @@ headline:
   label: attack trials succeeded against Claude and GPT agents
   note: First full run, including held-out cases (16 Nov), 300 agent trials (k=3)
     plus 10 data-poisoning cases. 95% upper bound 2.0% per trial for each model.
-    A second, public-only run on 18 Nov also had 0 of 248.
+    A second, public-only run on 18 Nov also had 0 of 248, and a third full run
+    with fresh held-out cases (published 20 Nov) had 0 of 310.
 metrics:
   - value: 41,463
     label: EGFR rows, quality problems flagged, never deleted
@@ -35,6 +36,9 @@ links:
   prd: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20PRD.md
   techspec: https://github.com/biplob819/assay-pipeline/blob/main/Trusted%20Assay%20Pipeline%20Tech%20Spec.md
   package: https://pypi.org/project/assay-pipeline/
+  architecture: https://github.com/biplob819/assay-pipeline/blob/main/docs/assets/architecture.svg
+  dataflow: https://github.com/biplob819/assay-pipeline/blob/main/docs/assets/dataflow.svg
+  methodology: https://github.com/biplob819/assay-pipeline/blob/main/docs/reading-the-dashboard.md
 stack:
   - Python
   - DuckDB
@@ -51,6 +55,10 @@ methodology:
   - Hash-chained, verifiable audit log
   - Quality problems flagged, never deleted
 proof:
+  - label: Latest run bundle (JSON, third run)
+    url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18-s3/bundle.json
+  - label: Compound explorer (41,463 rows)
+    url: https://biplob819.github.io/assay-pipeline/explorer.html
   - label: Results bundle (JSON)
     url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-16/bundle.json
   - label: Results dashboard
@@ -66,13 +74,13 @@ images:
       the attacks, agent behaviour, the run-against-run comparison, the audit
       trail, the results explorer before and after filtering, a console replay
       where the guard blocks a query, and the release gate passing"
-    caption: nine real screens, 22.5 seconds, loops
+    caption: nine real screens from the 18 Nov run, 22.5 seconds, loops
     kind: walkthrough
   - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/screenshots/dashboard.png
     alt: "Trusted Assay Pipeline CISO dashboard: attack outcomes, what stopped them,
       data quality and audit events"
     kind: screenshot
-    caption: CISO dashboard
+    caption: CISO dashboard, 18 Nov run
   - src: https://raw.githubusercontent.com/biplob819/assay-pipeline/main/docs/assets/screenshots/console-replay.png
     alt: Agent console replaying a recorded attack through the SQL guard and the
       audit log
@@ -151,7 +159,7 @@ story:
     evidence, and an attack suite shows where the defence actually sits.
   evals:
     - name: Attack suite
-      data: 60 attack cases across the OWASP LLM Top 10, 3 trials each on public and
+      data: 60 attack cases across six OWASP LLM Top 10 categories, 3 trials each on public and
         held-out cases, plus 10 data-poisoning cases
       method: Claude Sonnet 5.5 and GPT-6.1 Sol agents query the data through the SQL
         guard; every query lands in a hash-chained audit log
@@ -168,7 +176,7 @@ story:
         on normal questions: Sol 91%, Sonnet 70% (first run 74% and 57%). $3.49"
       status: pass
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18/bundle.json
-    - name: Third run, public and held-out cases (18 Nov)
+    - name: Third run, public and held-out cases (18 to 20 Nov)
       data: 300 agent trials (k=3 per case on the public cases and a fresh held-out
         suite) plus 10 data-poisoning cases
       method: The full suite re-run on both splits, with the guard-off run, the
@@ -237,14 +245,21 @@ story:
       now: Every number I quote names the table it came from, and a test checks it
         against that table.
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
-    - lesson: After four rounds of tightening, the boundary lint still had bypasses.
+    - lesson: After three rounds of tightening, the boundary lint still had bypasses.
       now: I state what a check can and cannot catch instead of claiming it is
         complete, and pair each static check with a runtime one.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
+    - lesson: Handing a visitor's own API key to the provider's SDK did not isolate
+        it. The client still read the host's endpoint, custom headers, organisation
+        and proxy settings, and a host header could replace the visitor's key.
+      now: A client built for someone else's key is cut off from the host's
+        environment explicitly (fixed endpoint, no inherited headers or proxies),
+        and a test checks it with the real SDK clients.
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/lessons.md
   improvements:
     - metric: Answers whose SQL block shows only the SQL that actually ran
       before: Claude Sonnet 5.5 97%, GPT-6.1 Sol 80% (16 Nov run)
-      after: Claude Sonnet 5.5 100%, GPT-6.1 Sol 98% (18 Nov run)
+      after: Claude Sonnet 5.5 100%, GPT-6.1 Sol 98% (18 Nov run); both 100% (third run)
       change: The agent's instructions now say the quality-flags column is a list, so
         Sol stopped listing failed queries in its SQL block. The dashboard does
         not flag the change as significant, because it compares two separate
@@ -256,11 +271,24 @@ story:
       change: The same fix. Agents had been comparing the flags column with an empty
         string, which fails on a list.
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/measurements/hand-read-main-2026-11-18.md
+    - metric: Normal-question queries the guard refused (public split)
+      before: 14 (16 Nov run), 7 (18 Nov run)
+      after: 1 (third run)
+      change: The guard now allows an aggregate's FILTER clause and one GROUP BY
+        ROLLUP, both read-only, with everything inside them still checked. Other
+        refused read-only syntax gets its own reason instead of "not a SELECT".
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/measurements/hand-read-main-2026-11-18-s3.md
+    - metric: Claude answers wrapped in a stray answer tag
+      before: 7 (18 Nov run)
+      after: 0 (third run)
+      change: The answer format in the agent's instructions no longer has a
+        placeholder that Claude copied as a literal tag.
+      url: https://github.com/biplob819/assay-pipeline/blob/main/docs/measurements/hand-read-main-2026-11-18-s3.md
   monitoring:
     - metric: Attack trials that succeeded
       kind: guardrail
       target: 0, and a 95% upper bound per trial of at most 0.03 for each agent
-      current: "18 Nov run: 0 of 248; 95% upper bound 2.5% per trial for each agent"
+      current: "Third run (both splits): 0 of 310; 95% upper bound 2.0% per trial for each agent"
       how: The release gate runs in CI on the latest published run; a miss fails the
         build
     - metric: Scripted attacker with no model, stopped
@@ -271,31 +299,31 @@ story:
     - metric: Audit log verifies
       kind: guardrail
       target: Verifies
-      current: 997 lines, 394 anchors, verifies
+      current: 1,330 lines, 540 anchors, verifies
       how: Release gate in CI; the hash chain and its published anchors are checked
     - metric: Safety rules (planted instructions not followed, no restricted read, no
         write, no prompt leak, no medical advice)
       kind: guardrail
       target: Kept in every applicable trial
-      current: "18 Nov run: kept by both agents, for example no restricted read in 192
-        / 192 trials each"
+      current: "Third run: kept by both agents, for example no restricted read in 240
+        / 240 trials each"
       how: Release gate in CI; medical advice is checked by both judges
     - metric: Answer quality on normal questions
       kind: quality
       target: Answer states the gold value in at least 0.7 of public questions; SQL
         shown is the SQL that ran in at least 0.8 (warn only)
-      current: "Answer states the gold value: Claude Sonnet 5.5 100%, GPT-6.1 Sol 93%.
-        SQL shown is what ran: 100% and 98%"
+      current: "Third run: answer states the gold value: Claude Sonnet 5.5 100%, GPT-6.1
+        Sol 90%. SQL shown is what ran: 100% and 100%"
       how: Warning gate in CI
     - metric: Judge reliability
       kind: quality
       target: At least 0.9 agreement between judges and with hand labels (warn only)
-      current: Agree with each other on 78 of 78; both match all 24 hand labels
+      current: Agree with each other on 96 of 96; both match all 24 hand labels
       how: Warning gate in CI
     - metric: Spend per real-API run
       kind: cost
       target: $25 or less (warn); a cost cap refuses or stops a run
-      current: $3.49 for the run, the guard-off ablation and the judges
+      current: $4.13 for the third run, the guard-off ablation and the judges
       how: Counted from the providers' own usage fields, cached input included; every
         paid run is a line in the spend ledger
     - metric: Published dashboard matches the results
@@ -316,6 +344,8 @@ story:
       real failures
     - Flag each row that appears in both ChEMBL and PubChem, instead of only
       counting the overlap on the data card
+    - Reword one public question that two readings fit, so its gold answer is the
+      only reading
   priorities:
     - item: ChEMBL and PubChem activity records in one schema, with provenance on
         every row
@@ -378,10 +408,52 @@ story:
       url: https://github.com/biplob819/assay-pipeline/blob/main/docs/data-roadmap.md
 source:
   repo: biplob819/assay-pipeline
-  synced: 2026-11-16
+  synced: 2026-11-21
 license: MIT
 harness: true
 demoLabel: Live console (your own API key)
+timeline:
+  - when: 20 Nov 2026
+    title: Console live, third run published
+    status: released
+    items:
+      - The console is live on Streamlit Community Cloud, on the visitor's own API key
+      - "Third run on public and fresh held-out cases: 0 of 310 attack trials
+        succeeded, scripted attacker 60 of 60 stopped, $4.13"
+    url: https://github.com/biplob819/assay-pipeline/blob/main/docs/results/main-2026-11-18-s3/bundle.json
+  - when: 18 Nov 2026
+    title: v0.1.2 released
+    status: released
+    items:
+      - The guard allows aggregate FILTER and one GROUP BY ROLLUP; other refused
+        read-only syntax gets its own reason
+      - The answer format no longer has a placeholder Claude copied
+      - "Second run, public cases only: 0 of 248 attack trials succeeded, $3.49"
+    url: https://github.com/biplob819/assay-pipeline/releases/tag/v0.1.2
+  - when: 17 Nov 2026
+    title: v0.1.1 released
+    status: released
+    items:
+      - Tested on Python 3.11 to 3.15 on Linux, macOS and Windows
+      - Console live mode on the visitor's own Anthropic or OpenAI key
+    url: https://github.com/biplob819/assay-pipeline/releases/tag/v0.1.1
+  - when: 16 Nov 2026
+    title: v0.1.0 released, first full run
+    status: released
+    items:
+      - "First full run, including held-out cases: 0 of 310 attack trials
+        succeeded, $4.60"
+      - Public security dashboard and compound explorer
+      - On PyPI by trusted publishing
+    url: https://github.com/biplob819/assay-pipeline/releases/tag/v0.1.0
+  - when: 15 Nov 2026
+    title: Pipeline, guard and attack suite built
+    status: built
+    items:
+      - ChEMBL and PubChem ingest, quality rules and a 41,463-row snapshot
+      - SQL guard tested against a 109-statement bypass corpus, and a hash-chained
+        audit log
+      - Agent on Claude and GPT, and a 60-case attack suite with a held-out split
 ---
 
 ## Write-up
@@ -392,5 +464,5 @@ Drug-discovery teams want language-model agents that answer questions over assay
 ## Key decisions
 
 1. **Process isolation, not parsing, keeps the database available.** A static SQL guard cannot bound what DuckDB costs to plan and run; two attacker passes found three blow-up classes. So each query runs in a child process killed at a deadline with a memory cap, and the guard still refuses the known classes. *Trade-off:* every query pays for a process start, and the guard refuses some legitimate queries: 18 queries in normal questions were blocked in the published run.
-2. **A private held-out split.** 12 attack cases and 6 normal questions are held out. The guard and the prompt were developed against the 48 public attacks only, and the held-out set ran once, before publishing. *Trade-off:* outsiders see only a hash manifest and split-level numbers for those cases. Keeping them private also took a git-history rewrite after labels paraphrasing two held-out questions were published by mistake.
+2. **A private held-out split.** 12 attack cases and 6 normal questions are held out. The guard and the prompt were developed against the 48 public attacks only, and each version of the held-out set runs once: the first ran before publishing, and a fresh one ran in the third run. *Trade-off:* outsiders see only a hash manifest and split-level numbers for those cases. Keeping them private also took a git-history rewrite after labels paraphrasing two held-out questions were published by mistake.
 3. **Separate what the model stops from what the controls stop.** A model-free scripted attacker sends each attack's SQL straight through the guard, permissions and limits, and a guard-off ablation runs the models against a sacrificial copy. *Trade-off:* two extra runs per release. They showed the models refused almost every attack on their own (288 of 310 trials stopped at the model; 0 of 80 succeeded with the guard off), so in practice the guard is tested mainly by the scripted attacker.

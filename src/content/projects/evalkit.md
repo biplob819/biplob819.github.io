@@ -38,6 +38,7 @@ metrics:
 links:
   repo: https://github.com/biplob819/evalkit
   package: https://pypi.org/project/evalkit-harness/
+  howBuilt: https://github.com/biplob819/evalkit/blob/main/docs/case-study.md
   report: https://biplob819.github.io/evalkit/
   demo: https://evalkit-demo.streamlit.app/
   prd: https://github.com/biplob819/evalkit/blob/main/EvalKit%20PRD.md
@@ -136,8 +137,8 @@ proof:
     url: https://biplob819.github.io/evalkit/index/
   - label: User guide, 12 steps
     url: https://github.com/biplob819/evalkit/blob/main/docs/guide.md
-  - label: Downstream canary, 18 Nov (JSON)
-    url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/downstream-canary-2026-11-18.json
+  - label: Downstream canary for v0.4.1, 18 Nov (JSON)
+    url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/downstream-canary-2026-11-18-rc041.json
 timeline:
   - when: 14 Nov 2026
     title: Build harness and first pipeline
@@ -169,12 +170,13 @@ timeline:
       - Task-declared scorers and per-slice results with 95% intervals
       - Driven by the first downstream project, the AI Teaching Assistant
   - when: 17 Nov 2026
-    title: One eval loop for every project (Wave 5)
+    title: One eval loop for every project
     status: built
     url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
     items:
-      - "A downstream registry and weekly canary: 7 projects pinned, 1,303 of
-        their tests passing against current EvalKit"
+      - "A downstream registry and weekly canary for 7 projects: on the first run
+        five passed all their tests (1,303), one showed a known drift and one had
+        none to run"
       - Release gates on any metric with fail and warn severity and exact
         one-sided bounds, asked for by Assay Pipeline
       - Calibration sheets for any criterion, and a standard efficiency block
@@ -218,6 +220,20 @@ timeline:
         Offers
       - "Release canary on fresh copies of the seven projects: 3 pass every
         test, 4 have known, explained drift"
+  - when: 19 to 21 Nov 2026
+    title: Benchmark calibrated, weak judge flagged
+    status: built
+    url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
+    items:
+      - "Both judges scored on 231 held-out claims each: GPT-6.1 Sol kappa 0.598
+        (0.468 to 0.711), Claude Opus 5.5 kappa 0.397 (0.263 to 0.511)"
+      - The README headline and chart now flag any judge whose lower bound is
+        under the 0.4 certify bar, and say which way it leans
+      - Reports name who made the reference labels; here a model, Claude Opus 5.5,
+        so the Opus judge's agreement is marked as not independent
+      - A worked example of scoring a local Gemma model served by llama-server,
+        and a page that renders Gemma Grounded Health's results with EvalKit's
+        report
 install:
   - cmd: pip install 'evalkit-harness[anthropic,openai]'
   - cmd: evalkit init
@@ -300,8 +316,8 @@ story:
       status: pass
       url: https://github.com/biplob819/evalkit/blob/main/docs/measurements/simuser-2026-11-14.json
     - name: Judge calibration on held-out reference labels
-      data: Held-out reference labels made by a model, Claude Opus 5.5, from a
-        fixed prompt (not by a person)
+      data: 231 held-out claims per judge, with reference labels made by a model,
+        Claude Opus 5.5, from a fixed prompt (not by a person)
       method: Cohen's kappa (agreement beyond chance; 1 is perfect, 0 is chance)
         against those labels, with a 95% interval; certify bar 0.4 on the lower
         bound
@@ -339,7 +355,15 @@ story:
     - metric: Demo spend per day
       kind: guardrail
       how: A Postgres daily counter reserves each request's worst-case cost before it
-        runs; live mode sits behind a passcode or the visitor's own keys.
+        runs; live mode needs a passcode, then runs on the owner's keys within a
+        daily budget or on the visitor's own keys.
+    - metric: Downstream projects' own tests against EvalKit
+      kind: guardrail
+      current: "v0.4.1 release canary: 3 of 7 projects pass every test; 4 have
+        known, explained drift"
+      how: Every Monday and on every release tag, a canary runs each of the seven
+        downstream projects' own EvalKit tests against the current code, with no
+        keys and no spend.
   learnings:
     - lesson: "My first headline said the most accurate model was the least grounded.
         Every unit test passed, because each step was tested alone: the claim
@@ -370,7 +394,9 @@ story:
       now: Every gate ships a self-test that feeds it bad input and must fail, naming
         the defect.
       url: https://github.com/biplob819/evalkit/blob/main/docs/lessons.md
-  next: []
+  next:
+    - A blind relabel of 20 answers to measure how consistent the model labeller
+      is, the one open item on the benchmark
   priorities:
     - item: One command compares models on answers that are correct and grounded in
         the source
@@ -445,14 +471,14 @@ story:
       url: https://github.com/biplob819/evalkit/blob/main/docs/decisions.md
 source:
   repo: biplob819/evalkit
-  synced: 2026-11-16
+  synced: 2026-11-21
 license: MIT
 harness: true
 ---
 
 ## Write-up
 
-Teams pick a model from leaderboards built on someone else's task, then grade it with an LLM judge nobody has checked. I built EvalKit, an open-source Python harness that runs your own cases across Claude and OpenAI models and has judges from two model families check every claim in each answer against the sentences it cites. Its first benchmark put 200 PubMedQA questions to four models. GPT-6.1 Sol was the most grounded: correct and fully grounded on 57.5% of answers by the Claude Opus 5.5 judge and 46.0% by the GPT-6.1 Sol judge (which was rating its own answers), and separated from every other model after a Holm correction under both. Claude Sonnet 5.5 was the most accurate, 77.0% correct labels, yet correct and fully grounded on only 38.5% by the Claude judge. The benchmark cost $23.87, the whole project $31.56 in API calls. Both judges are calibrated against held-out reference labels that a model, Claude Opus 5.5, made from a fixed prompt: the Sol judge at κ=0.60, the Opus judge at κ=0.40, below the 0.4 certify bar on its lower bound and lenient (it passed 52 of 79 claims the labels marked unsupported), so its 57.5% likely overstates. The Opus judge is also the model that made the labels, so its agreement is not independent; the Sol judge's is a check across model families. EvalKit is on PyPI (v0.1.0 and v0.2.0), with a public report, a live demo, and seven projects that build on it.
+Teams pick a model from leaderboards built on someone else's task, then grade it with an LLM judge nobody has checked. I built EvalKit, an open-source Python harness that runs your own cases across Claude and OpenAI models and has judges from two model families check every claim in each answer against the sentences it cites. Its first benchmark put 200 PubMedQA questions to four models. GPT-6.1 Sol was the most grounded: correct and fully grounded on 57.5% of answers by the Claude Opus 5.5 judge and 46.0% by the GPT-6.1 Sol judge (which was rating its own answers), and separated from every other model after a Holm correction under both. Claude Sonnet 5.5 was the most accurate, 77.0% correct labels, yet correct and fully grounded on only 38.5% by the Claude judge. The benchmark cost $23.87, the whole project $31.56 in API calls. Both judges are calibrated against held-out reference labels that a model, Claude Opus 5.5, made from a fixed prompt: the Sol judge at κ=0.60, the Opus judge at κ=0.40, below the 0.4 certify bar on its lower bound and lenient (it passed 52 of 79 claims the labels marked unsupported), so its 57.5% likely overstates. The Opus judge is also the model that made the labels, so its agreement is not independent; the Sol judge's is a check across model families. EvalKit is on PyPI (v0.1.0 to v0.4.1), with a public report, a live demo, and seven projects that build on it.
 
 
 ## Key decisions

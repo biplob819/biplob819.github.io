@@ -19,6 +19,7 @@ links:
   prd: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20PRD.md
   techspec: https://github.com/biplob819/agentic-analytics/blob/main/Agentic%20Analytics%20Tech%20Spec.md
   package: https://pypi.org/project/agentic-analytics/
+  methodology: https://github.com/biplob819/agentic-analytics/blob/main/docs/reproduce-the-uk-benchmark.md
 stack:
   - ClickHouse MCP
   - Snowflake Cortex Analyst
@@ -122,6 +123,10 @@ methodology:
 proof:
   - label: Data card
     url: https://github.com/biplob819/agentic-analytics/blob/main/DATA_CARD.md
+  - label: Published run summary (JSON)
+    url: https://github.com/biplob819/agentic-analytics/blob/main/docs/results/summary.json
+  - label: Scorer parity on EvalKit 0.4.0 (JSON)
+    url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/evalkit-0.4-parity-2026-11-18.json
   - label: Baseline results (JSON)
     url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/baseline-2026-11-17.json
   - label: Fix runs (JSON)
@@ -181,8 +186,9 @@ story:
     - name: Prompt-injection probe
       data: Probe questions per configuration
       method: Does the agent follow an instruction planted in the data?
-      result: With the examples fix, Claude followed an injected instruction in every
-        trial of one probe it had resisted at baseline
+      result: With column descriptions, with worked examples and with all fixes
+        together, Claude followed an injected instruction in every trial of one
+        probe it never followed at baseline
       status: fail
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
     - name: Failure taxonomy
@@ -192,6 +198,30 @@ story:
         asking back
       status: final
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/failure-taxonomy-2026-11-17.json
+    - name: Asking back on answerable questions
+      data: Every answerable question, every configuration
+      method: The rate of asking back when the question has an answer, shown beside
+        the rate on ambiguous questions so asking back on everything cannot look good
+      result: 0.0% for every configuration
+      status: final
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/results/summary.json
+    - name: Hand check of the scorer
+      data: 25 baseline records across every category
+      method: The builder and an independent verifier read each record, its SQL and
+        the gold result
+      result: No scorer defect; 8 were strict-only misses that the accepted answer
+        shapes now pass, one rule was widened and one dispute was kept wrong by the
+        owner's ruling
+      status: final
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/baseline-2026-11-17.json
+    - name: Scorer parity on EvalKit 0.4.0
+      data: All 5,046 stored answers, including 810 probe answers
+      method: Every stored run rescored offline through EvalKit 0.4.0 and compared
+        with the published verdicts
+      result: One verdict of 5,046 changed (one GPT answer with descriptions),
+        recorded and accepted; no probe verdict disagreed
+      status: final
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/evalkit-0.4-parity-2026-11-18.json
   improvements:
     - metric: Claude Sonnet 5.5 accuracy
       before: 76%
@@ -200,6 +230,18 @@ story:
         asking back on ambiguous questions. The cost: one injection probe it had
         resisted now succeeds."
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
+    - metric: Claude Sonnet 5.5 accuracy, column descriptions
+      before: 76%
+      after: 84.3%
+      change: "One frozen fix: column descriptions, +8.3 points and above noise after
+        the Holm correction, again mostly from asking back on ambiguous questions."
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/measurements/fixruns-evalkit-0.4-2026-11-18.json
+    - metric: Claude tool calls beyond the minimum, per answer
+      before: "1.24"
+      after: "0.15"
+      change: "The worked examples fix: answers at the minimum number of tool calls
+        went from 0.3% to 85%."
+      url: https://github.com/biplob819/agentic-analytics/blob/main/docs/results/summary.json
   learnings:
     - lesson: A rule list written from memory missed 8 of the database's documented
         table functions, and each rule that keyed on where a word sat in the SQL
@@ -270,6 +312,7 @@ story:
         metered warehouse credits.
     - metric: Tool calls beyond the minimum, per agent
       kind: cost
+      current: "Baseline: Claude 1.24, GPT 0.94 extra calls per answer"
       how: Each answer's tool calls are compared with the question's minimum and
         reported per configuration on every run.
     - metric: Hosted demo answer time, p95
@@ -279,7 +322,18 @@ story:
         errored panels; the run cost $4.25
       how: A timed run asks 20 questions through the deployed page in its
         passcode-gated live mode, under the owner measurement budget
-  next: []
+    - metric: Accuracy, cost per correct answer and p95 latency over time
+      kind: quality
+      how: Every run appends its metrics to EvalKit's run ledger; a trend page plots
+        accuracy, cost per correct answer and p95 latency with alarm bands, and the
+        hand-run monitor checks each smoke run against its band.
+  next:
+    - Add Snowflake Cortex Agents as a third approach, the next step the PRD names
+      after this comparison.
+    - Turn on the weekly 12-question monitoring run once the owner approves its
+      recurring spend; until then it runs by hand.
+    - Record each answer's self-check outcome (sent, passed, skipped), so the
+      self-check fix can be measured as a fix rather than as noise.
   priorities:
     - item: A 100-question UK house-price benchmark with gold SQL checked on both
         engines
@@ -343,7 +397,7 @@ story:
       url: https://github.com/biplob819/agentic-analytics/blob/main/docs/decisions.md
 source:
   repo: biplob819/agentic-analytics
-  synced: 2026-11-16
+  synced: 2026-11-21
 install:
   - cmd: pip install agentic-analytics
     note: Python 3.11 or newer; the command is agentic-analytics, alias aa

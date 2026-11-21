@@ -271,11 +271,11 @@ story:
         twice
       call: built
       why: Two full runs show how much the cited sources vary between asks.
-      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+      url: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
     - item: Citation share, freshness lag, stale-answer rate and model overlap
       call: built
       why: These answer the four Must stories for publishers and AI labs.
-      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+      url: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
     - item: Page dates, with the source of every date recorded
       call: built
       why: Readers can see how each cited page's age was worked out.
@@ -318,7 +318,7 @@ story:
     - item: Crawling at scale and Google's AI search features
       call: cut
       why: They were non-goals, so the study stays on two models and polite fetching.
-      url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+      url: https://github.com/biplob819/ai-visibility/blob/main/AI%20Visibility%20PRD.md
     - item: Support judging as an optional extra on a newer EvalKit
       call: later
       why: It ships once that EvalKit reproduces the study's support verdicts.
@@ -335,9 +335,47 @@ story:
       call: later
       why: Claude's live path has so far been checked only against offline fakes.
       url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+timeline:
+  - when: 19 Nov 2026
+    title: v0.1.1 released
+    status: released
+    items:
+      - "The PyPI page carries the released README: install from PyPI, the demo and its screenshot"
+    url: https://pypi.org/project/citewatch/0.1.1/
+  - when: 19 Nov 2026
+    title: Demo live
+    status: built
+    items:
+      - Domain lookup open to anyone; live questions behind passkeys
+      - "Live check: one question answered with the visitor's own OpenAI key, 1 nhs.uk citation, $0.035"
+    url: https://github.com/biplob819/ai-visibility/blob/main/docs/decisions.md
+  - when: 19 Nov 2026
+    title: v0.1.0 released
+    status: released
+    items:
+      - On PyPI as citewatch, published by trusted publishing and smoke-tested on three operating systems
+      - "The tool and the UK health study: 100 pre-registered questions, two models, two runs, $15.03"
+      - Guides, thresholds that can fail a CI job, and a public API under semantic versioning
+    url: https://pypi.org/project/citewatch/0.1.0/
+  - when: 17 Nov 2026
+    title: Findings published
+    status: built
+    items:
+      - Findings dashboard live on GitHub Pages, rebuilt from the committed results
+      - The post published after the owner approved all eight review items
+      - One-page signal spec, and domain cards for 361 cited publishers
+    url: https://github.com/biplob819/ai-visibility/blob/main/changelog.md
+  - when: 16 Nov 2026
+    title: Study runs
+    status: built
+    items:
+      - Questions and metric definitions frozen before any study run
+      - A $0.79 smoke run set the cost estimate from measured usage
+      - "Run 1 and run 2: 200 answers each, 0 errors, $7.55 and $7.48"
+    url: https://github.com/biplob819/ai-visibility/blob/main/changelog.md
 source:
   repo: biplob819/ai-visibility
-  synced: 2026-11-19
+  synced: 2026-11-21
 datasets:
   - name: citewatch UK health study data
     url: https://github.com/biplob819/ai-visibility/tree/main/studies/uk-health/data
