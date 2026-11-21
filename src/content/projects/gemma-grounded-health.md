@@ -18,6 +18,8 @@ links:
   prd: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20PRD.md
   techspec: https://github.com/biplob819/gemma-grounded-health/blob/main/Gemma%20Grounded%20Health%20Tech%20Spec.md
   report: https://biplob819.github.io/evalkit/gemma/
+  howBuilt: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/writeup/how-i-built-it.md
+  prdOnePage: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/writeup/prd-one-page.md
   methodology: https://github.com/biplob819/gemma-grounded-health/blob/main/configs/eval_plan_v2.yaml
 stack:
   - Gemma
