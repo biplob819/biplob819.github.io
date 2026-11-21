@@ -375,7 +375,7 @@ The first fine-tune raised label accuracy on all 1,000 expert-labelled PubMedQA 
 ## Key decisions
 
 - **Train and test on the benchmark's own prompt and format.** Training prompts are rendered by EvalKit's own PubMedQA template, and every model, local or frontier, answers under the same JSON schema, so the benchmark measures grounding rather than format. Answers are scored on "correct and fully grounded" with two judges from different model families. *Trade-off:* a strict metric that made v1 look worse than label accuracy alone would have ($53.68 for the full v1 run, mostly judging).
-- **Pre-register the comparisons and live with them.** The three comparisons were hashed and committed 31 seconds before the main run started; when v1 lost on the headline, the result stood. *Trade-off:* no freedom to pick a flattering metric afterwards.
+- **Pre-register the comparisons and live with them.** The three comparisons were hashed and committed 31 seconds before the main run started; when v1 fell below its base on the headline, the result stood. *Trade-off:* no freedom to pick a flattering metric afterwards.
 - **Fix it on dev data, label it honestly.** v2 is selected with a dev-set grounding check, never the test questions, and is labelled as built after v1's test results were seen. *Trade-off:* a second Kaggle training run and more paid judging, instead of shipping v1 with a caveat.
 
 The step-by-step failure analysis, the metrics table, the v2 plan and how to reproduce it are in the [full case study](https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md).
