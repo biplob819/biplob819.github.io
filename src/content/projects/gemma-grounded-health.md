@@ -353,7 +353,7 @@ methodology:
   - Bootstrap 95% intervals, paired bootstrap between models, and a Holm
     correction; a gap counts only when its corrected interval excludes zero
   - The comparisons were hashed and committed before the main run, and the
-    result stood when the fine-tune lost
+    result stood when the fine-tune fell below its base
   - Training data checked for leakage against the 1,000 test questions and split
     by PubMed ID; the checkpoint is chosen on dev data only
   - The 4-bit laptop file is checked against the full-precision model on 500 dev
