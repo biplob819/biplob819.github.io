@@ -99,8 +99,8 @@ metrics:
   - value: 0.560 → 0.084
     label: "answers citing an unsupporting aim sentence, v1 → v2: the failure v2
       fixed"
-  - value: 3.3 GB
-    label: model file at 4-bit; runs offline on a laptop
+  - value: 3.43 GB
+    label: "v2 model file at 4-bit (3,427,874,336 bytes); runs offline on a laptop"
   - value: "4"
     label: "models on the same 1,000 questions: Gemma base and fine-tuned, Claude
       Haiku 5.5, GPT-6 Luna"
@@ -365,7 +365,7 @@ harness: true
 
 ## Write-up
 
-Gemma Grounded Health is a small open model (Gemma 4 E2B, 3.3 GB at 4-bit) fine-tuned to answer a research question only from the numbered sentences of a given abstract, with a yes / no / maybe label, a short answer and the sentences it relied on. It runs offline on a laptop. Research only, not medical advice.
+Gemma Grounded Health is a small open model (Gemma 4 E2B, 3.43 GB at 4-bit) fine-tuned to answer a research question only from the numbered sentences of a given abstract, with a yes / no / maybe label, a short answer and the sentences it relied on. It runs offline on a laptop. Research only, not medical advice.
 
 The first fine-tune raised label accuracy on all 1,000 expert-labelled PubMedQA questions from 0.501 to 0.728, but it did not beat its own base model on the metric that matters, "correct and fully grounded" (0.388 against 0.418, Claude Opus 5.5 judging), because its citations often pointed at the study's aim instead of its results. The project measured that failure, traced it to the training data, and retrained a v2 chosen on dev data only. On the same 1,000 questions v2 fixed the citations (cited sentences that support a claim, 0.362 to 0.736) but not the headline (0.329, a tie with v1 and below the base model's 0.404), under one judge, GPT-6.1 Sol.
 
