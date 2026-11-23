@@ -8,7 +8,7 @@ export const site = {
   url: 'https://biplob819.github.io',
   roles: ['Lead Product Manager, Data and AI/ML', 'Builder', 'India International, Modern Pentathlon'],
   // One sentence of identity, one of proof. Numbers come from the CV.
-  lede: 'Product manager who ships. Pentathlete for India.',
+  lede: 'From complex customer problems to measured solutions. Pentathlete for India.',
   proof: [
     "I'm Lead PM, Data and AI/ML (Agentic Analytics) at Mindbody. I shipped its first agentic product and led ML products that contributed to $103M+ in incremental ARR.",
     "I'm also building Kova (kovahr.com) and Insightsflow (insightsflow.live) end to end, and I'm a PhD scholar in AI at IIT Kharagpur.",
