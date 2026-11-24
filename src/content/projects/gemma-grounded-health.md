@@ -112,8 +112,8 @@ headline:
     v3, trained on a word-overlap reward, reached only 0.367. Caveats: v3b restates
     cited result sentences closely (0.461 on answers that are not whole-sentence
     copies; v2 0.283, base 0.306), and its 4-bit file missed the parity bar
-    (0.924). v2 is the released model; v3b is not yet on Hugging Face. Research
-    only, not medical advice."
+    (0.924). v3b is released on Hugging Face (tag v3b.0.0, GitHub release v1.1.0);
+    the 8-bit file is the recommended download. Research only, not medical advice."
 metrics:
   - value: "0.367"
     label: "v3, GRPO on a word-overlap reward: better than v2 (+0.038) but still
@@ -135,9 +135,11 @@ proof:
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/case-study.md
   - label: Spend ledger
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/measurements/spend-ledger.jsonl
+  - label: GitHub release v1.1.0, v3b (notes, artifacts, hashes, known limits)
+    url: https://github.com/biplob819/gemma-grounded-health/releases/tag/v1.1.0
   - label: GitHub release v1.0.0 (notes, artifacts, hashes, known limits)
     url: https://github.com/biplob819/gemma-grounded-health/releases/tag/v1.0.0
-  - label: 4-bit laptop file on Hugging Face (GGUF)
+  - label: 4-bit and 8-bit laptop files on Hugging Face (GGUF)
     url: https://huggingface.co/biplob123/gemma-4-e2b-grounded-health-GGUF
   - label: v2 main run summary (JSON)
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main_v2/summary.json
@@ -239,11 +241,17 @@ timeline:
     items:
       - "Correct and fully grounded 0.503 against v2's 0.329 (+0.174 [+0.147, +0.202], pre-registered) and base's 0.404 (exploratory)"
       - "Guardrails pass: citation precision 0.873, aim-citation rate 0.032; the 4-bit file missed parity (0.924), the 8-bit passed (0.990) and scores 0.541"
+  - when: 24 Nov 2026
+    title: v1.1.0 released
+    status: released
+    url: https://github.com/biplob819/gemma-grounded-health/releases/tag/v1.1.0
+    items:
+      - "v3b on Hugging Face (merged weights, adapter, 4-bit and 8-bit laptop files, tag v3b.0.0), every file downloaded back and hash-checked"
+      - "The 8-bit file is the recommended download: label agreement with the merged weights 0.990, against 0.924 for the 4-bit"
   - when: Next
-    title: v3b release, second judge, quiet benchmark
+    title: Second judge, quiet benchmark
     status: planned
     items:
-      - v3b on Hugging Face, on the owner's call
       - Claude Opus 5.5 as a second judge
       - Laptop benchmark re-run on a quiet machine
 datasets:
@@ -261,7 +269,7 @@ story:
     - "Label accuracy on all 1,000 expert-labelled PubMedQA questions rose from 0.501 to 0.728 with the first fine-tune"
     - "v2 fixed the citations against v1: cited sentences that support a claim 0.362 → 0.736, answers citing an unsupporting aim sentence 0.560 → 0.084"
     - "For v2, correct and fully grounded did not move (0.331 → 0.329, a tie) with the base model ahead at 0.404; that pre-registered result was published as it fell, and it is what v3 and v3b were built to fix"
-    - "Released as v1.0.0: merged weights and a 3.43 GB 4-bit file on Hugging Face that runs offline on a laptop"
+    - "Released as v1.0.0 (v2) and v1.1.0 (v3b): merged weights and 4-bit and 8-bit files on Hugging Face that run offline on a laptop"
   pain:
     who: Developers building on-device health features.
     problem: They need a model that answers only from the source in front of it and
@@ -502,7 +510,6 @@ story:
       why: "v2's speed was measured on a busy laptop and its gap to v1 is unexplained."
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/known-issues.md
   next:
-    - v3b on Hugging Face, on the owner's call
     - Claude Opus 5.5 as a second judge, once the Anthropic credit is topped up
     - A laptop benchmark re-run on a quiet machine
     - The aim rule in EvalKit's citation rubric clarified upstream (an open issue)
