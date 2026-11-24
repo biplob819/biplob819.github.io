@@ -1,8 +1,8 @@
 ---
 title: Gemma Grounded Health
-tagline: A small open Gemma model fine-tuned to answer health questions only
-  from a given abstract and cite its sentences. Research only, not medical
-  advice.
+tagline: A small open Gemma model, fine-tuned and then RL-trained, that answers
+  health questions only from a given abstract and cites its sentences. Research
+  only, not medical advice.
 kind: case-study
 status: shipped
 role: Product and build
@@ -10,6 +10,7 @@ year: "2026"
 order: 36
 tags:
   - fine-tuning
+  - reinforcement learning
   - open models
   - grounding
   - evals
@@ -102,26 +103,29 @@ images:
     alt: "Gemma Grounded Health: data flow"
     kind: dataflow
 headline:
-  value: 0.362 → 0.736
-  label: of cited sentences that support a claim, fine-tuned v1 → v2, on 1,000
-    expert-labelled PubMedQA questions (GPT-6.1 Sol judge)
-  note: "The fix v2 was built for: v1 had learned to cite the study's aim instead
-    of its results (answers citing an unsupporting aim sentence 0.560 → 0.084).
-    Correct and fully grounded tied (0.331 → 0.329), and the base model stays
-    ahead at 0.404. v1 had raised label accuracy from 0.501 to 0.728; v2 scores
-    0.678. Released as v1.0.0. Research only, not medical advice."
+  value: 0.329 → 0.503
+  label: correct and fully grounded, fine-tuned v2 → v3b (GRPO with a grounding-checker
+    reward), on 1,000 expert-labelled PubMedQA questions (GPT-6.1 Sol judge, pre-registered)
+  note: "Primary test v3b minus v2 +0.174, 95% CI [+0.147, +0.202]. v3b also passes
+    the base model's 0.404 (+0.099 [+0.061, +0.138], exploratory). The gain is
+    groundedness (0.729 vs 0.493) at unchanged label accuracy (0.677 vs 0.678).
+    v3, trained on a word-overlap reward, reached only 0.367. Caveats: v3b restates
+    cited result sentences closely (0.461 on answers that are not whole-sentence
+    copies; v2 0.283, base 0.306), and its 4-bit file missed the parity bar
+    (0.924). v2 is the released model; v3b is not yet on Hugging Face. Research
+    only, not medical advice."
 metrics:
+  - value: "0.367"
+    label: "v3, GRPO on a word-overlap reward: better than v2 (+0.038) but still
+      below base; its reward disagreed with the judge, which led to v3b"
   - value: 0.560 → 0.084
     label: "answers citing an unsupporting aim sentence, v1 → v2: the failure v2
       fixed"
   - value: 3.43 GB
     label: "v2 model file at 4-bit (3,427,874,336 bytes); runs offline on a laptop"
-  - value: "4"
-    label: "models on the same 1,000 questions: Gemma base and fine-tuned, Claude
-      Haiku 5.5, GPT-6 Luna"
-  - value: $4.00
-    label: for v2's main run, with base and v1 answers from EvalKit's cache ($53.68
-      for v1's run of 4,000 answers with two judges)
+  - value: $3.47
+    label: for v3b's scoring run, with base and v2 answers from EvalKit's cache ($1.82
+      for v3's; $53.68 for v1's run of 4,000 answers with two judges)
 proof:
   - label: Data card
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/DATA_CARD.md
@@ -141,9 +145,15 @@ proof:
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/reproduce.md
   - label: Results bundle (every published number comes from it)
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/results_bundle.json
+  - label: v3b result (JSON)
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main_v3b/result.json
+  - label: v3 result (JSON)
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main_v3/result.json
+  - label: Changelog (every v3 and v3b step, with its spend and GPU hours)
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/changelog.md
   - label: Decision log (including the call to build v2)
     url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
-cost: "$53.68 for the v1 main run (1,000 questions, four models, dual judges); $4.00 for v2's, with base and v1 answers from EvalKit's cache"
+cost: "$53.68 for the v1 main run (1,000 questions, four models, dual judges); $4.00 for v2's, $1.82 for v3's and $3.47 for v3b's, with earlier answers from EvalKit's cache"
 install:
   - cmd: ollama pull hf.co/biplob123/gemma-4-e2b-grounded-health-GGUF:Q4_K_M
   - cmd: ollama run --think=false hf.co/biplob123/gemma-4-e2b-grounded-health-GGUF:Q4_K_M
@@ -206,25 +216,51 @@ timeline:
       - EvalKit gained a Gemma worked example and report page (pull request merged)
       - Reproduce-from-scratch guide where each step is tested, and a write-up whose numbers are generated from the results bundle
       - Offline Ollama run recorded inside a sandbox that blocks the internet
+  - when: 21–23 Nov 2026
+    title: "v3: reinforcement learning on a word-overlap reward"
+    status: built
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/changelog.md
+    items:
+      - GRPO from v2's adapter with a programmatic reward (label, grounded citations, aim penalty) and no judge in the loop; the plan hashed before training
+      - "Two trial attempts failed on bugs (a doubled data path, then running out of GPU memory) and were fixed; the third passed every pre-registered stop rule"
+      - 678 GRPO steps, 9.19 GPU hours on Kaggle; checkpoint chosen on dev rows only
+  - when: 23 Nov 2026
+    title: "v3 scored, and v3b designed"
+    status: built
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/changelog.md
+    items:
+      - "v3 on the 1,000 test questions: 0.367 against v2's 0.329, improves (+0.038 [+0.014, +0.063]) but below base's 0.404"
+      - "A free dev check showed v3's reward ranked v2 above base while the judge ranked base far above v2"
+      - "v3b's reward uses a local grounding checker chosen for agreeing with the judge (0.82 against 0.69 for v3's approach); 300 GRPO steps, 5.87 GPU hours"
+  - when: 24 Nov 2026
+    title: "v3b scored: past v2 and base"
+    status: built
+    url: https://github.com/biplob819/gemma-grounded-health/blob/main/changelog.md
+    items:
+      - "Correct and fully grounded 0.503 against v2's 0.329 (+0.174 [+0.147, +0.202], pre-registered) and base's 0.404 (exploratory)"
+      - "Guardrails pass: citation precision 0.873, aim-citation rate 0.032; the 4-bit file missed parity (0.924), the 8-bit passed (0.990) and scores 0.541"
   - when: Next
-    title: Second judge and a quiet benchmark
+    title: v3b release, second judge, quiet benchmark
     status: planned
     items:
-      - Claude Opus 5.5 as a second judge on v2
+      - v3b on Hugging Face, on the owner's call
+      - Claude Opus 5.5 as a second judge
       - Laptop benchmark re-run on a quiet machine
 datasets:
   - name: PubMedQA
     url: https://pubmedqa.github.io/
     note: Biomedical questions with expert-labelled answers from PubMed abstracts
 story:
-  overview: A small open model, Gemma 4 E2B, fine-tuned in a day on free hardware
-    to answer health questions only from the abstract in front of it, citing
-    each sentence it used. It is measured with EvalKit against frontier small
-    models, and timed running offline on a laptop.
+  overview: A small open model, Gemma 4 E2B, fine-tuned on free hardware and then
+    trained with reinforcement learning (GRPO) to answer health questions only
+    from the abstract in front of it, citing each sentence it used. It is
+    measured with EvalKit against frontier small models, and timed running
+    offline on a laptop.
   impact:
+    - "Reinforcement learning against a grounding checker (v3b) raised correct and fully grounded from 0.329 to 0.503 on all 1,000 expert-labelled questions, past the base model's 0.404"
     - "Label accuracy on all 1,000 expert-labelled PubMedQA questions rose from 0.501 to 0.728 with the first fine-tune"
     - "v2 fixed the citations against v1: cited sentences that support a claim 0.362 → 0.736, answers citing an unsupporting aim sentence 0.560 → 0.084"
-    - "Correct and fully grounded did not move (0.331 → 0.329, a tie) and the base model stays ahead at 0.404; the pre-registered result was published as it fell"
+    - "For v2, correct and fully grounded did not move (0.331 → 0.329, a tie) with the base model ahead at 0.404; that pre-registered result was published as it fell, and it is what v3 and v3b were built to fix"
     - "Released as v1.0.0: merged weights and a 3.43 GB 4-bit file on Hugging Face that runs offline on a laptop"
   pain:
     who: Developers building on-device health features.
@@ -276,7 +312,29 @@ story:
         0.711]); the labels are a model's, by the owner's choice
       status: final
       url: https://github.com/biplob819/gemma-grounded-health#v2-result-the-citations-are-fixed-the-headline-is-not
+    - name: v3 and v3b on the 1,000 test questions
+      data: 1,000 expert-labelled PubMedQA questions, each plan hashed before training
+      method: GPT-6 Luna extracts claims and GPT-6.1 Sol judges them; the primary test
+        is each RL model against v2, paired bootstrap; base and v2 answers reused
+        from EvalKit's cache
+      result: "v3 (word-overlap reward) 0.367, improves on v2 (+0.038 [+0.014,
+        +0.063]) but not base. v3b (grounding-checker reward) 0.503, improves on
+        v2 (+0.174 [+0.147, +0.202]) and passes base's 0.404 (exploratory). Label
+        accuracy unchanged (0.677 vs 0.678); v3b quotes its cited sentences more
+        closely (0.461 on non-copies)"
+      status: final
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main_v3b/result.json
   learnings:
+    - lesson: v3's reward ranked v2 above the base model while the judge ranked base
+        far above v2, so optimising it moved the headline only +0.038.
+      now: Check a reward against the judge on dev before training; v3b's checker was
+        chosen for agreeing with the judge (0.82 against 0.69), and it moved the
+        headline +0.174.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/changelog.md
+    - lesson: Rewarding supported claims also rewards copying the cited sentence.
+      now: v3b's checkpoint is chosen under a copy guard, and the copy share and the
+        score on non-copies are published beside the headline.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/changelog.md
     - lesson: '"Valid citation" was not "supporting citation": every automatic dev
         check passed because it only asked whether the cited sentence existed.'
       now: Check that each cited sentence supports the claim, and turn what a
@@ -312,6 +370,13 @@ story:
         never change a payload that is then used, only a copy.
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/lessons.md
   improvements:
+    - metric: Correct and fully grounded, 1,000 test questions (GPT-6.1 Sol)
+      before: "0.329"
+      after: "0.503"
+      change: v3b, GRPO from v2's adapter with a reward built on a grounding checker
+        that agrees with the judge; v3b minus v2 +0.174 [+0.147, +0.202],
+        pre-registered.
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/results/main_v3b/result.json
     - metric: Label accuracy, 1,000 expert-labelled questions
       before: "0.501"
       after: "0.728"
@@ -340,19 +405,20 @@ story:
     - metric: Correct and fully grounded (GPT-6.1 Sol judge)
       kind: north-star
       target: Above the base model, separated, pre-registered
-      current: 0.329 for v2 (v1 0.331, base 0.404)
+      current: "0.503 for v3b, past base's 0.404 (+0.099 [+0.061, +0.138],
+        exploratory); v2 0.329, v3 0.367"
       how: EvalKit main run on 1,000 PubMedQA questions, paired bootstrap with a Holm
         correction (a stricter bar when several comparisons are tested at once)
     - metric: Cited sentences that support a claim (GPT-6.1 Sol judge)
       kind: quality
       target: Reported with intervals
-      current: 0.736 for v2 (v1 0.362, base 0.747)
+      current: 0.873 for v3b (v2 0.736, v1 0.362, base 0.747)
       how: EvalKit citation check; v2 is not claimed to beat base on citations,
         because the judge's aim rule penalises base's aim-restating claims
     - metric: Label accuracy
       kind: quality
       target: Reported with intervals
-      current: 0.678 for v2 (v1 0.728, base 0.501)
+      current: 0.677 for v3b (v2 0.678, v1 0.728, base 0.501)
       how: Yes / no / maybe against the expert label, paired bootstrap
     - metric: Valid JSON answers on dev
       kind: guardrail
@@ -362,7 +428,8 @@ story:
     - metric: Laptop file agreement with full precision (dev labels)
       kind: guardrail
       target: At least 0.95
-      current: "0.920 for v2, missed and disclosed (v1 0.956)"
+      current: "0.924 for v3b, missed and disclosed (8-bit 0.990 passed); v2
+        0.920, v1 0.956"
       how: The 4-bit file against the full-precision model on 500 dev prompts
     - metric: Memorisation check (paraphrase probe)
       kind: guardrail
@@ -373,11 +440,15 @@ story:
     - metric: Spend per main run
       kind: cost
       target: Hard cap $70, estimate first
-      current: $4.00 for v2, with base and v1 answers from EvalKit's cache ($53.68
-        for v1's run, estimate $63.65)
+      current: $3.47 for v3b and $1.82 for v3, with earlier answers from EvalKit's
+        cache ($4.00 for v2; $53.68 for v1's run, estimate $63.65)
       how: Every API dollar goes into a spend ledger and every Kaggle GPU hour into a
         GPU ledger
   priorities:
+    - item: "Reinforcement learning (GRPO) on a programmatic reward, with no judge in the training loop"
+      call: built
+      why: "v2's headline tied v1, so RL post-training targeted grounding directly; v3b's reward was checked against the judge first."
+      url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/decisions.md
     - item: "Retrained v2 so every cited sentence must support the answer"
       call: built
       why: "v1 cited the study's aim instead of its results, so v2 trained on stricter citation targets."
@@ -431,13 +502,13 @@ story:
       why: "v2's speed was measured on a busy laptop and its gap to v1 is unexplained."
       url: https://github.com/biplob819/gemma-grounded-health/blob/main/docs/known-issues.md
   next:
-    - Claude Opus 5.5 as a second judge on v2's results, once the Anthropic credit
-      is topped up
+    - v3b on Hugging Face, on the owner's call
+    - Claude Opus 5.5 as a second judge, once the Anthropic credit is topped up
     - A laptop benchmark re-run on a quiet machine
     - The aim rule in EvalKit's citation rubric clarified upstream (an open issue)
 source:
   repo: biplob819/gemma-grounded-health
-  synced: 2026-11-21
+  synced: 2026-11-24
 methodology:
   - Every model, local or frontier, gets the same EvalKit PubMedQA prompt and
     the same JSON answer format
@@ -455,6 +526,9 @@ methodology:
   - A paraphrase probe on 100 questions checks whether the model memorised the
     benchmark
   - 20 answers are read by hand at each stage
+  - v3 and v3b were trained with GRPO from v2's adapter on programmatic rewards
+    with no judge in the loop; each plan was hashed before training, and
+    checkpoints were chosen on dev rows only
 license: Apache-2.0
 harness: true
 ---
@@ -464,6 +538,8 @@ harness: true
 Gemma Grounded Health is a small open model (Gemma 4 E2B, 3.43 GB at 4-bit) fine-tuned to answer a research question only from the numbered sentences of a given abstract, with a yes / no / maybe label, a short answer and the sentences it relied on. It runs offline on a laptop. Research only, not medical advice.
 
 The first fine-tune raised label accuracy on all 1,000 expert-labelled PubMedQA questions from 0.501 to 0.728, but it did not beat its own base model on the metric that matters, "correct and fully grounded" (0.388 against 0.418, Claude Opus 5.5 judging), because its citations often pointed at the study's aim instead of its results. The project measured that failure, traced it to the training data, and retrained a v2 chosen on dev data only. On the same 1,000 questions v2 fixed the citations (cited sentences that support a claim, 0.362 to 0.736) but not the headline (0.329, a tie with v1 and below the base model's 0.404), under one judge, GPT-6.1 Sol.
+
+Reinforcement learning closed the gap. v3, trained with GRPO on a word-overlap reward, improved on v2 only slightly (0.367), because a free dev check showed its reward disagreed with the judge. v3b replaced that reward with a local grounding checker chosen for agreeing with the judge, and reached 0.503 on the same 1,000 questions, against v2's 0.329 (pre-registered) and the base model's 0.404. The gain is groundedness at unchanged label accuracy; v3b also quotes its cited sentences more closely, which is published beside the result.
 
 
 ## Key decisions
