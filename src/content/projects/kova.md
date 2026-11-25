@@ -15,8 +15,8 @@ headline:
 metrics:
   - value: "6"
     label: "countries designed for from day one: US, UK, Australia, New Zealand, Canada, India"
-  - value: 209 of 759
-    label: catalogued capabilities green so far
+  - value: 236 of 759
+    label: catalogued capabilities green so far (counted 25 Nov)
   - value: 1,474
     label: product and engineering decisions logged
 links:
@@ -117,9 +117,10 @@ The marketing site and self-serve signup are live at [kovahr.com](https://kovahr
 - **Sign-in built in-house**, so HR data stays in Kova's own database: passwords (hashed with a deliberately slow method at the OWASP minimum), email verification, passkeys (a fingerprint or face instead of a password), 2-step codes from an authenticator app with backup codes, and sign-in with Google.
 - **Sessions close themselves**: the screen locks after 10 idle minutes and asks for the password again, you are signed out after 30 idle minutes, every session ends after 30 days, and 5 failed logins lock the account for 30 minutes.
 - **Access down to the single field**: 8 access-level types (Owner, Full Admin, Employee, Manager, Custom, Former employee, Payroll, No access), and each employee field can be hidden, read-only, editable, or editable with approval. Admins can preview the product as another user and see a history of access changes, and no one can grant more access than they hold.
-- **Each company's data is walled off by the database itself**, on 235 tables. A build check fails any new table that isn't walled off or written down as an exception.
-- **Security is tested feature by feature**: 400 security test files, 305 of them against a real database, and every one of the 209 shipped capabilities names its own security test (for example, "company A cannot read company B's assignments").
-- **An audit log nobody can edit**: the app can read it but never change or delete it; sign-in secrets are encrypted at rest, and e-signature consent text is versioned.
+- **Permissions as a grid customers manage themselves**: 16 modules by 6 actions by 4 scopes (own, department, all, global), plus who-you-can-see rules from "own record" to "everyone". Company admins build their own custom levels, but 25 hard ceilings stay off-limits to any custom level, and 2-step sign-in can be required per level.
+- **Each company's data is walled off by the database itself**: all 244 tables that hold company data (of 275) have row-level security and a policy. A build check fails any new table that isn't walled off or written down as an exception.
+- **Security is tested feature by feature**: 547 security test files, and every one of the 236 shipped capabilities names its own security test (for example, "company A cannot read company B's assignments").
+- **An audit log the app can't change**: the app's database role can read it but never change or delete it; sign-in secrets are encrypted at rest, and e-signature consent text is versioned.
 - **Country-agnostic by design** for six countries (the US, UK, Canada, Australia, New Zealand and India): address formats, date and number styles, currency, time zones and statutory rules come from data, not hard-coded US rules, with data for 16 currencies. The interface is in English today; more languages come later.
 - **Planned**: company single sign-on (Google, Microsoft and SAML).
 
