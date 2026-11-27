@@ -2,7 +2,7 @@
 title: ASL Translator
 tagline: A web app that turns American Sign Language into text and speech from a
   webcam, with hand tracking in the browser so video never leaves the device.
-kind: prototype
+kind: case-study
 status: shipped
 role: Product and build
 year: "2026"
@@ -120,6 +120,7 @@ datasets:
     note: 137,078 sequences of 10 mean frames, linked here through the training
       script that loads it. It has no participant IDs, so signers could not be
       kept apart in the split
+license: MIT
 story:
   overview: A web app that translates American Sign Language into text and
     speech in real time from a webcam. MediaPipe finds hand and body landmarks
@@ -139,7 +140,9 @@ story:
       114.8 KB ONNX model; never tested on unseen signers, because the dataset
       has no participant IDs"
     - 28 of 28 planned features built; 83 of 84 backend tests pass, 1 skipped
-    - Video never leaves the browser; no accounts and no analytics
+    - "Video never leaves the browser; no accounts and no analytics. The one
+      external call is optional translation, which sends recognised text to the
+      free MyMemory API"
   pain:
     who: Deaf and hard-of-hearing people who sign and want hearing colleagues to
       understand them, and people learning ASL who want feedback outside class.

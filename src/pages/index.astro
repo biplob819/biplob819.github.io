@@ -115,7 +115,7 @@ const INSTALL: Record<string, string> = {
 
   <section class="block wrap" id="builds">
     <div class="sec-head"><h2 class="cond">AI builds, scored</h2><span class="label">{published} of {builds.length} with published results</span></div>
-    <p class="intro">Each build starts from a real team's problem, ships as a public repo, and is measured with EvalKit: quality, cost per answer and confidence intervals. The rest are being built in public and publish their numbers when the evaluation run lands.</p>
+    <p class="intro">Each build starts from a real problem, ships as a public repo, and publishes its evals: quality, cost or latency, with confidence intervals where the run supports them. All but the ASL Translator are scored with EvalKit. The rest are being built in public and publish their numbers when the evaluation run lands.</p>
     <div class="cards">{builds.map((p) => <ProjectCard project={p} />)}</div>
     <p class="more"><a class="tlink" href="/projects/">All builds →</a></p>
   </section>
