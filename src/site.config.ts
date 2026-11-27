@@ -127,6 +127,6 @@ export const now = [
   'Building Kova, an HR platform for growing companies (pre-launch).',
   'Getting Insightsflow, embedded analytics for SaaS teams, ready to launch.',
   'Eight public AI builds, all complete, each scored with EvalKit; the last, Gemma, released v1.0.0 on Hugging Face.',
-  'Released the Build Harness as open source: the Claude Code harness behind Kova, Insightsflow and every project here.',
+  'Released the Build Harness as open source: the Claude Code harness behind Kova, Insightsflow and the eight AI builds.',
   'PhD research at IIT Kharagpur, and training.',
 ];
