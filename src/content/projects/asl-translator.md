@@ -48,6 +48,26 @@ stack:
   - Web Speech API
   - SQLite with SQLAlchemy
   - Docker Compose
+images:
+  - src: https://raw.githubusercontent.com/biplob819/asl-translator/master/docs/assets/architecture.svg
+    alt: "Three layers. In the browser, a Next.js app runs MediaPipe hand and pose
+      landmarkers as WebAssembly, sends only landmark coordinates over
+      WebSockets, and shows and speaks the result with the Web Speech API. A
+      FastAPI server classifies fingerspelling with a Random Forest and words
+      with a BiLSTM in ONNX Runtime, stores settings and saved phrases in
+      SQLite, and calls the MyMemory API only for optional translation.
+      Offline, training scripts build both models and an eval suite checks
+      them against accuracy thresholds."
+    kind: architecture
+  - src: https://raw.githubusercontent.com/biplob819/asl-translator/master/docs/assets/dataflow.svg
+    alt: "A webcam frame becomes hand landmarks in the browser and is normalised.
+      Fingerspelling sends each frame at 10 frames a second; word and
+      conversation mode average 30 frames into 10. The server returns a sign
+      and confidence; the browser keeps signs above the threshold, builds the
+      text and speaks it, sending the text to MyMemory first only when the
+      speech language is not English. Saved phrases go to SQLite. Video never
+      leaves the browser."
+    kind: dataflow
 methodology:
   - "Fingerspelling: MediaPipe hand landmarks extracted offline from the Kaggle
     ASL Alphabet images (20,007 samples, 1,000 per class sampled), centred on
